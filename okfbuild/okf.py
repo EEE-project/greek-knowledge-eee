@@ -204,3 +204,38 @@ def write(concept: ConceptFile, path: Path) -> bool:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(rendered)
     return True
+
+
+def read(path: Path) -> ConceptFile | None:
+    """Read `path` back into a ConceptFile — e.g. so a caller can change one
+    field (pipeline.py's pruning step flips `status` to "deprecated") and
+    write it back through write()'s normal verification-preserving path.
+
+    Returns None if `path` doesn't exist, can't be parsed as OKF markdown,
+    or is missing a field every concept file requires (mirrors
+    _read_existing's leniency — a bad existing file, most likely a human
+    hand-edit, should never crash the caller).
+    """
+    existing = _read_existing(path)
+    if existing is None:
+        return None
+    frontmatter, body = existing
+    if not isinstance(frontmatter, dict):
+        return None
+
+    try:
+        return ConceptFile(
+            type=frontmatter["type"],
+            title=frontmatter["title"],
+            description=frontmatter["description"],
+            tags=frontmatter["tags"],
+            level=frontmatter["level"],
+            sources=[Source(**s) for s in frontmatter["sources"]],
+            generated_by=frontmatter["generated"]["by"],
+            body=body,
+            extra_frontmatter={
+                k: v for k, v in frontmatter.items() if k not in _COMMON_FIELDS and k not in ("type", "verified")
+            },
+        )
+    except (KeyError, TypeError):
+        return None

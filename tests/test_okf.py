@@ -4,6 +4,7 @@ import yaml
 from okfbuild.okf import (
     ConceptFile,
     Source,
+    read,
     render,
     resolve_slug,
     validate_frontmatter,
@@ -209,3 +210,49 @@ def test_resolve_slug_unchanged_for_same_lemma_rewrite(tmp_path):
     resolved = resolve_slug(tmp_path, "slug", lemma="lemma A")
 
     assert resolved == "slug"
+
+
+# --- read() ---
+
+
+def test_read_roundtrips_a_written_concept(tmp_path):
+    path = tmp_path / "test.md"
+    concept = _minimal_concept(body="original body")
+    write(concept, path)
+
+    result = read(path)
+
+    assert result.type == "Lexical Entry"
+    assert result.body == "original body"
+    assert result.extra_frontmatter["lemma"] == "test"
+    assert result.sources == []
+
+
+def test_read_returns_none_for_missing_file(tmp_path):
+    assert read(tmp_path / "does-not-exist.md") is None
+
+
+def test_read_returns_none_for_malformed_existing_file(tmp_path):
+    path = tmp_path / "test.md"
+    path.write_text("not a valid OKF file at all, no frontmatter fence here")
+
+    assert read(path) is None
+
+
+def test_read_returns_none_for_empty_frontmatter_block(tmp_path):
+    """A file whose frontmatter fence is present but empty (`---\\n---\\nbody`)
+    parses as YAML `None`, not a dict — read() must treat this the same as
+    any other unparseable existing file, not crash on the missing keys."""
+    path = tmp_path / "test.md"
+    path.write_text("---\n---\nbody\n")
+
+    assert read(path) is None
+
+
+def test_read_returns_none_for_frontmatter_missing_a_required_field(tmp_path):
+    """A valid-YAML frontmatter block that's missing a field every concept
+    requires (e.g. a human hand-edit deleted `sources:`) must not crash."""
+    path = tmp_path / "test.md"
+    path.write_text("---\ntitle: test\n---\nbody\n")
+
+    assert read(path) is None
