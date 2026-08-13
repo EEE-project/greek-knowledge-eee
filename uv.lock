@@ -192,6 +192,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "eee-project" },
+    { name = "pyyaml" },
 ]
 
 [package.dev-dependencies]
@@ -200,7 +201,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "eee-project", specifier = "==1.6.0" }]
+requires-dist = [
+    { name = "eee-project", specifier = "==1.6.0" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
+]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest" }]

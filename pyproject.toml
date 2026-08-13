@@ -8,6 +8,7 @@ authors = [{name = "Oleg Sadov", email = "oleg.sadov@gmail.com"}]
 requires-python = ">=3.12"
 dependencies = [
     "eee-project==1.6.0",
+    "pyyaml>=6.0.3",
 ]
 
 [build-system]
