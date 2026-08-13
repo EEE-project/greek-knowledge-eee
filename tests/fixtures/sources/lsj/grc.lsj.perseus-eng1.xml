@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <text>
+    <body>
+      <entryFree key="ἀγαθός" type="main">
+        <orth>ἀγαθός</orth>
+        <sense>good, brave, capable, of good birth.</sense>
+      </entryFree>
+      <entryFree key="ἀγορά" type="main">
+        <orth>ἀγορά</orth>
+        <sense>assembly, market-place.</sense>
+      </entryFree>
+    </body>
+  </text>
+</TEI>

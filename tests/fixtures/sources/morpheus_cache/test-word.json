@@ -1,0 +1,6 @@
+{"RDF": {"Annotation": {"Body":
+  {"rest": {"entry":
+    {"dict": {"hdwd": {"$": "some-lemma"}, "pofs": "noun"},
+     "infl": {"case": "gen", "num": "sing", "gend": "masc", "dial": "epic"}}
+  }}
+}}}
