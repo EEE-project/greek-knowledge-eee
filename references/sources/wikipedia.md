@@ -8,5 +8,5 @@ Every request must set a descriptive `User-Agent` and back off/retry on
 429/5xx responses (Wikimedia API etiquette) — only a 404 means "no such
 page."
 
-Client: `build/sources/wikipedia_client.py` (added in
+Client: `okfbuild/sources/wikipedia_client.py` (added in
 section-03-source-clients).

@@ -9,5 +9,5 @@ section-06-byzantine-mining.
 
 No live API exists for Byzantine Greek at all (LBG/DIAL-G/Lampe/Du Cange
 are all human-search-only, no bulk export) — this file is read directly
-as a local data file by `build/sources/byzantine_lexicon.py` (added in
+as a local data file by `okfbuild/sources/byzantine_lexicon.py` (added in
 section-03-source-clients), not queried over the network.

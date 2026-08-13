@@ -7,7 +7,7 @@ from
 machine-readable path: download + parse the TEI-XML, don't screen-scrape
 a viewer.
 
-Parsed by `build/sources/lsj_index.py` (added in
+Parsed by `okfbuild/sources/lsj_index.py` (added in
 section-03-source-clients), which must disable XML entity
 expansion/external entity resolution even though this specific file comes
 from a trusted source.

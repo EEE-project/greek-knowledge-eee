@@ -4,7 +4,7 @@ The Perseids Morpheus service
 (`https://services.perseids.org/bsp/morphologyservice/analysis/word`),
 used for Classical/Koine Ancient Greek morphological analysis.
 
-This KB's client, `build/sources/morpheus_client.py` (added in
+This KB's client, `okfbuild/sources/morpheus_client.py` (added in
 section-03-source-clients), is a **vendored copy** of
 `greek-inflexion-eee/tools/morpheus/query_morpheus.py` — that script
 lives under `tools/` in that repo, not its installable package, so

@@ -33,8 +33,8 @@ uv sync --dev
 
 ## Usage
 
-*(Filled in once `build/pipeline.py` exists — section-05-pipeline. Until
-then, this repo's code is a Python API (`from build.pipeline import
+*(Filled in once `okfbuild/pipeline.py` exists — section-05-pipeline. Until
+then, this repo's code is a Python API (`from okfbuild.pipeline import
 run`), not yet a CLI wrapper.)*
 
 
@@ -46,7 +46,7 @@ historical period), **Grammatical Rule** (one file per documented
 period-to-period morphological change), and **Cultural Context** (one
 file per person/theme/work). Every claim in a file's body is
 footnote-cited back to a `sources[]` frontmatter entry. See
-`build/okf.py` (added in section-02-okf-writer) for the exact schema.
+`okfbuild/okf.py` (added in section-02-okf-writer) for the exact schema.
 
 
 ## Sources
