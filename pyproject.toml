@@ -1,0 +1,30 @@
+[project]
+name = "greek-knowledge-eee"
+version = "0.1.0"
+description = "A Greek language & culture knowledge base (Open Knowledge Format) for the EEE project"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{name = "Oleg Sadov", email = "oleg.sadov@gmail.com"}]
+requires-python = ">=3.12"
+dependencies = [
+    "eee-project==1.6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Deliberate deviation from this org's usual `src/<pkg_name>` layout: this
+# repo's own code lives at `build/` (repo root), matching the directory
+# tree in sections/section-01-foundation.md. Keeps `import build...`
+# working from test files with no extra sys.path/conftest.py wiring.
+[tool.hatch.build.targets.wheel]
+packages = ["build"]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
