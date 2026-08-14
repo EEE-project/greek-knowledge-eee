@@ -8,6 +8,8 @@ authors = [{name = "Oleg Sadov", email = "oleg.sadov@gmail.com"}]
 requires-python = ">=3.12"
 dependencies = [
     "eee-project==1.6.0",
+    "ancient-greek-backend-eee>=2.0.0",
+    "modern-greek-backend-eee>=1.0.0",
     "pyyaml>=6.0.3",
     "defusedxml>=0.7.1",
 ]
@@ -32,3 +34,6 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "integration: real network/data pilot acceptance tests (uv run pytest -m integration)",
+]

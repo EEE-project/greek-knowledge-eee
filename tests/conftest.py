@@ -1,10 +1,17 @@
 """Shared pytest fixtures for okfbuild's test suite."""
 
+import os
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
 
 from okfbuild.sources import SourceBundle
+from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
+from okfbuild.sources.lsj_index import LSJIndex
+from okfbuild.sources.morpheus_client import MorpheusClient
+from okfbuild.sources.wiktextract_index import WiktextractIndex
+from okfbuild.sources import wikipedia_client
 
 
 def _eee_engine_stub(attested_lemmas: set[str]):
@@ -45,3 +52,128 @@ def make_source_bundle():
         )
 
     return _make
+
+
+# --- section-07 pilot: real (non-fixture) fixtures -------------------------
+#
+# Everything below wires REAL source clients against REAL sibling-repo data
+# for the pilot acceptance run (tests/test_pilot_acceptance.py), as opposed
+# to make_source_bundle's synthetic stubs above. See section-07-pilot.md's
+# "Preparing the real inputs" for the source of every path/decision here.
+
+
+@pytest.fixture(scope="session")
+def repo_root() -> Path:
+    """This checkout's own root. out_dir for the pilot run IS this repo —
+    the pipeline writes real words/grammar/culture files here, and running
+    the acceptance test is how those files get generated; a human reviews
+    the resulting git diff before committing."""
+    return Path(__file__).parent.parent
+
+
+@pytest.fixture(scope="session")
+def created_with_eee_root(repo_root: Path) -> Path:
+    """Locate the sibling created_with_eee checkout (lesson content lives
+    there, not in this repo). Resolution order: a CREATED_WITH_EEE_PATH env
+    var, else the conventional sibling-checkout layout (both repos under
+    the same EEE-project/ parent directory)."""
+    env_path = os.environ.get("CREATED_WITH_EEE_PATH")
+    candidate = Path(env_path) if env_path else repo_root.parent / "created_with_eee"
+    if not candidate.is_dir():
+        pytest.skip(f"created_with_eee checkout not found at {candidate} (set CREATED_WITH_EEE_PATH)")
+    return candidate
+
+
+@pytest.fixture(scope="session")
+def real_source_bundle(repo_root: Path) -> SourceBundle:
+    """Wires the REAL (non-fixture, non-mocked) section-03 clients.
+
+    Backend registration is this fixture's own responsibility (eee_engine.py's
+    module docstring: "Backend registration... is the caller's
+    responsibility") — registers named "homeric"/"attic" AncientGreekBackend
+    variants (see docs/api-patterns.md's for_period() example) plus a plain
+    ModernGreekBackend for "el", matching lexical_entry.build()'s expected
+    backend names exactly.
+
+    lsj is deliberately an empty LSJIndex({}), not a real downloaded Perseus
+    dump: none of the three concept builders needed for this pilot's
+    required deliverables (lexical_entry / grammatical_rule /
+    cultural_context) ever read sources.lsj — confirmed by reading all three
+    modules directly, not assumed. Downloading and parsing the 27 real LSJ
+    TEI-XML files would add real time/disk cost for zero effect on this
+    pilot's actual output.
+
+    wiktextract loads the real kaikki.org el-extract.jsonl dump if present
+    (a one-time download, see data/wiktextract/README.md), filtered to
+    lang_code="el" — see wiktextract_index.py's lang_code parameter, added
+    by this section after discovering the real dump has both an "el" and a
+    "grc" section for shared headwords like νόστος, and the unfiltered
+    loader silently kept whichever sorted last (grc), which would have
+    mislabeled Ancient-Greek glosses as the Modern-period citation. Falls
+    back to an empty index (not a skip) if the dump isn't downloaded — the
+    modern-period section can still be satisfied by eee_engine's own
+    Modern Greek inflection alone; wiktextract is enrichment, not a hard
+    requirement, for νόστος specifically."""
+    # Checked first, before any backend registration or directory creation
+    # below — a missing lexicon should skip cleanly with no side effects.
+    byzantine_yaml = (
+        repo_root.parent / "greek-inflexion-eee" / "src" / "greek_inflexion_eee" / "data" / "byzantine_verbs_lexicon.yaml"
+    )
+    if not byzantine_yaml.is_file():
+        pytest.skip(f"greek-inflexion-eee byzantine lexicon not found at {byzantine_yaml}")
+    byzantine_forms = load_byzantine_forms(byzantine_yaml)
+
+    from ancient_greek_backend_eee import AncientGreekBackend
+    from modern_greek_backend_eee import ModernGreekBackend
+    import eee_project as eee
+    from okfbuild.sources import eee_engine as eee_engine_wrapper
+
+    eee.register_backend("grc", AncientGreekBackend.for_period("epic"), backend="homeric")
+    eee.register_backend("grc", AncientGreekBackend.for_period("attic"), backend="attic")
+    eee.register_backend("el", ModernGreekBackend())
+
+    morpheus = MorpheusClient(cache_dir=repo_root / "data" / "morpheus-cache")
+
+    wiktextract_jsonl = repo_root / "data" / "wiktextract" / "el-extract.jsonl"
+    wiktextract = (
+        WiktextractIndex.load(wiktextract_jsonl, lang_code="el") if wiktextract_jsonl.is_file() else WiktextractIndex({})
+    )
+
+    return SourceBundle(
+        eee_engine=eee_engine_wrapper,
+        morpheus=morpheus,
+        byzantine_forms=byzantine_forms,
+        wiktextract=wiktextract,
+        lsj=LSJIndex({}),
+        wikipedia=wikipedia_client,
+    )
+
+
+@pytest.fixture(scope="session")
+def pilot_build_report(repo_root, real_source_bundle, created_with_eee_root):
+    """The single real pipeline.run() call every test in
+    test_pilot_acceptance.py reads its result from — session-scoped so the
+    expensive, network-touching real run happens once per test session.
+    course_paths / grammar_rules / cultural_topics are the curated pilot
+    inputs from section-07-pilot.md's "Preparing the real inputs"."""
+    from okfbuild import pipeline
+    from okfbuild.pilot_content import CULTURAL_TOPICS, GRAMMAR_RULES, enrich_nostos_with_beekes
+
+    course_paths = [
+        created_with_eee_root / "ancient_greek" / "odyssey",
+        created_with_eee_root / "modern_greek" / "b1greeklanguageandculture" / "kavafis_ithaki",
+    ]
+
+    report = pipeline.run(
+        course_paths,
+        out_dir=repo_root,
+        sources=real_source_bundle,
+        grammar_rules=GRAMMAR_RULES,
+        cultural_topics=CULTURAL_TOPICS,
+    )
+    # Adds the Etymology section pipeline.run()'s own auto-extraction loop
+    # has no way to supply (see enrich_nostos_with_beekes's own docstring).
+    # Runs after the main report so a failure here doesn't hide whether the
+    # bulk run itself succeeded.
+    enrich_nostos_with_beekes(repo_root, real_source_bundle)
+    return report

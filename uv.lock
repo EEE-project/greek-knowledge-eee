@@ -3,6 +3,18 @@ revision = 3
 requires-python = ">=3.12"
 
 [[package]]
+name = "ancient-greek-backend-eee"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "greek-inflexion-eee" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/93/91/728ff92d8d69cb5014aa57c4763a73427851321e161e660a15fa1456b607/ancient_greek_backend_eee-2.0.0.tar.gz", hash = "sha256:66ecbfa037d1ca7ff74eb4cb3e227e62c3bab72392f5460bd5d663e85a408417", size = 73687, upload-time = "2026-07-31T16:59:22.379Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/95/08/3ef76e57ea00bce57f344ba66c8165d48eb8485a3e35f63c9f54bd278e7d/ancient_greek_backend_eee-2.0.0-py3-none-any.whl", hash = "sha256:c05bafbb2aa015d609204f110f626568d2ab6b001a6c80db15c829ff5bae46b6", size = 25960, upload-time = "2026-07-31T16:59:21.188Z" },
+]
+
+[[package]]
 name = "anyio"
 version = "4.14.2"
 source = { registry = "https://pypi.org/simple" }
@@ -196,12 +208,37 @@ wheels = [
 ]
 
 [[package]]
+name = "greek-accentuation"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/aa/d1/2150028806ed6a9c0e7454251c367e59c38acb0cff88b9be557db9caa3ed/greek-accentuation-1.2.0.tar.gz", hash = "sha256:9761d95ddaa52ee6efcb66d68616556063291740d754a4c315e864706179c5d9", size = 4530, upload-time = "2017-03-21T09:52:50.068Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/be/91/cb02996626f43c2adbd2a6e964ddf3b5893a8ee5c2134a5dac66dd70306e/greek_accentuation-1.2.0-py2.py3-none-any.whl", hash = "sha256:d778afe55c64253938710715b5f0d648ec3361deaef136648d616d671989f841", size = 6768, upload-time = "2017-03-21T09:52:52.052Z" },
+]
+
+[[package]]
+name = "greek-inflexion-eee"
+version = "3.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "greek-accentuation" },
+    { name = "inflexion" },
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/51/81/43e9b250b9468ace2ae4c293a8884a54bddcae5b9d200de012c26678db68/greek_inflexion_eee-3.0.0.tar.gz", hash = "sha256:4431a594d47e6790e553dbe13c09639d42fd0c0d201b4123b2e8f87b2a124a9f", size = 725027, upload-time = "2026-07-31T16:46:02.846Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0a/09/8a829190a5e32cb78ffbce90602237e490a2711b39d2c499651ebe7e6266/greek_inflexion_eee-3.0.0-py3-none-any.whl", hash = "sha256:e66ab2f0248af06b6a5ac149ebc7ddca5465d8411070eb33f04409bdfde80daa", size = 179112, upload-time = "2026-07-31T16:46:01.316Z" },
+]
+
+[[package]]
 name = "greek-knowledge-eee"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "ancient-greek-backend-eee" },
     { name = "defusedxml" },
     { name = "eee-project" },
+    { name = "modern-greek-backend-eee" },
     { name = "pyyaml" },
 ]
 
@@ -212,8 +249,10 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "ancient-greek-backend-eee", specifier = ">=2.0.0" },
     { name = "defusedxml", specifier = ">=0.7.1" },
     { name = "eee-project", specifier = "==1.6.0" },
+    { name = "modern-greek-backend-eee", specifier = ">=1.0.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
 ]
 
@@ -236,6 +275,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/cd/63/9496c57188a2ee585e0f1db071d75089a11e98aa86eb99d9d7618fc1edce/idna-3.18.tar.gz", hash = "sha256:ffb385a7e039654cef1ab9ef32c6fafe283c0c0467bba1d9029738ce4a14a848", size = 196711, upload-time = "2026-06-02T14:34:07.794Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1e/5e/d4e9f1a599fb8e573b7b87160658329fbf28d19eac2718f51fc3def3aa5a/idna-3.18-py3-none-any.whl", hash = "sha256:7f952cbe720b688055e3f87de14f5c3e5fdaa8bc3928985c4077ca689de849a2", size = 65455, upload-time = "2026-06-02T14:34:06.319Z" },
+]
+
+[[package]]
+name = "inflexion"
+version = "0.8.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/69/7ce0fa7a893d39f8ef3a7360719126019b1914f8d9f5aaf029e71e520865/inflexion-0.8.0.tar.gz", hash = "sha256:c3aee42357be4860434a51334fd2df1d3c4c4652a197ec92e94b33fb2cf1e0d6", size = 2861, upload-time = "2016-12-23T03:35:15.197Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ba/e1/6b884cf459c89b35812926753a5937b2f72e1ae35c5e05cc7f91bc2a9ffb/inflexion-0.8.0-py3-none-any.whl", hash = "sha256:90fefbc52d990d2c2a32b2b8e02ff31c4c0c98b471b207feadd40098980a508d", size = 5145, upload-time = "2016-12-23T03:35:18.583Z" },
 ]
 
 [[package]]
@@ -435,6 +483,39 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/bd/c0/9f7c9a46090390368a4d7bcb76bb87a4a36c421e4c0792cdb53486ffac7a/matplotlib_inline-0.2.2.tar.gz", hash = "sha256:72f3fe8fce36b70d4a5b612f899090cd0401deddc4ea90e1572b9f4bfb058c79", size = 8150, upload-time = "2026-05-08T17:33:33.49Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/41/09/5b161152e2d90f7b87f781c2e1267494aef9c32498df793f73ad0a0a494a/matplotlib_inline-0.2.2-py3-none-any.whl", hash = "sha256:3c821cf1c209f59fb2d2d64abbf5b23b67bcb2210d663f9918dd851c6da1fcf6", size = 9534, upload-time = "2026-05-08T17:33:32.055Z" },
+]
+
+[[package]]
+name = "modern-greek-accentuation-eee"
+version = "1.0.10"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/8b/74/a18fc7586a3de9ddce64c702da5c97a35d672c415ae00ea9be18a977af74/modern_greek_accentuation_eee-1.0.10.tar.gz", hash = "sha256:d934824de70aedd56aa53b2fd5a6327af23cf96c0be2cceae495a82ba6525a96", size = 18614, upload-time = "2026-07-29T11:03:23.768Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/30/d6/66c9de429a2770a450f709fe36de376b936d43da6d273b0ef6677307614c/modern_greek_accentuation_eee-1.0.10-py3-none-any.whl", hash = "sha256:af2b12378e5148355f46d8e63f6e1cba6db7c903032ea484ddb5941c379a5560", size = 18890, upload-time = "2026-07-29T11:03:22.422Z" },
+]
+
+[[package]]
+name = "modern-greek-backend-eee"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "modern-greek-inflexion-eee" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ac/9f/ad1a73d0735ac03f3bbe032d24911e2afb0aa129d41e61895cfe2c345c1c/modern_greek_backend_eee-1.0.0.tar.gz", hash = "sha256:fd2806a0e64c371ed55a384b989313aaf7b8ded2dc38ee11ad303c99909e8571", size = 54191, upload-time = "2026-07-29T18:51:49.112Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/85/6b/fbc6b690257b6ea6199bd408bbbfbef35d257dd789fe3c2b4f0a65c2027c/modern_greek_backend_eee-1.0.0-py3-none-any.whl", hash = "sha256:9989b1c38f78ce8f45f8badf27b6ea4271b09971da4b9937d0ec4d861e186490", size = 17959, upload-time = "2026-07-29T18:51:47.905Z" },
+]
+
+[[package]]
+name = "modern-greek-inflexion-eee"
+version = "2.1.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "modern-greek-accentuation-eee" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/92/ce/6ffbd528a3e525232a29ade0aa0e885918a3d85d540206ee9933a9b3ea99/modern_greek_inflexion_eee-2.1.4.tar.gz", hash = "sha256:24763326c6b8f8afd9bb7aa4227d474472f3a73bee22e9f365069a8007c3d80c", size = 9434054, upload-time = "2026-08-09T20:55:20.269Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c6/53/d76702883e7e933c3edb83f6170587e97ad07221c838734527e51dc80bf3/modern_greek_inflexion_eee-2.1.4-py3-none-any.whl", hash = "sha256:d99b1b606e181cdd837067864e3753034085edafb90479cf5a5188f28d71adfb", size = 9743764, upload-time = "2026-08-09T20:55:17.854Z" },
 ]
 
 [[package]]
