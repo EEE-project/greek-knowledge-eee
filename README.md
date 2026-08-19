@@ -77,9 +77,13 @@ uv run --all-extras --dev python -m pytest
 
 `uv run pytest` with no flags also runs the pilot's real acceptance suite
 (`tests/test_pilot_acceptance.py`, marked `integration`) — it needs a
-sibling `created_with_eee` checkout, a downloaded Wiktextract dump
-(`data/wiktextract/README.md`), and live network access (Perseids Morpheus,
-Wikipedia), and takes several minutes. For a fast unit-test-only run:
+sibling `created_with_eee` checkout and live network access (Perseids
+Morpheus, Wikipedia). A downloaded Wiktextract dump
+(`data/wiktextract/README.md`) is only needed the first time, or when a
+course adds a lemma not already in `data/wiktextract-cache/` (git-tracked,
+covers everything the current pilot's 2 courses use) — with a warm cache,
+a run takes seconds; a cold one (resolving new lemmas against the full raw
+dump) takes several minutes. For a fast unit-test-only run:
 ```bash
 uv run pytest -m "not integration"
 ```

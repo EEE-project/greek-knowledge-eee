@@ -5,7 +5,7 @@ from types import ModuleType
 
 from okfbuild.sources.lsj_index import LSJIndex
 from okfbuild.sources.morpheus_client import MorpheusClient
-from okfbuild.sources.wiktextract_index import WiktextractIndex
+from okfbuild.sources.wiktextract_index import CachedWiktextractIndex, WiktextractIndex
 
 
 @dataclass
@@ -20,6 +20,6 @@ class SourceBundle:
     eee_engine: ModuleType
     morpheus: MorpheusClient
     byzantine_forms: dict[str, dict[str, "str | list[str]"]]
-    wiktextract: WiktextractIndex
+    wiktextract: "WiktextractIndex | CachedWiktextractIndex"
     lsj: LSJIndex
     wikipedia: ModuleType

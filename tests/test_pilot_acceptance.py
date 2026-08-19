@@ -62,6 +62,18 @@ def test_grammatical_rule_cites_newly_mined_osan_pattern(pilot_build_report, rep
     assert any(form in line and "[^" in line for form in osan_forms for line in lines), lines
 
 
+def test_wiktextract_lookups_are_cached_not_just_in_memory(pilot_build_report, repo_root):
+    # Proves the real fixture wiring uses CachedWiktextractIndex (not
+    # WiktextractIndex.load(), which never touches disk) -- a regression
+    # here wouldn't be caught by wiktextract_index.py's own unit tests,
+    # which construct CachedWiktextractIndex directly, not via conftest.py.
+    cache_dir = repo_root / "data" / "wiktextract-cache"
+    assert cache_dir.is_dir() and any(cache_dir.glob("*.json")), (
+        "expected data/wiktextract-cache/ to hold at least one resolved lemma "
+        "after a real pilot run"
+    )
+
+
 def test_cross_link_resolves_to_real_file(pilot_build_report, repo_root):
     culture_path = repo_root / "culture" / "cavafy.md"
     assert culture_path.is_file()

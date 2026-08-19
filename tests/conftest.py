@@ -10,7 +10,7 @@ from okfbuild.sources import SourceBundle
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 from okfbuild.sources.lsj_index import LSJIndex
 from okfbuild.sources.morpheus_client import MorpheusClient
-from okfbuild.sources.wiktextract_index import WiktextractIndex
+from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
 from okfbuild.sources import wikipedia_client
 
 
@@ -103,14 +103,17 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     TEI-XML files would add real time/disk cost for zero effect on this
     pilot's actual output.
 
-    wiktextract loads the real kaikki.org el-extract.jsonl dump if present
-    (a one-time download, see data/wiktextract/README.md), filtered to
+    wiktextract is a CachedWiktextractIndex: lemmas already resolved on a
+    prior run come from data/wiktextract-cache/ (small, git-tracked) with no
+    need for the raw dump at all; a genuinely new lemma falls back to the
+    real kaikki.org el-extract.jsonl dump if present locally (a one-time,
+    gitignored download, see data/wiktextract/README.md), filtered to
     lang_code="el" — see wiktextract_index.py's lang_code parameter, added
     by this section after discovering the real dump has both an "el" and a
     "grc" section for shared headwords like νόστος, and the unfiltered
     loader silently kept whichever sorted last (grc), which would have
-    mislabeled Ancient-Greek glosses as the Modern-period citation. Falls
-    back to an empty index (not a skip) if the dump isn't downloaded — the
+    mislabeled Ancient-Greek glosses as the Modern-period citation. A cache
+    miss with no dump available returns None rather than skipping — the
     modern-period section can still be satisfied by eee_engine's own
     Modern Greek inflection alone; wiktextract is enrichment, not a hard
     requirement, for νόστος specifically."""
@@ -135,8 +138,10 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     morpheus = MorpheusClient(cache_dir=repo_root / "data" / "morpheus-cache")
 
     wiktextract_jsonl = repo_root / "data" / "wiktextract" / "el-extract.jsonl"
-    wiktextract = (
-        WiktextractIndex.load(wiktextract_jsonl, lang_code="el") if wiktextract_jsonl.is_file() else WiktextractIndex({})
+    wiktextract = CachedWiktextractIndex(
+        cache_dir=repo_root / "data" / "wiktextract-cache",
+        jsonl_path=wiktextract_jsonl if wiktextract_jsonl.is_file() else None,
+        lang_code="el",
     )
 
     return SourceBundle(

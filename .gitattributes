@@ -1,2 +1,1 @@
 data/lsj/*.xml filter=lfs diff=lfs merge=lfs -text
-data/wiktextract/*.jsonl filter=lfs diff=lfs merge=lfs -text

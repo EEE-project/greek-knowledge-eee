@@ -15,6 +15,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+from okfbuild.sources.disk_cache import KeyedJsonCache
+
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://services.perseids.org/bsp/morphologyservice/analysis/word"
@@ -35,12 +37,8 @@ def _text_of(x):
 
 class MorpheusClient:
     def __init__(self, cache_dir: Path):
-        self.cache_dir = Path(cache_dir)
-        self.cache_dir.mkdir(parents=True, exist_ok=True)
-
-    def _cache_path(self, word: str) -> Path:
-        safe = urllib.parse.quote(word, safe="")
-        return self.cache_dir / f"{safe}.json"
+        self._cache = KeyedJsonCache(cache_dir)
+        self.cache_dir = self._cache.cache_dir
 
     def analyze(self, word: str, lang: str = "grc") -> list[dict]:
         """Query (or read from local cache) Morpheus's analysis for `word`.
@@ -55,10 +53,8 @@ class MorpheusClient:
         can treat a Morpheus miss uniformly whether it's "no entry" or
         "request failed" for what is enrichment data, not a hard
         dependency."""
-        cache_file = self._cache_path(word)
-        if cache_file.exists():
-            raw = json.loads(cache_file.read_text(encoding="utf-8"))
-        else:
+        hit, raw = self._cache.read(word)
+        if not hit:
             encoded = urllib.parse.quote(word)
             url = f"{BASE_URL}?word={encoded}&lang={lang}&engine={_ENGINE}"
             try:
@@ -68,7 +64,7 @@ class MorpheusClient:
             except Exception as e:
                 logger.warning("Morpheus request failed for %r: %s", word, e)
                 return []
-            cache_file.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
+            self._cache.write(word, raw)
             time.sleep(_REQUEST_DELAY)
 
         return self._parse_entries(raw)
