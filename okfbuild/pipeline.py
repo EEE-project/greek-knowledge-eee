@@ -5,6 +5,8 @@ files under out_dir/{words,grammar,culture}.
 """
 
 import csv
+import logging
+import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
@@ -13,7 +15,38 @@ from okfbuild.concepts import cultural_context, grammatical_rule, lexical_entry
 from okfbuild.okf import ConceptFile
 from okfbuild.sources import SourceBundle
 
+logger = logging.getLogger(__name__)
+
 _ALL_PERIODS = ["homeric", "attic", "byzantine", "modern"]
+
+_FILENAME_TO_POS: dict[str, str] = {
+    "nouns.tsv": "noun",
+    "verbs.tsv": "verb",
+    "verbs+.tsv": "verb",
+    "adjectives.tsv": "adj",
+    "adjs.tsv": "adj",
+    "pronouns.tsv": "pronoun",
+    "particles.tsv": "particle",
+    "cap1_particles.tsv": "particle",
+}
+
+_VOCABULARY_TYPE_TO_POS: dict[str, str] = {
+    "noun": "noun",
+    "verb": "verb",
+    "adjective": "adj",
+    "adverb": "adv",
+    "pronoun": "pronoun",
+}
+
+# Confirmed, catalogued Type values that intentionally skip (multi-word
+# idioms, or no usable POS signal) -- distinct from a genuinely
+# unrecognized value, so these must not trigger the "unrecognized" warning.
+_VOCABULARY_TYPE_KNOWN_SKIP = {"phrase", "adverb phrase", "literary term"}
+
+_SINGULAR_ARTICLES = {"ο", "η", "το", "ὁ", "ἡ", "τό", "τὸ"}
+_PLURAL_ARTICLES = {"οι", "τα", "τις"}
+
+_LANGUAGE_SUFFIX_RE = re.compile(r"_[a-z]{2}\.tsv$")
 
 
 @dataclass
@@ -63,22 +96,100 @@ def _slugify(text: str) -> str:
     return text.strip().lower().replace(" ", "-")
 
 
+def _resolve_noun_lemma(word: str) -> str | None:
+    """Returns the lemma to use for a noun-typed Word value, or None if
+    this row should be skipped entirely (starts with a plural article --
+    the pluralia tantum risk: e.g. "τα σκουπίδια" (garbage) has no natural
+    singular, so stripping "τα" would fabricate a false, possibly
+    non-existent singular lemma).
+
+    - Starts with a token in _SINGULAR_ARTICLES: strip it, return the
+      remainder.
+    - Starts with a token in _PLURAL_ARTICLES: return None (skip).
+    - Neither: return word unchanged (a bare lemma with no article, e.g.
+      "παροιμία" -- confirmed a real, valid case, not an error)."""
+    parts = word.split(maxsplit=1)
+    if len(parts) == 2 and parts[0] in _SINGULAR_ARTICLES:
+        return parts[1]
+    if len(parts) == 2 and parts[0] in _PLURAL_ARTICLES:
+        return None
+    return word
+
+
+def _read_word_translation_row(row: dict, filename: str, pos: str) -> _LexicalCandidate | None:
+    """Build a candidate from one Word/Translation-format row already
+    resolved to a `pos`, or None if this row should be skipped (empty
+    Word, or a noun-typed row starting with a plural article -- logged
+    here since the caller already has `filename` for context)."""
+    word = (row.get("Word") or "").strip()
+    if not word:
+        return None
+    lemma = word
+    if pos == "noun":
+        lemma = _resolve_noun_lemma(word)
+        if lemma is None:
+            logger.warning("Skipping pluralia-tantum-risk row %r in %s (plural article, no safe singular)", word, filename)
+            return None
+    return _LexicalCandidate(lemma=lemma, pos=pos, level=[], tags=[])
+
+
 def _read_vocabulary_candidates(course_path: Path) -> list[_LexicalCandidate]:
     """Read every *.tsv under course_path (searched recursively — real
-    courses nest one vocabulary file per chapter) expecting a header row
-    with lemma/pos/level/tags columns. `level` and `tags` are semicolon-
-    separated; both may be empty. Exact real-course TSV layout is confirmed
-    in section-07; this shape is this section's own fixture convention."""
+    courses nest one vocabulary file per chapter). Each file is dispatched
+    per its own header/filename shape:
+
+    1. A `lemma` column present -> the reading-course format
+       (lemma/pos/level/tags, semicolon-separated level/tags).
+    2. A `_XX.tsv` language-suffix filename -> skipped quietly (a
+       translation twin of a sibling file, e.g. nouns_ru.tsv).
+    3. Exactly `vocabulary.tsv` -> Word/Translation/Type format, pos from
+       the per-row Type column via _VOCABULARY_TYPE_TO_POS.
+    4. Filename is a key in _FILENAME_TO_POS -> Word/Translation format,
+       pos fixed per file.
+    5. Anything else -> skipped, with a warning (an unrecognized vocab
+       file this code doesn't know how to read yet)."""
     candidates = []
     for tsv_path in sorted(course_path.rglob("*.tsv")):
         with tsv_path.open(newline="", encoding="utf-8") as fh:
-            for row in csv.DictReader(fh, delimiter="\t"):
-                lemma = (row.get("lemma") or "").strip()
-                if not lemma:
-                    continue
-                level = [part for part in (row.get("level") or "").split(";") if part]
-                tags = [part for part in (row.get("tags") or "").split(";") if part]
-                candidates.append(_LexicalCandidate(lemma=lemma, pos=(row.get("pos") or "").strip(), level=level, tags=tags))
+            reader = csv.DictReader(fh, delimiter="\t")
+            if reader.fieldnames and "lemma" in reader.fieldnames:
+                for row in reader:
+                    lemma = (row.get("lemma") or "").strip()
+                    if not lemma:
+                        continue
+                    level = [part for part in (row.get("level") or "").split(";") if part]
+                    tags = [part for part in (row.get("tags") or "").split(";") if part]
+                    candidates.append(
+                        _LexicalCandidate(lemma=lemma, pos=(row.get("pos") or "").strip(), level=level, tags=tags)
+                    )
+                continue
+
+            if _LANGUAGE_SUFFIX_RE.search(tsv_path.name):
+                logger.info("Skipping translation-twin vocabulary file %r in %s", tsv_path.name, course_path)
+                continue
+
+            if tsv_path.name == "vocabulary.tsv":
+                for row in reader:
+                    type_value = (row.get("Type") or "").strip()
+                    normalized = type_value.split(" (")[0]
+                    pos = _VOCABULARY_TYPE_TO_POS.get(normalized)
+                    if pos is None:
+                        if type_value and normalized not in _VOCABULARY_TYPE_KNOWN_SKIP:
+                            logger.warning("Unrecognized vocabulary Type %r in %s", type_value, tsv_path.name)
+                        continue
+                    candidate = _read_word_translation_row(row, tsv_path.name, pos)
+                    if candidate is not None:
+                        candidates.append(candidate)
+                continue
+
+            pos = _FILENAME_TO_POS.get(tsv_path.name)
+            if pos is None:
+                logger.warning("Unrecognized vocabulary file %r in %s", tsv_path.name, course_path)
+                continue
+            for row in reader:
+                candidate = _read_word_translation_row(row, tsv_path.name, pos)
+                if candidate is not None:
+                    candidates.append(candidate)
     return candidates
 
 
