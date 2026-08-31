@@ -1,20 +1,17 @@
 # greek-knowledge-eee
 
 A Greek language & culture knowledge base in Google's Open Knowledge
-Format (OKF v0.2) for the Ελληνικά Εκπαιδευτικά Εργαλεία (EEE) — Greek
-Language Educational Tools project. Built by a batch pipeline that reads
-this project's own lesson materials (starting with the Odyssey and
-Kavafis Ithaki courses; the remaining EEE courses are future work) and
-queries the EEE morphology engine plus several external linguistic
-sources, producing plain, checked-in markdown files with YAML-frontmatter
+Format (OKF v0.2), built on the Ελληνικά Εκπαιδευτικά Εργαλεία (EEE) —
+Greek Language Educational Tools — morphology engine. A standalone
+personal/research project, not (yet) part of the EEE-project org. Built
+by a batch pipeline that reads EEE course lesson materials (starting
+with the Odyssey and Kavafis Ithaki courses) and queries the EEE
+morphology engine plus several external linguistic sources, producing
+plain, checked-in markdown files with YAML-frontmatter
 provenance/citation metadata that a person or an AI agent can read
-directly — the same way this org's other repos are already read via their
-own README/CLAUDE.md/docs.
+directly.
 
-🔓 Open source:
-- prod — https://github.com/EEE-project/greek-knowledge-eee
-- prod mirror — https://gitlab.com/EEE-project/greek-knowledge-eee
-- dev — https://codeberg.org/EEE-project/greek-knowledge-eee
+🔓 Open source: https://codeberg.org/sadov/greek-knowledge-eee
 
 💬 Community: https://telegram.me/eee_greek
 
@@ -25,7 +22,7 @@ This repo is not a library other packages import — it's cloned and run
 directly to (re)generate the knowledge base content:
 
 ```bash
-git clone https://codeberg.org/EEE-project/greek-knowledge-eee.git
+git clone https://codeberg.org/sadov/greek-knowledge-eee.git
 cd greek-knowledge-eee
 uv sync --dev
 ```
