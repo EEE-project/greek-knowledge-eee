@@ -12,11 +12,21 @@ dependencies = [
     "modern-greek-backend-eee>=1.0.0",
     "pyyaml>=6.0.3",
     "defusedxml>=0.7.1",
+    "llm-backend-eee",
 ]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+# llm-backend-eee is not published to PyPI (confirmed: pypi.org/pypi/llm-backend-eee/json
+# returns 404) -- only available via Codeberg. Pinned to the v0.2.1 tag (not a bare
+# unpinned URL) because this integration relies on a specific method signature/return-type
+# contract (LLMBackend.inflect(lemma, features, pos, language=...) -> set[str]); an
+# unpinned default-branch dependency would let a future commit silently change that
+# contract out from under this code.
+[tool.uv.sources]
+llm-backend-eee = { git = "https://codeberg.org/EEE-project/llm-backend-eee", tag = "v0.2.1" }
 
 # Deliberate deviation from this org's usual `src/<pkg_name>` layout: this
 # repo's own code lives at `okfbuild/` (repo root), matching the directory
