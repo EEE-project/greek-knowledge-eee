@@ -60,6 +60,9 @@ footnote-cited back to a `sources[]` frontmatter entry. See
 | Wiktextract (kaikki.org) | Modern + Ancient Greek dictionary data | [`references/sources/wiktextract.md`](references/sources/wiktextract.md) |
 | Wikipedia | Cultural/biographical context | [`references/sources/wikipedia.md`](references/sources/wikipedia.md) |
 | Beekes' EDG | Indo-European etymology, word families (hand-curated, no bulk access) | [`references/sources/beekes.md`](references/sources/beekes.md) |
+| Thesaurus Linguae Graecae (TLG) | Canonical Greek text library, Homer–Byzantine (subscription-only, not integrated) | [`references/sources/tlg.md`](references/sources/tlg.md) |
+| Patrologia Graeca corpus (GREgORI/Calfa) | Late-antique/Byzantine Greek text, ~6M words, ~1% CER (not yet integrated) | [`references/sources/patrologia-graeca.md`](references/sources/patrologia-graeca.md) |
+| ancientrome.ru | Greek author index + Dvoretsky Greek-Russian dictionary listing (finding aid, not integrated) | [`references/sources/ancientrome-ru.md`](references/sources/ancientrome-ru.md) |
 
 
 ## Development
