@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from types import ModuleType
 
+from okfbuild.sources.llm_gap_filler import GapFillerConfig
 from okfbuild.sources.lsj_index import LSJIndex
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex, WiktextractIndex
@@ -13,7 +14,7 @@ class SourceBundle:
     """Bundles one instance/handle of each source client, for concept
     builders (okfbuild/concepts/*.py) to consume. eee_engine and wikipedia
     are the respective modules themselves (accessed as
-    sources.eee_engine.inflect_all_attested(...) /
+    sources.eee_engine.collect_slot_forms(...) /
     sources.wikipedia.summary(...)), not bare functions, since concept
     builders call them via dotted attribute access."""
 
@@ -23,3 +24,4 @@ class SourceBundle:
     wiktextract: "WiktextractIndex | CachedWiktextractIndex"
     lsj: LSJIndex
     wikipedia: ModuleType
+    llm_gap_filler: "GapFillerConfig | None" = None

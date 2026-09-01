@@ -353,4 +353,11 @@ def fill_gap(
             )
 
     cache.set(key, result)
-    return result
+    # Returns via cache.get(), not the local `result` object directly:
+    # `result` is the exact instance now stored internally, so returning it
+    # as-is would hand the caller a live alias into the cache's own storage
+    # -- get()'s defensive copy (see its docstring) only protects a HIT
+    # against this; without going through it here too, the very first,
+    # uncopied caller on a MISS could mutate `.forms` in place and silently
+    # corrupt this cache entry for every future hit.
+    return cache.get(key)

@@ -415,6 +415,27 @@ def test_gap_fill_cache_different_model_config_is_a_cache_miss(monkeypatch):
     assert len(constructed) == 2
 
 
+def test_gap_fill_cache_miss_return_value_does_not_alias_internal_storage(monkeypatch):
+    """A cache MISS returns the exact object fill_gap() just handed to
+    cache.set() -- if that return value isn't a copy, a caller mutating
+    it in place (result.forms.add(...)) would silently corrupt the
+    cache's own stored entry for every future hit on that key."""
+    monkeypatch.setenv("TEST_KEY_A", "secret")
+    config = GapFillerConfig(models=(_model(),), samples_per_model=1)
+    cache = GapFillCache()
+
+    with patch(
+        "okfbuild.sources.llm_gap_filler.LLMBackend", side_effect=_mock_backend(forms={"form"})
+    ):
+        first = fill_gap("lemma", {}, "noun", "grc", config, cache)
+
+    first.forms.add("mutated-in-place")
+
+    key = cache.make_key("lemma", {}, "noun", "grc", config)
+    stored = cache.get(key)
+    assert "mutated-in-place" not in stored.forms
+
+
 # --- Request budget -------------------------------------------------------
 
 
