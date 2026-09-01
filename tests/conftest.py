@@ -14,6 +14,55 @@ from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
 from okfbuild.sources import wikipedia_client
 
+pytest_plugins = ["pytester"]
+
+PAID_LLM_CONFIRM_VAR = "GREEK_KNOWLEDGE_RUN_PAID_LLM_TESTS"
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--run-paid-llm-tests",
+        action="store_true",
+        default=False,
+        help="run tests marked paid_llm_api (issues real, billed LLM API calls)",
+    )
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--run-paid-llm-tests"):
+        return
+    skip_paid = pytest.mark.skip(reason="need --run-paid-llm-tests to run paid_llm_api tests")
+    for item in items:
+        if "paid_llm_api" in item.keywords:
+            item.add_marker(skip_paid)
+
+
+def require_paid_llm_gate(key_env_var: str) -> None:
+    """The actual paid-LLM-API enforcement boundary. Call this from inside
+    any fixture that is about to construct a real LLM client or issue a
+    real, billed call -- BEFORE that construction happens -- regardless of
+    how the calling test was invoked (marker selection, --run-paid-llm-tests,
+    or anything else). Skips (pytest.skip -- never raises/errors) unless
+    BOTH, independently:
+      - key_env_var is set in the environment to a non-empty,
+        non-whitespace-only value (layer 2).
+      - GREEK_KNOWLEDGE_RUN_PAID_LLM_TESTS is set to exactly "1" -- not
+        merely truthy; "0"/"false"/anything else does NOT satisfy this
+        (layer 3).
+    Distinguishable skip messages for each failure case -- see
+    tests/test_paid_llm_gating.py. This is the real security boundary,
+    not the marker/CLI-flag layer above -- a fixture that calls this first
+    genuinely cannot construct anything real unless both checks pass, no
+    matter how the test got collected/selected in the first place."""
+    value = os.environ.get(key_env_var, "").strip()
+    if not value:
+        pytest.skip(f"paid LLM tests require {key_env_var} to be set (real, billed API key)")
+    confirm = os.environ.get(PAID_LLM_CONFIRM_VAR, "")
+    if confirm != "1":
+        pytest.skip(
+            f"paid LLM tests require {PAID_LLM_CONFIRM_VAR}=1 (explicit opt-in to real, billed API calls)"
+        )
+
 
 def _eee_engine_stub(attested_lemmas: set[str]):
     """Lemma-aware stub for SourceBundle.eee_engine: lemmas in

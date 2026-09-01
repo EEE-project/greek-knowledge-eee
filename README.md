@@ -96,3 +96,14 @@ To run only the pilot acceptance suite:
 ```bash
 uv run pytest -m integration
 ```
+
+Some tests under `integration` additionally call a real, billed LLM API
+and are further gated behind their own `paid_llm_api` marker — running
+them requires all of: the `--run-paid-llm-tests` flag, a real API key set
+in the environment variable the test names, AND
+`GREEK_KNOWLEDGE_RUN_PAID_LLM_TESTS=1` set exactly (not `"0"`/`"true"`/
+anything else). Any one of these missing causes a clean skip, never a
+silent real charge:
+```bash
+uv run pytest --run-paid-llm-tests -m "integration and paid_llm_api"
+```

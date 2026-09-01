@@ -46,4 +46,5 @@ dev = [
 testpaths = ["tests"]
 markers = [
     "integration: real network/data pilot acceptance tests (uv run pytest -m integration)",
+    "paid_llm_api: tests that call a real, billed LLM API -- gated by --run-paid-llm-tests plus env vars, see README (uv run pytest --run-paid-llm-tests -m paid_llm_api)",
 ]
