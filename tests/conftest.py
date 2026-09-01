@@ -8,6 +8,7 @@ import pytest
 
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
+from okfbuild.sources.eee_engine import FormSourceType, SlotForms
 from okfbuild.sources.lsj_index import LSJIndex
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
@@ -17,19 +18,21 @@ from okfbuild.sources import wikipedia_client
 def _eee_engine_stub(attested_lemmas: set[str]):
     """Lemma-aware stub for SourceBundle.eee_engine: lemmas in
     `attested_lemmas` get a fixed homeric form back (via
-    inflect_all_attested's language="grc", backend="homeric" branch, per
+    collect_slot_forms's language="grc", backend="homeric" branch, per
     the real per-period backend scoping documented in
     okfbuild/concepts/lexical_entry.py); every other lemma/backend/language
     combination returns empty, so a test can control exactly which
-    candidate lemmas end up with attested data."""
+    candidate lemmas end up with attested data. Returns dict[str,
+    SlotForms] (source_type=RULE_BASED), matching collect_slot_forms()'s
+    real return shape post section-02/03."""
     engine = Mock()
 
-    def _inflect(lemma, pos, language, backend=None):
+    def _collect(lemma, pos, language, backend=None, gap_filler=None, cache=None):
         if lemma in attested_lemmas and language == "grc" and backend == "homeric":
-            return {"Nom.Sing": {lemma}}
+            return {"Nom.Sing": SlotForms(forms={lemma}, source_type=FormSourceType.RULE_BASED)}
         return {}
 
-    engine.inflect_all_attested.side_effect = _inflect
+    engine.collect_slot_forms.side_effect = _collect
     return engine
 
 

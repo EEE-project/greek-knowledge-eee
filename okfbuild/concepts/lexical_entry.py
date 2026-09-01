@@ -6,7 +6,7 @@ render() (section-02) auto-generates the footnote-definition block from
 ConceptFile.sources, filtered by ids actually referenced in body. Adding
 definition lines here would duplicate what render() already emits.
 
-Note on homeric/attic period-scoping: eee_engine.inflect_all_attested()
+Note on homeric/attic period-scoping: eee_engine.collect_slot_forms()
 is called with `backend=period` for both ancient periods, so each gets
 its own, genuinely period-scoped query rather than one shared query
 reused for both. This requires the caller to have registered distinct
@@ -18,39 +18,55 @@ registration time — it doesn't have to match for_period()'s own argument
 spelling; "homeric" above is this module's period vocabulary, "epic" is
 the backend's). If no backend is registered under a given period's name,
 that period's eee_engine contribution is simply empty (see
-eee_engine.inflect_all_attested's own docstring) — not an error, so a
+eee_engine.collect_slot_forms's own docstring) — not an error, so a
 caller that only wants one period doesn't need to register the others.
+
+Note on LLM-inferred forms: collect_slot_forms() can return a mix of
+RULE_BASED and LLM_INFERRED SlotForms under different labels (never both
+for the same label). LLM-inferred forms are cited distinctly (one Source
+per distinct model/method, not per slot) and marked with `†` in body text
+— never the linguistic `*`, which has established, different meanings
+(reconstructed/unattested/ungrammatical) that an LLM guess doesn't
+necessarily fit. Rule-based forms are unaffected either way; this module's
+output is byte-identical to before when sources.llm_gap_filler is None.
 """
 
 from okfbuild.concepts import GENERATED_BY
 from okfbuild.okf import ConceptFile, Source
 from okfbuild.sources import SourceBundle
+from okfbuild.sources.eee_engine import FormSourceType, SlotForms
+from okfbuild.sources.llm_gap_filler import GapFillCache
 
 _ANCIENT_PERIODS = ("homeric", "attic")
 
-_EEE_ENGINE_SOURCE = dict(
-    resource="https://codeberg.org/EEE-project/eee-project",
-    title="EEE morphology engine",
-    author="EEE project",
-)
-_MORPHEUS_SOURCE = dict(
-    resource="https://services.perseids.org/bsp/morphologyservice/analysis/word",
-    title="Perseids Morpheus",
-    author="Perseids Project",
-)
-_BYZANTINE_SOURCE = dict(
-    resource="greek-inflexion-eee/byzantine_verbs_lexicon.yaml",
-    title="Byzantine Verbs Lexicon",
-    author="Sophocles (1887), curated",
-)
-_WIKTEXTRACT_SOURCE = dict(
-    resource="https://kaikki.org/elwiktionary/", title="Wiktextract (kaikki.org)", author="kaikki.org"
-)
-_BEEKES_SOURCE = dict(
-    resource="Beekes (2010), Etymological Dictionary of Greek",
-    title="Etymological Dictionary of Greek",
-    author="Robert Beekes",
-)
+_EEE_ENGINE_SOURCE = {
+    "resource": "https://codeberg.org/EEE-project/eee-project",
+    "title": "EEE morphology engine",
+    "author": "EEE project",
+}
+_MORPHEUS_SOURCE = {
+    "resource": "https://services.perseids.org/bsp/morphologyservice/analysis/word",
+    "title": "Perseids Morpheus",
+    "author": "Perseids Project",
+}
+_BYZANTINE_SOURCE = {
+    "resource": "greek-inflexion-eee/byzantine_verbs_lexicon.yaml",
+    "title": "Byzantine Verbs Lexicon",
+    "author": "Sophocles (1887), curated",
+}
+_WIKTEXTRACT_SOURCE = {
+    "resource": "https://kaikki.org/elwiktionary/", "title": "Wiktextract (kaikki.org)", "author": "kaikki.org"
+}
+_BEEKES_SOURCE = {
+    "resource": "Beekes (2010), Etymological Dictionary of Greek",
+    "title": "Etymological Dictionary of Greek",
+    "author": "Robert Beekes",
+}
+_LLM_GAP_FILLER_SOURCE = {
+    "resource": "llm-backend-eee gap-filler",
+    "title": "LLM-inferred (unverified)",
+}
+_LLM_MARKER_LEGEND = "† LLM-inferred (unverified) form; not independently attested or rule-derived."
 
 
 def build(
@@ -71,6 +87,11 @@ def build(
     relevant source produces no section — `periods` in the returned
     ConceptFile may be a subset of the requested `periods`.
 
+    `sources.llm_gap_filler` (if set) is forwarded to every
+    collect_slot_forms() call, opaquely — this function never inspects a
+    GapFillerConfig's internals. When it is None (the default), behavior
+    and output are unchanged from before LLM gap-filling existed.
+
     `beekes_citation`, if given, should embed its own page locator inline
     as normal scholarly prose would (e.g. "...(Beekes 2010, p. 1017)") —
     build() has no separate parameter for it, since different lemmas cite
@@ -85,13 +106,25 @@ def build(
             concept_sources.append(Source(id=source_id, resource=resource, title=title, author=author))
             seen_source_ids.add(source_id)
 
+    # collect_slot_forms() requires a real GapFillCache whenever gap_filler
+    # is set (raises ValueError otherwise) -- pipeline.py isn't modified by
+    # this plan, so there's no run-spanning cache to thread through; this
+    # build()-scoped instance is still shared across every collect_slot_forms()
+    # call within THIS build() invocation (so a gap recurring across e.g. the
+    # homeric and modern queries for the same lemma is still memoized once),
+    # just not across separate build() calls -- that's the explicitly
+    # deferred follow-up (real, pipeline.run()-spanning memoization).
+    gap_fill_cache = GapFillCache() if sources.llm_gap_filler is not None else None
+
     morpheus_readings = None
     modern_forms = None
     wiktextract_entry = None
 
     for period in periods:
         if period in _ANCIENT_PERIODS:
-            ancient_forms = sources.eee_engine.inflect_all_attested(lemma, pos, "grc", backend=period)
+            ancient_forms = sources.eee_engine.collect_slot_forms(
+                lemma, pos, "grc", backend=period, gap_filler=sources.llm_gap_filler, cache=gap_fill_cache
+            )
             if morpheus_readings is None:
                 morpheus_readings = sources.morpheus.analyze(lemma)
             section = _ancient_period_section(period, ancient_forms, morpheus_readings, cite)
@@ -100,7 +133,9 @@ def build(
             section = _byzantine_period_section(forms, cite) if forms else None
         elif period == "modern":
             if modern_forms is None:
-                modern_forms = sources.eee_engine.inflect_all_attested(lemma, pos, "el")
+                modern_forms = sources.eee_engine.collect_slot_forms(
+                    lemma, pos, "el", gap_filler=sources.llm_gap_filler, cache=gap_fill_cache
+                )
             if wiktextract_entry is None:
                 wiktextract_entry = sources.wiktextract.lookup(lemma)
             section = _modern_period_section(modern_forms, wiktextract_entry, cite)
@@ -110,6 +145,9 @@ def build(
         if section is not None:
             attested_periods.append(period)
             body_sections.append(f"## {period.capitalize()}\n\n{section}")
+
+    if any(source_id.startswith("llm-gap-filler-") for source_id in seen_source_ids):
+        body_sections.append(_LLM_MARKER_LEGEND)
 
     if beekes_citation:
         source_id = "beekes-edg"
@@ -134,12 +172,49 @@ def _format_forms(forms: dict[str, set[str]]) -> str:
     return "; ".join(parts)
 
 
-def _ancient_period_section(period, ancient_forms, morpheus_readings, cite) -> str | None:
+def _partition_slot_forms(forms: dict[str, SlotForms]) -> tuple[dict[str, set[str]], dict[str, SlotForms]]:
+    """Splits a collect_slot_forms() result by provenance. `rule_based`
+    matches _format_forms's existing input shape unchanged ({label: forms}),
+    so the rule-based rendering path is untouched by this split. `llm_inferred`
+    keeps the full SlotForms (its method/llm_backend_version are needed for
+    citation)."""
+    rule_based = {label: sf.forms for label, sf in forms.items() if sf.source_type == FormSourceType.RULE_BASED}
+    llm_inferred = {label: sf for label, sf in forms.items() if sf.source_type == FormSourceType.LLM_INFERRED}
+    return rule_based, llm_inferred
+
+
+def _llm_inferred_lines(llm_inferred: dict[str, SlotForms], cite) -> list[str]:
+    """One line per distinct method among llm_inferred's values, each
+    citing exactly one Source -- deduplicated across the WHOLE build()
+    call (not just this period) via cite()'s existing seen_source_ids
+    mechanism, keyed on a method-derived (not period-derived) source_id --
+    and marked with `†`, never `*` (see module docstring)."""
+    forms_by_method: dict[str, dict[str, set[str]]] = {}
+    version_by_method: dict[str, str | None] = {}
+    for label, slot_forms in llm_inferred.items():
+        forms_by_method.setdefault(slot_forms.method, {})[label] = slot_forms.forms
+        version_by_method[slot_forms.method] = slot_forms.llm_backend_version
+
     lines = []
-    if ancient_forms:
+    for method in sorted(forms_by_method):
+        source_id = "llm-gap-filler-" + method.replace(":", "-")
+        cite(
+            source_id,
+            **_LLM_GAP_FILLER_SOURCE,
+            author=f"{method} (llm-backend-eee v{version_by_method[method]})",
+        )
+        lines.append(f"LLM-inferred forms: {_format_forms(forms_by_method[method])}†[^{source_id}]")
+    return lines
+
+
+def _ancient_period_section(period, ancient_forms, morpheus_readings, cite) -> str | None:
+    rule_based, llm_inferred = _partition_slot_forms(ancient_forms)
+    lines = []
+    if rule_based:
         source_id = f"eee-{period}"
         cite(source_id, **_EEE_ENGINE_SOURCE)
-        lines.append(f"Attested forms: {_format_forms(ancient_forms)}[^{source_id}]")
+        lines.append(f"Attested forms: {_format_forms(rule_based)}[^{source_id}]")
+    lines.extend(_llm_inferred_lines(llm_inferred, cite))
     if morpheus_readings:
         source_id = f"morpheus-{period}"
         cite(source_id, **_MORPHEUS_SOURCE)
@@ -161,11 +236,13 @@ def _join_form(form: str | list[str]) -> str:
 
 
 def _modern_period_section(modern_forms, wiktextract_entry, cite) -> str | None:
+    rule_based, llm_inferred = _partition_slot_forms(modern_forms)
     lines = []
-    if modern_forms:
+    if rule_based:
         source_id = "eee-modern"
         cite(source_id, **_EEE_ENGINE_SOURCE)
-        lines.append(f"Attested forms: {_format_forms(modern_forms)}[^{source_id}]")
+        lines.append(f"Attested forms: {_format_forms(rule_based)}[^{source_id}]")
+    lines.extend(_llm_inferred_lines(llm_inferred, cite))
     if wiktextract_entry:
         source_id = "wiktextract-modern"
         cite(source_id, **_WIKTEXTRACT_SOURCE)
