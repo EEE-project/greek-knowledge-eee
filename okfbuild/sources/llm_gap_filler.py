@@ -18,6 +18,7 @@ import unicodedata
 from concurrent.futures import ThreadPoolExecutor, wait
 from dataclasses import asdict, dataclass, field, replace
 from enum import Enum, auto
+from functools import cache
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
@@ -170,10 +171,38 @@ def _decode_key_element(encoded: dict) -> str | tuple | GapFillerConfig:
     raise ValueError(f"GapFillCache.load(): unknown cache key element type {kind!r}")
 
 
+@cache
+def load_versioned_json(path: Path, expected_version: int, label: str) -> dict:
+    """Reads `path` as JSON, raising a clear, path-naming ValueError for
+    either corrupt JSON or a format_version that doesn't match
+    `expected_version` -- silently falling back to some default here
+    would silently mask a real problem with the file, for any caller.
+    `label` (e.g. "cache", "handoff") names the artifact kind in the
+    error message, so two different callers' errors stay distinguishable
+    without each hand-rolling this same parse-and-validate logic. Shared
+    by GapFillCache.load() (below) and
+    okfbuild.morpheus_crosscheck.crosscheck_handoff_file()."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"corrupt {label} file at {path}: {exc}") from exc
+
+    format_version = data.get("format_version")
+    if format_version != expected_version:
+        raise ValueError(
+            f"unsupported {label} format_version {format_version!r} at {path} (expected {expected_version})"
+        )
+    return data
+
+
 def _encode_config(config: GapFillerConfig) -> dict:
     """Every GapFillerConfig/LLMModelConfig field is already a JSON-safe
     primitive (str/int/None or a tuple of such), so asdict() alone is
-    sufficient -- no custom field-by-field handling needed."""
+    sufficient -- no custom field-by-field handling needed. Memoized:
+    every entry in one run shares the identical (frozen, hashable)
+    config object, so re-deriving this dict from scratch on every save()
+    -- potentially thousands of times across a long run's periodic
+    checkpoints -- would be pure waste."""
     return asdict(config)
 
 
@@ -310,17 +339,7 @@ class GapFillCache:
         if not path.exists():
             return GapFillCache()
 
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError as exc:
-            raise ValueError(f"GapFillCache.load(): corrupt cache file at {path}: {exc}") from exc
-
-        format_version = data.get("format_version")
-        if format_version != _CACHE_FORMAT_VERSION:
-            raise ValueError(
-                f"GapFillCache.load(): unsupported cache format_version {format_version!r} at {path} "
-                f"(expected {_CACHE_FORMAT_VERSION})"
-            )
+        data = load_versioned_json(path, _CACHE_FORMAT_VERSION, "cache")
 
         cache = GapFillCache(request_count=data["request_count"])
         for entry in data["entries"]:

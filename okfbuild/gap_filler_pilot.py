@@ -13,6 +13,7 @@ function, not a reimplementation of it.
 """
 
 import json
+import os
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -21,6 +22,10 @@ from okfbuild.concepts.lexical_entry import GapFillRecord
 from okfbuild.pipeline import BuildReport
 from okfbuild.sources import SourceBundle
 
+# Keep in sync with morpheus_crosscheck.py's own _HANDOFF_FORMAT_VERSION --
+# not imported from there directly, since morpheus_crosscheck.py is
+# deliberately kept free of any pipeline.py/SourceBundle dependency (see
+# its own module docstring), which importing this module would introduce.
 _HANDOFF_FORMAT_VERSION = 1
 
 
@@ -66,18 +71,21 @@ def run_gap_filler_pilot(
     )
 
     handoff_path.parent.mkdir(parents=True, exist_ok=True)
-    handoff_path.write_text(
-        json.dumps(
-            {
-                "format_version": _HANDOFF_FORMAT_VERSION,
-                "run_timestamp": datetime.now(UTC).isoformat(),
-                "entries": [_encode_record(record) for record in records],
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
-        encoding="utf-8",
+    payload = json.dumps(
+        {
+            "format_version": _HANDOFF_FORMAT_VERSION,
+            "run_timestamp": datetime.now(UTC).isoformat(),
+            "entries": [_encode_record(record) for record in records],
+        },
+        ensure_ascii=False,
+        indent=2,
     )
+    # Atomic write (temp sibling + os.replace()), matching GapFillCache.save()'s
+    # established pattern -- a process killed mid-write must never leave a
+    # truncated, unparseable handoff file behind.
+    tmp_path = handoff_path.with_name(handoff_path.name + ".tmp")
+    tmp_path.write_text(payload, encoding="utf-8")
+    os.replace(tmp_path, handoff_path)
     return report
 
 

@@ -296,6 +296,11 @@ def test_collect_slot_forms_context_omits_dialect_when_course_has_none():
 
 
 def test_collect_slot_forms_context_ignores_unmapped_or_missing_course():
+    """The second call (explicit source_course=None) also doubles as this
+    file's coverage that omitting source_course entirely (see
+    test_collect_slot_forms_context_is_just_the_label_with_no_backend_or_course)
+    behaves identically to passing None explicitly -- the parameter's
+    default -- so a separate dedicated test for that isn't needed."""
     template = _FakeSlotTemplate("Nom.Sing", features={"Case": "Nom"})
     gap_filler = Mock()
     cache = Mock()
@@ -314,20 +319,3 @@ def test_collect_slot_forms_context_ignores_unmapped_or_missing_course():
 
     for call in mock_fill_gap.call_args_list:
         assert call.kwargs["context"] == "Nom.Sing"
-
-
-def test_collect_slot_forms_source_course_defaults_to_none():
-    template = _FakeSlotTemplate("Nom.Sing", features={"Case": "Nom"})
-    gap_filler = Mock()
-    cache = Mock()
-    with (
-        patch("okfbuild.sources.eee_engine.eee.get_slot_templates", return_value=[template]),
-        patch("okfbuild.sources.eee_engine.eee.inflect_slot", return_value=set()),
-        patch(
-            "okfbuild.sources.eee_engine.llm_gap_filler.fill_gap",
-            return_value=_gap_result({"form"}),
-        ) as mock_fill_gap,
-    ):
-        collect_slot_forms("word", "noun", "el", gap_filler=gap_filler, cache=cache)
-
-    assert mock_fill_gap.call_args.kwargs["context"] == "Nom.Sing"

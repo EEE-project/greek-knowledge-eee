@@ -306,7 +306,6 @@ def run(
             gap_fill_cache = GapFillCache()
     last_checkpoint_len = len(gap_fill_cache) if gap_fill_cache is not None else 0
 
-    completed_normally = False
     try:
         for candidate in _collect_lexical_candidates(course_paths):
             try:
@@ -385,28 +384,30 @@ def run(
                 report.errors.append(f"cultural_context {spec.topic_id!r}: {exc}")
 
         _prune(out_dir, touched, report)
-        completed_normally = True
-    finally:
+    except BaseException:
         # Protects against ordinary exception unwinding (an unexpected bug
         # above, KeyboardInterrupt) -- NOT SIGKILL/power loss, which only
         # the periodic checkpoint above protects against. A failure here
         # is logged, never allowed to replace/mask a real exception
-        # already propagating out of this function. Skipped when the try
-        # block above completed normally -- the cleanup step right below
-        # is about to delete this same file, so saving it first would
-        # just be wasted work on every successful run.
-        if gap_fill_cache_path is not None and not completed_normally:
+        # already propagating out of this function. Always attempts the
+        # save (even with zero new entries since the last checkpoint) --
+        # a crash before any progress must still leave a cache.json behind
+        # for _resolve_gap_fill_run_path() to find on resume, matching
+        # this run's own gap_fill_cache_path rather than silently losing
+        # track of the attempt.
+        if gap_fill_cache_path is not None:
             try:
                 gap_fill_cache.save(gap_fill_cache_path)
             except Exception:
                 logger.exception("gap-filler: failed to save final checkpoint at %s", gap_fill_cache_path)
-
-    # Only reached if the try block above returned normally -- "successful
-    # completion" for cache-cleanup purposes, regardless of report.failed
-    # (individual candidate failures are already isolated above and never
-    # reach here as a propagating exception).
-    if gap_fill_cache_path is not None:
-        gap_fill_cache_path.unlink(missing_ok=True)
+        raise
+    else:
+        # Only reached if the try block above returned normally --
+        # "successful completion" for cache-cleanup purposes, regardless
+        # of report.failed (individual candidate failures are already
+        # isolated above and never reach here as a propagating exception).
+        if gap_fill_cache_path is not None:
+            gap_fill_cache_path.unlink(missing_ok=True)
 
     return report
 

@@ -20,14 +20,20 @@ Informational only: flags disagreement, blocks nothing, never modifies
 words/*.md.
 """
 
-import json
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
 
-from okfbuild.sources.llm_gap_filler import normalize_form
+from okfbuild.sources.llm_gap_filler import load_versioned_json, normalize_form
 from okfbuild.sources.morpheus_client import MorpheusClient
 
+# Keep in sync with okfbuild/gap_filler_pilot.py's own _HANDOFF_FORMAT_VERSION
+# -- not imported from there, since that would pull in a pipeline.py/
+# SourceBundle dependency this module is deliberately kept free of (see
+# module docstring above). load_versioned_json() (the parse-and-validate
+# logic itself) IS safely shared, from llm_gap_filler.py -- that module
+# has no such dependency either, and this file already depends on it for
+# normalize_form.
 _HANDOFF_FORMAT_VERSION = 1
 
 # --- UD-FEATS <-> Morpheus vocabulary mapping --------------------------------
@@ -54,6 +60,19 @@ _TENSE = {"Pres": "present", "Imp": "imperfect", "Aor": "aorist", "Perf": "perfe
 # participle are themselves *mood* values in Morpheus's own vocabulary.
 _FINITE_MOOD = {"Ind": "indicative", "Sub": "subjunctive", "Opt": "optative", "Imp": "imperative"}
 _NONFINITE_VERBFORM = {"Inf": "infinitive", "Part": "participle"}
+
+# Every axis that reduces to a single reading-field lookup -- everything
+# except Voice (genuine match-set ambiguity, see below) and VerbForm=="Fin"
+# (a pure structural no-op, since Mood already covers that case here too).
+_UNIFORM_FEATURE_FIELDS: dict[str, tuple[str, dict[str, str]]] = {
+    "Case": ("case", _CASE),
+    "Number": ("number", _NUMBER),
+    "Gender": ("gender", _GENDER),
+    "Person": ("person", _PERSON),
+    "Tense": ("tense", _TENSE),
+    "Mood": ("mood", _FINITE_MOOD),
+    "VerbForm": ("mood", _NONFINITE_VERBFORM),
+}
 
 # Voice is the one axis with genuine value-level ambiguity: Morpheus commonly
 # reports "mediopassive" for stems where Greek doesn't morphologically
@@ -113,13 +132,13 @@ class CrosscheckReport:
 
 def _feature_key_outcome(key: str, value: str, reading: dict) -> str:
     """Returns "MATCH", "COMPATIBLE", or "CONTRADICT" for one requested
-    feature key/value against one Morpheus reading."""
-    if key == "VerbForm":
-        if value == "Fin":
-            return "MATCH"  # structural marker only -- Mood (below) carries the real check
-        return "MATCH" if reading.get("mood") == _NONFINITE_VERBFORM[value] else "CONTRADICT"
-    if key == "Mood":
-        return "MATCH" if reading.get("mood") == _FINITE_MOOD[value] else "CONTRADICT"
+    feature key/value against one Morpheus reading. VerbForm=="Fin" is the
+    one true special case (a structural no-op -- Mood, looked up via the
+    same _UNIFORM_FEATURE_FIELDS table below, carries the real check for
+    that case); VerbForm=="Inf"/"Part" instead resolves through the table
+    directly, since Morpheus has no separate "verbform" field of its own."""
+    if key == "VerbForm" and value == "Fin":
+        return "MATCH"
     if key == "Voice":
         reading_voice = reading.get("voice")
         if reading_voice in _VOICE_MATCH[value]:
@@ -127,13 +146,7 @@ def _feature_key_outcome(key: str, value: str, reading: dict) -> str:
         if reading_voice in _VOICE_COMPATIBLE_NOT_CONFIRMING[value]:
             return "COMPATIBLE"
         return "CONTRADICT"
-    field_name, vocab = {
-        "Case": ("case", _CASE),
-        "Number": ("number", _NUMBER),
-        "Gender": ("gender", _GENDER),
-        "Person": ("person", _PERSON),
-        "Tense": ("tense", _TENSE),
-    }[key]
+    field_name, vocab = _UNIFORM_FEATURE_FIELDS[key]
     return "MATCH" if reading.get(field_name) == vocab[value] else "CONTRADICT"
 
 
@@ -219,16 +232,7 @@ def crosscheck_handoff_file(handoff_path: Path, report_path: Path, morpheus: Mor
     so tests can pass a Mock() -- this function performs no MorpheusClient
     construction and reads no real cache_dir itself. An empty `entries`
     list produces a well-formed, empty report -- not an error."""
-    try:
-        data = json.loads(handoff_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"crosscheck_handoff_file(): corrupt handoff file at {handoff_path}: {exc}") from exc
-    format_version = data.get("format_version")
-    if format_version != _HANDOFF_FORMAT_VERSION:
-        raise ValueError(
-            f"crosscheck_handoff_file(): unsupported handoff format_version {format_version!r} "
-            f"at {handoff_path} (expected {_HANDOFF_FORMAT_VERSION})"
-        )
+    data = load_versioned_json(handoff_path, _HANDOFF_FORMAT_VERSION, "handoff")
     run_timestamp = data.get("run_timestamp", "")
     entries = data.get("entries", [])
 
@@ -242,21 +246,23 @@ def crosscheck_handoff_file(handoff_path: Path, report_path: Path, morpheus: Mor
             readings = _query_morpheus_or_none(morpheus, entry["form"])
             classification_by_key[key] = _classify_readings(entry["lemma"], entry["features"], readings)
 
-    results = [
-        CrosscheckResult(
-            lemma=entry["lemma"],
-            form=entry["form"],
-            slot_label=entry["slot_label"],
-            features=entry["features"],
-            pos=entry["pos"],
-            language=entry["language"],
-            period=entry.get("period"),
-            method=entry["method"],
-            category=classification_by_key[_dedup_key(entry)][0],
-            detail=classification_by_key[_dedup_key(entry)][1],
+    results = []
+    for entry in grc_entries:
+        category, detail = classification_by_key[_dedup_key(entry)]
+        results.append(
+            CrosscheckResult(
+                lemma=entry["lemma"],
+                form=entry["form"],
+                slot_label=entry["slot_label"],
+                features=entry["features"],
+                pos=entry["pos"],
+                language=entry["language"],
+                period=entry.get("period"),
+                method=entry["method"],
+                category=category,
+                detail=detail,
+            )
         )
-        for entry in grc_entries
-    ]
 
     report = CrosscheckReport(results=results, skipped_non_grc=skipped_non_grc)
     report_path.parent.mkdir(parents=True, exist_ok=True)

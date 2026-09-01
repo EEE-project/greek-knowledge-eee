@@ -35,7 +35,7 @@ class SlotForms:
     source_type: FormSourceType
     method: str | None = None  # populated only when source_type == FormSourceType.LLM_INFERRED
     llm_backend_version: str | None = None  # ditto -- from GapFillResult, for reproducibility
-    features: dict[str, str] | None = None  # ditto -- the template.features used for the fill_gap() call
+    features: dict[str, str] | None = None  # the template's own features dict, for RULE_BASED and LLM_INFERRED alike
 
 
 def collect_slot_forms(
@@ -93,7 +93,9 @@ def collect_slot_forms(
     for template in templates:
         forms = eee.inflect_slot(lemma, template, pos, language=language, backend=backend)
         if forms:
-            result[template.label] = SlotForms(forms=forms, source_type=FormSourceType.RULE_BASED)
+            result[template.label] = SlotForms(
+                forms=forms, source_type=FormSourceType.RULE_BASED, features=template.features
+            )
             continue
 
         if gap_filler is not None and template.features is not None:

@@ -113,6 +113,26 @@ def test_run_build_report_counts_and_isolates_failures(tmp_path, make_source_bun
     assert not (out_dir / "words" / "ἄγνωστος.md").exists()
 
 
+def _fake_build(lemma, pos, periods, sources, level, tags, **kwargs):
+    """Stand-in for lexical_entry.build() that accepts any current or
+    future optional kwarg via **kwargs -- a hand-enumerated signature here
+    would silently drift out of sync every time build() gains a new
+    parameter (confirmed: this happened for real with on_llm_inferred,
+    the two tests below returned "passed" while every candidate actually
+    raised TypeError, swallowed by run()'s own per-candidate isolation)."""
+    return ConceptFile(
+        type="Lexical Entry",
+        title=lemma,
+        description="",
+        tags=tags,
+        level=level,
+        sources=[],
+        generated_by=GENERATED_BY,
+        body="",
+        extra_frontmatter={"lemma": lemma, "periods": ["homeric"]},
+    )
+
+
 def test_run_passes_each_candidates_source_course_to_lexical_entry_build(tmp_path, make_source_bundle):
     course_a = tmp_path / "odyssey"
     course_b = tmp_path / "other-course"
@@ -121,22 +141,10 @@ def test_run_passes_each_candidates_source_course_to_lexical_entry_build(tmp_pat
     out_dir = tmp_path / "out"
     sources = make_source_bundle(attested_lemmas={"νόστος", "φίλος"})
 
-    def fake_build(lemma, pos, periods, sources, level, tags, beekes_citation=None, source_course=None):
-        return ConceptFile(
-            type="Lexical Entry",
-            title=lemma,
-            description="",
-            tags=tags,
-            level=level,
-            sources=[],
-            generated_by=GENERATED_BY,
-            body="",
-            extra_frontmatter={"lemma": lemma, "periods": ["homeric"]},
-        )
+    with patch("okfbuild.pipeline.lexical_entry.build", side_effect=_fake_build) as mock_build:
+        report = run([course_a, course_b], out_dir, sources)
 
-    with patch("okfbuild.pipeline.lexical_entry.build", side_effect=fake_build) as mock_build:
-        run([course_a, course_b], out_dir, sources)
-
+    assert report.failed == 0  # catches future signature drift loudly instead of silently
     passed_source_courses = {call.kwargs["source_course"] for call in mock_build.call_args_list}
     assert passed_source_courses == {"odyssey", "other-course"}
 
@@ -153,22 +161,10 @@ def test_run_shares_one_gap_fill_cache_across_all_candidates(tmp_path, make_sour
     out_dir = tmp_path / "out"
     sources = make_source_bundle(attested_lemmas={"νόστος", "φίλος"}, llm_gap_filler=_gap_filler())
 
-    def fake_build(lemma, pos, periods, sources, level, tags, beekes_citation=None, source_course=None, cache=None):
-        return ConceptFile(
-            type="Lexical Entry",
-            title=lemma,
-            description="",
-            tags=tags,
-            level=level,
-            sources=[],
-            generated_by=GENERATED_BY,
-            body="",
-            extra_frontmatter={"lemma": lemma, "periods": ["homeric"]},
-        )
+    with patch("okfbuild.pipeline.lexical_entry.build", side_effect=_fake_build) as mock_build:
+        report = run([course_a, course_b], out_dir, sources)
 
-    with patch("okfbuild.pipeline.lexical_entry.build", side_effect=fake_build) as mock_build:
-        run([course_a, course_b], out_dir, sources)
-
+    assert report.failed == 0  # catches future signature drift loudly instead of silently
     cache_args = [call.kwargs["cache"] for call in mock_build.call_args_list]
     assert len(cache_args) == 2
     assert cache_args[0] is not None
