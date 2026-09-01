@@ -137,12 +137,13 @@ def normalize_form(form: str) -> str:
 class GapFillCache:
     """Run-local (in-process, single pipeline invocation) memoization,
     keyed by (lemma, a canonical/sorted serialization of features, pos,
-    language, config identity). Prevents redundant LLM calls when the
-    same gap recurs across courses/periods within one run. Also caches a
-    "no result" outcome (disagreement/failure), not just successes,
-    within the run -- otherwise the same unfillable gap re-triggers the
-    full call batch every time it recurs. Persistent (cross-run) caching
-    is explicitly deferred to a later, not-yet-planned follow-up.
+    language, config identity, context string -- see make_key()). Prevents
+    redundant LLM calls when the same gap recurs with the same context
+    across courses/periods within one run. Also caches a "no result"
+    outcome (disagreement/failure), not just successes, within the run --
+    otherwise the same unfillable gap re-triggers the full call batch
+    every time it recurs. Persistent (cross-run) caching is explicitly
+    deferred to a later, not-yet-planned follow-up.
 
     Also tracks `request_count`, the running total of LLM calls issued
     through this cache -- see fill_gap()'s request-budget enforcement."""
@@ -152,16 +153,24 @@ class GapFillCache:
 
     @staticmethod
     def make_key(
-        lemma: str, features: dict[str, str], pos: str, language: str, config: GapFillerConfig
+        lemma: str,
+        features: dict[str, str],
+        pos: str,
+        language: str,
+        config: GapFillerConfig,
+        context: str = "",
     ) -> tuple:
         """GapFillerConfig and LLMModelConfig are frozen dataclasses with
         structural equality/hashing, so using `config` itself as part of
         the key is sufficient -- any field difference (models, sample
         count, budget) naturally produces a different key. `features` is
         sorted so insertion-order differences don't cause spurious cache
-        misses."""
+        misses. `context` (the slot/period/dialect/author string also sent
+        to the LLM as the prompt's `label`) is part of the key too -- a
+        query asked under different context must never be served from a
+        differently-scoped cache hit."""
         feature_key = tuple(sorted(features.items()))
-        return (lemma, feature_key, pos, language, config)
+        return (lemma, feature_key, pos, language, config, context)
 
     def get(self, key: tuple) -> GapFillResult | None:
         """Returns a copy with its own `forms` set, not the stored instance
@@ -179,11 +188,20 @@ class GapFillCache:
 
 
 def _call_one(
-    model_config: LLMModelConfig, lemma: str, features: dict[str, str], pos: str, language: str
+    model_config: LLMModelConfig,
+    lemma: str,
+    features: dict[str, str],
+    pos: str,
+    language: str,
+    context: str,
 ) -> tuple[SampleStatus, set[str]]:
     """One sample call to one configured model. Never raises -- every
     failure mode (missing/invalid env var, network error, API error)
-    is caught and reported as CALL_FAILED."""
+    is caught and reported as CALL_FAILED. `context` is passed through as
+    llm-backend-eee's own `label` kwarg -- per its real source, this is
+    appended to the actual prompt text as `slot="..."`, telling the model
+    which grammatical slot/period/dialect/author it's being asked about,
+    not just disambiguating the cache key."""
     try:
         api_key = os.environ.get(model_config.api_key_env)
         if api_key is None:
@@ -202,7 +220,7 @@ def _call_one(
         backend = LLMBackend(
             model=model_config.model, api_key=api_key, base_url=model_config.base_url, use_cache=False
         )
-        forms = backend.inflect(lemma, features, pos, language=language)
+        forms = backend.inflect(lemma, features, pos, language=language, label=context)
     except Exception:
         logger.debug(
             "gap-filler: call failed for model=%s lemma=%s pos=%s",
@@ -230,8 +248,14 @@ def fill_gap(
     language: str,
     config: GapFillerConfig,
     cache: GapFillCache,
+    context: str = "",
 ) -> GapFillResult:
-    """Attempt to fill one morphology gap. Checks `cache` first -- a cache
+    """Attempt to fill one morphology gap. `context` (e.g. a grammatical
+    slot label, and when known, period/dialect/author/work) is forwarded
+    to every sample call as llm-backend-eee's own `label` kwarg -- it
+    reaches the real prompt text, not just the cache key below -- and is
+    itself part of the cache key, so two calls differing only in context
+    are never conflated. Checks `cache` first -- a cache
     hit returns immediately with zero LLM calls. On a miss, issues
     len(config.models) * config.samples_per_model independent calls to
     LLMBackend.inflect(lemma, features, pos, language=...), one batch per
@@ -264,7 +288,7 @@ def fill_gap(
     new calls -- a budget-exhausted run must fail loudly, not silently
     return an empty result indistinguishable from a real disagreement.
     """
-    key = cache.make_key(lemma, features, pos, language, config)
+    key = cache.make_key(lemma, features, pos, language, config, context)
     cached = cache.get(key)
     if cached is not None:
         return cached
@@ -285,7 +309,7 @@ def fill_gap(
     executor = ThreadPoolExecutor(max_workers=len(calls))
     try:
         futures = {
-            executor.submit(_call_one, model_config, lemma, features, pos, language): model_config
+            executor.submit(_call_one, model_config, lemma, features, pos, language, context): model_config
             for model_config in calls
         }
         # A single wait() over the whole batch bounds fill_gap()'s total

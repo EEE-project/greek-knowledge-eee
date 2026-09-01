@@ -131,6 +131,31 @@ def test_fill_gap_one_model_one_sample_success(monkeypatch):
     assert result.sample_statuses == (SampleStatus.SUCCESS,)
 
 
+def test_fill_gap_context_reaches_every_sample_call_as_label(monkeypatch):
+    monkeypatch.setenv("TEST_KEY_A", "secret")
+    config = GapFillerConfig(models=(_model(),), samples_per_model=3)
+    cache = GapFillCache()
+
+    lock = threading.Lock()
+    received_labels = []
+
+    def construct(*, model, api_key, base_url, use_cache):
+        instance = MagicMock()
+
+        def _inflect(*args, **kwargs):
+            with lock:
+                received_labels.append(kwargs.get("label"))
+            return {"θεοῦ"}
+
+        instance.inflect.side_effect = _inflect
+        return instance
+
+    with patch("okfbuild.sources.llm_gap_filler.LLMBackend", side_effect=construct):
+        fill_gap("θεός", {"Case": "Gen"}, "noun", "grc", config, cache, context="Gen.Sing, period=homeric")
+
+    assert received_labels == ["Gen.Sing, period=homeric"] * 3
+
+
 def test_fill_gap_one_model_three_samples_agree_after_normalization(monkeypatch):
     monkeypatch.setenv("TEST_KEY_A", "secret")
     config = GapFillerConfig(models=(_model(),), samples_per_model=3)
@@ -411,6 +436,27 @@ def test_gap_fill_cache_different_model_config_is_a_cache_miss(monkeypatch):
     with patch("okfbuild.sources.llm_gap_filler.LLMBackend", side_effect=construct):
         fill_gap("lemma", {}, "noun", "grc", config_a, cache)
         fill_gap("lemma", {}, "noun", "grc", config_b, cache)
+
+    assert len(constructed) == 2
+
+
+def test_gap_fill_cache_different_context_is_a_cache_miss(monkeypatch):
+    monkeypatch.setenv("TEST_KEY_A", "secret")
+    config = GapFillerConfig(models=(_model(),), samples_per_model=1)
+    cache = GapFillCache()
+
+    constructed = []
+
+    def construct(*, model, api_key, base_url, use_cache):
+        constructed.append(1)
+        instance = MagicMock()
+        instance.inflect.return_value = {"form"}
+        return instance
+
+    with patch("okfbuild.sources.llm_gap_filler.LLMBackend", side_effect=construct):
+        fill_gap("lemma", {}, "noun", "grc", config, cache, context="Gen.Sing")
+        fill_gap("lemma", {}, "noun", "grc", config, cache, context="Gen.Sing")  # same context -> hit
+        fill_gap("lemma", {}, "noun", "grc", config, cache, context="Gen.Sing, period=attic")  # different -> miss
 
     assert len(constructed) == 2
 

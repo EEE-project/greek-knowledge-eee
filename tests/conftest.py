@@ -27,7 +27,7 @@ def _eee_engine_stub(attested_lemmas: set[str]):
     real return shape post section-02/03."""
     engine = Mock()
 
-    def _collect(lemma, pos, language, backend=None, gap_filler=None, cache=None):
+    def _collect(lemma, pos, language, backend=None, gap_filler=None, cache=None, source_course=None):
         if lemma in attested_lemmas and language == "grc" and backend == "homeric":
             return {"Nom.Sing": SlotForms(forms={lemma}, source_type=FormSourceType.RULE_BASED)}
         return {}

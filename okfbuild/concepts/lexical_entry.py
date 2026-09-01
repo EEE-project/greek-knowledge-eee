@@ -77,6 +77,7 @@ def build(
     level: list[str],
     tags: list[str],
     beekes_citation: str | None = None,
+    source_course: str | None = None,
 ) -> ConceptFile:
     """Assemble a Lexical Entry for `lemma`, querying each source relevant
     to the requested `periods`: eee_engine + morpheus_client for
@@ -107,13 +108,13 @@ def build(
             seen_source_ids.add(source_id)
 
     # collect_slot_forms() requires a real GapFillCache whenever gap_filler
-    # is set (raises ValueError otherwise) -- pipeline.py isn't modified by
-    # this plan, so there's no run-spanning cache to thread through; this
-    # build()-scoped instance is still shared across every collect_slot_forms()
-    # call within THIS build() invocation (so a gap recurring across e.g. the
-    # homeric and modern queries for the same lemma is still memoized once),
-    # just not across separate build() calls -- that's the explicitly
-    # deferred follow-up (real, pipeline.run()-spanning memoization).
+    # is set (raises ValueError otherwise). pipeline.py's run() doesn't yet
+    # thread a run-spanning cache through to build(), so this build()-scoped
+    # instance is still shared across every collect_slot_forms() call within
+    # THIS build() invocation (so a gap recurring across e.g. the homeric
+    # and modern queries for the same lemma is still memoized once), just
+    # not across separate build() calls -- that's the explicitly deferred
+    # follow-up (real, pipeline.run()-spanning memoization).
     gap_fill_cache = GapFillCache() if sources.llm_gap_filler is not None else None
 
     morpheus_readings = None
@@ -123,7 +124,8 @@ def build(
     for period in periods:
         if period in _ANCIENT_PERIODS:
             ancient_forms = sources.eee_engine.collect_slot_forms(
-                lemma, pos, "grc", backend=period, gap_filler=sources.llm_gap_filler, cache=gap_fill_cache
+                lemma, pos, "grc", backend=period, gap_filler=sources.llm_gap_filler, cache=gap_fill_cache,
+                source_course=source_course,
             )
             if morpheus_readings is None:
                 morpheus_readings = sources.morpheus.analyze(lemma)
@@ -134,7 +136,8 @@ def build(
         elif period == "modern":
             if modern_forms is None:
                 modern_forms = sources.eee_engine.collect_slot_forms(
-                    lemma, pos, "el", gap_filler=sources.llm_gap_filler, cache=gap_fill_cache
+                    lemma, pos, "el", gap_filler=sources.llm_gap_filler, cache=gap_fill_cache,
+                    source_course=source_course,
                 )
             if wiktextract_entry is None:
                 wiktextract_entry = sources.wiktextract.lookup(lemma)

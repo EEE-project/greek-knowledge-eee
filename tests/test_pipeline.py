@@ -1,8 +1,11 @@
 import csv
 from pathlib import Path
+from unittest.mock import patch
 
 import yaml
 
+from okfbuild.concepts import GENERATED_BY
+from okfbuild.okf import ConceptFile
 from okfbuild.pipeline import run
 
 
@@ -101,3 +104,31 @@ def test_run_build_report_counts_and_isolates_failures(tmp_path, make_source_bun
     assert report.failed == 1
     assert len(report.errors) == 1
     assert not (out_dir / "words" / "ἄγνωστος.md").exists()
+
+
+def test_run_passes_each_candidates_source_course_to_lexical_entry_build(tmp_path, make_source_bundle):
+    course_a = tmp_path / "odyssey"
+    course_b = tmp_path / "other-course"
+    _write_vocabulary_tsv(course_a, [{"lemma": "νόστος", "pos": "noun", "level": "", "tags": ""}])
+    _write_vocabulary_tsv(course_b, [{"lemma": "φίλος", "pos": "noun", "level": "", "tags": ""}])
+    out_dir = tmp_path / "out"
+    sources = make_source_bundle(attested_lemmas={"νόστος", "φίλος"})
+
+    def fake_build(lemma, pos, periods, sources, level, tags, beekes_citation=None, source_course=None):
+        return ConceptFile(
+            type="Lexical Entry",
+            title=lemma,
+            description="",
+            tags=tags,
+            level=level,
+            sources=[],
+            generated_by=GENERATED_BY,
+            body="",
+            extra_frontmatter={"lemma": lemma, "periods": ["homeric"]},
+        )
+
+    with patch("okfbuild.pipeline.lexical_entry.build", side_effect=fake_build) as mock_build:
+        run([course_a, course_b], out_dir, sources)
+
+    passed_source_courses = {call.kwargs["source_course"] for call in mock_build.call_args_list}
+    assert passed_source_courses == {"odyssey", "other-course"}

@@ -1,7 +1,12 @@
 import csv
 from pathlib import Path
 
-from okfbuild.pipeline import _LexicalCandidate, _read_vocabulary_candidates, run
+from okfbuild.pipeline import (
+    _collect_lexical_candidates,
+    _LexicalCandidate,
+    _read_vocabulary_candidates,
+    run,
+)
 
 
 def _write_word_translation_tsv(course_dir: Path, filename: str, rows: list[dict]) -> None:
@@ -25,7 +30,7 @@ def test_nouns_tsv_row_with_article_strips_to_noun_candidate(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="μήνυμα", pos="noun", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="μήνυμα", pos="noun", level=[], tags=[], source_course="course")]
 
 
 def test_verbs_tsv_produces_verb_candidate(tmp_path):
@@ -34,7 +39,7 @@ def test_verbs_tsv_produces_verb_candidate(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="ακούω", pos="verb", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="ακούω", pos="verb", level=[], tags=[], source_course="course")]
 
 
 def test_adjectives_tsv_produces_adj_candidate(tmp_path):
@@ -43,7 +48,7 @@ def test_adjectives_tsv_produces_adj_candidate(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="μεγάλος", pos="adj", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="μεγάλος", pos="adj", level=[], tags=[], source_course="course")]
 
 
 def test_pronouns_tsv_produces_pronoun_candidate(tmp_path):
@@ -52,7 +57,7 @@ def test_pronouns_tsv_produces_pronoun_candidate(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="εγώ", pos="pronoun", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="εγώ", pos="pronoun", level=[], tags=[], source_course="course")]
 
 
 def test_particles_tsv_produces_particle_candidate(tmp_path):
@@ -61,7 +66,7 @@ def test_particles_tsv_produces_particle_candidate(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="μεν", pos="particle", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="μεν", pos="particle", level=[], tags=[], source_course="course")]
 
 
 def test_verbs_plus_tsv_maps_to_same_pos_as_verbs_tsv(tmp_path):
@@ -70,7 +75,7 @@ def test_verbs_plus_tsv_maps_to_same_pos_as_verbs_tsv(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="λέγω", pos="verb", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="λέγω", pos="verb", level=[], tags=[], source_course="course")]
 
 
 def test_adjs_tsv_maps_to_same_pos_as_adjectives_tsv(tmp_path):
@@ -79,7 +84,7 @@ def test_adjs_tsv_maps_to_same_pos_as_adjectives_tsv(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="καλός", pos="adj", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="καλός", pos="adj", level=[], tags=[], source_course="course")]
 
 
 def test_ru_suffixed_filename_contributes_zero_candidates(tmp_path):
@@ -157,7 +162,7 @@ def test_vocabulary_tsv_unrecognized_type_value_skips_only_that_row(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="ακούω", pos="verb", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="ακούω", pos="verb", level=[], tags=[], source_course="course")]
 
 
 def test_vocabulary_ru_tsv_contributes_zero_candidates(tmp_path):
@@ -232,7 +237,7 @@ def test_nouns_tsv_bare_word_no_article_used_as_lemma_directly(tmp_path):
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="παροιμία", pos="noun", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="παροιμία", pos="noun", level=[], tags=[], source_course="course")]
 
 
 def test_vocabulary_tsv_type_noun_row_shares_article_stripping_with_nouns_tsv(tmp_path):
@@ -243,7 +248,7 @@ def test_vocabulary_tsv_type_noun_row_shares_article_stripping_with_nouns_tsv(tm
 
     candidates = _read_vocabulary_candidates(course_dir)
 
-    assert candidates == [_LexicalCandidate(lemma="φίλος", pos="noun", level=[], tags=[])]
+    assert candidates == [_LexicalCandidate(lemma="φίλος", pos="noun", level=[], tags=[], source_course="course")]
 
 
 # --- 5.5 Logging (skip visibility) ------------------------------------------
@@ -302,6 +307,21 @@ def test_nouns_tsv_plural_article_row_logs_warning_with_skipped_word(tmp_path, c
         _read_vocabulary_candidates(course_dir)
 
     assert "τα σκουπίδια" in caplog.text
+
+
+def test_collect_lexical_candidates_dedup_preserves_source_course_of_winning_candidate(tmp_path):
+    course_a = tmp_path / "odyssey"
+    course_b = tmp_path / "other-course"
+    _write_word_translation_tsv(course_a, "nouns.tsv", [{"Word": "ο φίλος", "Translation": "friend"}])
+    _write_word_translation_tsv(course_b, "nouns.tsv", [{"Word": "ο φίλος", "Translation": "friend"}])
+
+    forward = _collect_lexical_candidates([course_a, course_b])
+    assert len(forward) == 1
+    assert forward[0].source_course == "odyssey"
+
+    reversed_order = _collect_lexical_candidates([course_b, course_a])
+    assert len(reversed_order) == 1
+    assert reversed_order[0].source_course == "other-course"
 
 
 # --- 5.6 End-to-end integration (via run()) ---------------------------------

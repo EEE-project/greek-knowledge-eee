@@ -114,7 +114,7 @@ def test_collect_slot_forms_calls_fill_gap_on_clean_empty_result():
         result = collect_slot_forms("θεός", "noun", "grc", gap_filler=gap_filler, cache=cache)
 
     mock_fill_gap.assert_called_once_with(
-        "θεός", template.features, "noun", "grc", gap_filler, cache
+        "θεός", template.features, "noun", "grc", gap_filler, cache, context="Nom.Sing"
     )
     assert result == {
         "Nom.Sing": SlotForms(
@@ -197,3 +197,136 @@ def test_collect_slot_forms_threads_same_cache_across_multiple_templates():
     for call in mock_fill_gap.call_args_list:
         assert call.args[4] is gap_filler
         assert call.args[5] is cache
+
+
+# --- New tests: context string built for the LLM gap-filler -----------------
+
+
+def test_collect_slot_forms_context_is_just_the_label_with_no_backend_or_course():
+    template = _FakeSlotTemplate("Nom.Sing", features={"Case": "Nom"})
+    gap_filler = Mock()
+    cache = Mock()
+    with (
+        patch("okfbuild.sources.eee_engine.eee.get_slot_templates", return_value=[template]),
+        patch("okfbuild.sources.eee_engine.eee.inflect_slot", return_value=set()),
+        patch(
+            "okfbuild.sources.eee_engine.llm_gap_filler.fill_gap",
+            return_value=_gap_result({"θεός"}),
+        ) as mock_fill_gap,
+    ):
+        collect_slot_forms("θεός", "noun", "grc", gap_filler=gap_filler, cache=cache)
+
+    assert mock_fill_gap.call_args.kwargs["context"] == "Nom.Sing"
+
+
+def test_collect_slot_forms_context_includes_period_when_backend_set():
+    template = _FakeSlotTemplate("Gen.Sing", features={"Case": "Gen"})
+    gap_filler = Mock()
+    cache = Mock()
+    with (
+        patch("okfbuild.sources.eee_engine.eee.get_slot_templates", return_value=[template]),
+        patch("okfbuild.sources.eee_engine.eee.inflect_slot", return_value=set()),
+        patch(
+            "okfbuild.sources.eee_engine.llm_gap_filler.fill_gap",
+            return_value=_gap_result({"θεοῦ"}),
+        ) as mock_fill_gap,
+    ):
+        collect_slot_forms("θεός", "noun", "grc", backend="homeric", gap_filler=gap_filler, cache=cache)
+
+    assert mock_fill_gap.call_args.kwargs["context"] == "Gen.Sing, period=homeric"
+
+
+def test_collect_slot_forms_context_has_no_period_fragment_when_backend_unset():
+    template = _FakeSlotTemplate("Gen.Sing", features={"Case": "Gen"})
+    gap_filler = Mock()
+    cache = Mock()
+    with (
+        patch("okfbuild.sources.eee_engine.eee.get_slot_templates", return_value=[template]),
+        patch("okfbuild.sources.eee_engine.eee.inflect_slot", return_value=set()),
+        patch(
+            "okfbuild.sources.eee_engine.llm_gap_filler.fill_gap",
+            return_value=_gap_result({"form"}),
+        ) as mock_fill_gap,
+    ):
+        collect_slot_forms("word", "noun", "el", gap_filler=gap_filler, cache=cache)
+
+    assert "period=" not in mock_fill_gap.call_args.kwargs["context"]
+
+
+def test_collect_slot_forms_context_includes_full_course_metadata_for_odyssey():
+    template = _FakeSlotTemplate("Gen.Sing", features={"Case": "Gen"})
+    gap_filler = Mock()
+    cache = Mock()
+    with (
+        patch("okfbuild.sources.eee_engine.eee.get_slot_templates", return_value=[template]),
+        patch("okfbuild.sources.eee_engine.eee.inflect_slot", return_value=set()),
+        patch(
+            "okfbuild.sources.eee_engine.llm_gap_filler.fill_gap",
+            return_value=_gap_result({"θεοῦ"}),
+        ) as mock_fill_gap,
+    ):
+        collect_slot_forms(
+            "θεός", "noun", "grc", backend="homeric", gap_filler=gap_filler, cache=cache,
+            source_course="odyssey",
+        )
+
+    context = mock_fill_gap.call_args.kwargs["context"]
+    assert context == "Gen.Sing, period=homeric, author=Homer, work=Odyssey, dialect=Epic/Ionic"
+
+
+def test_collect_slot_forms_context_omits_dialect_when_course_has_none():
+    template = _FakeSlotTemplate("Nom.Sing", features={"Case": "Nom"})
+    gap_filler = Mock()
+    cache = Mock()
+    with (
+        patch("okfbuild.sources.eee_engine.eee.get_slot_templates", return_value=[template]),
+        patch("okfbuild.sources.eee_engine.eee.inflect_slot", return_value=set()),
+        patch(
+            "okfbuild.sources.eee_engine.llm_gap_filler.fill_gap",
+            return_value=_gap_result({"form"}),
+        ) as mock_fill_gap,
+    ):
+        collect_slot_forms(
+            "word", "noun", "el", gap_filler=gap_filler, cache=cache, source_course="kavafis_ithaki"
+        )
+
+    context = mock_fill_gap.call_args.kwargs["context"]
+    assert context == "Nom.Sing, author=Constantine P. Cavafy, work=Ithaka"
+
+
+def test_collect_slot_forms_context_ignores_unmapped_or_missing_course():
+    template = _FakeSlotTemplate("Nom.Sing", features={"Case": "Nom"})
+    gap_filler = Mock()
+    cache = Mock()
+    with (
+        patch("okfbuild.sources.eee_engine.eee.get_slot_templates", return_value=[template]),
+        patch("okfbuild.sources.eee_engine.eee.inflect_slot", return_value=set()),
+        patch(
+            "okfbuild.sources.eee_engine.llm_gap_filler.fill_gap",
+            return_value=_gap_result({"form"}),
+        ) as mock_fill_gap,
+    ):
+        collect_slot_forms(
+            "word", "noun", "el", gap_filler=gap_filler, cache=cache, source_course="unmapped-course"
+        )
+        collect_slot_forms("word", "noun", "el", gap_filler=gap_filler, cache=cache, source_course=None)
+
+    for call in mock_fill_gap.call_args_list:
+        assert call.kwargs["context"] == "Nom.Sing"
+
+
+def test_collect_slot_forms_source_course_defaults_to_none():
+    template = _FakeSlotTemplate("Nom.Sing", features={"Case": "Nom"})
+    gap_filler = Mock()
+    cache = Mock()
+    with (
+        patch("okfbuild.sources.eee_engine.eee.get_slot_templates", return_value=[template]),
+        patch("okfbuild.sources.eee_engine.eee.inflect_slot", return_value=set()),
+        patch(
+            "okfbuild.sources.eee_engine.llm_gap_filler.fill_gap",
+            return_value=_gap_result({"form"}),
+        ) as mock_fill_gap,
+    ):
+        collect_slot_forms("word", "noun", "el", gap_filler=gap_filler, cache=cache)
+
+    assert mock_fill_gap.call_args.kwargs["context"] == "Nom.Sing"

@@ -87,6 +87,7 @@ class _LexicalCandidate:
     pos: str
     level: list[str]
     tags: list[str]
+    source_course: str | None = None
 
 
 def _slugify(text: str) -> str:
@@ -116,7 +117,9 @@ def _resolve_noun_lemma(word: str) -> str | None:
     return word
 
 
-def _read_word_translation_row(row: dict, filename: str, pos: str) -> _LexicalCandidate | None:
+def _read_word_translation_row(
+    row: dict, filename: str, pos: str, source_course: str | None = None
+) -> _LexicalCandidate | None:
     """Build a candidate from one Word/Translation-format row already
     resolved to a `pos`, or None if this row should be skipped (empty
     Word, or a noun-typed row starting with a plural article -- logged
@@ -130,7 +133,7 @@ def _read_word_translation_row(row: dict, filename: str, pos: str) -> _LexicalCa
         if lemma is None:
             logger.warning("Skipping pluralia-tantum-risk row %r in %s (plural article, no safe singular)", word, filename)
             return None
-    return _LexicalCandidate(lemma=lemma, pos=pos, level=[], tags=[])
+    return _LexicalCandidate(lemma=lemma, pos=pos, level=[], tags=[], source_course=source_course)
 
 
 def _read_vocabulary_candidates(course_path: Path) -> list[_LexicalCandidate]:
@@ -160,7 +163,13 @@ def _read_vocabulary_candidates(course_path: Path) -> list[_LexicalCandidate]:
                     level = [part for part in (row.get("level") or "").split(";") if part]
                     tags = [part for part in (row.get("tags") or "").split(";") if part]
                     candidates.append(
-                        _LexicalCandidate(lemma=lemma, pos=(row.get("pos") or "").strip(), level=level, tags=tags)
+                        _LexicalCandidate(
+                            lemma=lemma,
+                            pos=(row.get("pos") or "").strip(),
+                            level=level,
+                            tags=tags,
+                            source_course=course_path.name,
+                        )
                     )
                 continue
 
@@ -177,7 +186,7 @@ def _read_vocabulary_candidates(course_path: Path) -> list[_LexicalCandidate]:
                         if type_value and normalized not in _VOCABULARY_TYPE_KNOWN_SKIP:
                             logger.warning("Unrecognized vocabulary Type %r in %s", type_value, tsv_path.name)
                         continue
-                    candidate = _read_word_translation_row(row, tsv_path.name, pos)
+                    candidate = _read_word_translation_row(row, tsv_path.name, pos, source_course=course_path.name)
                     if candidate is not None:
                         candidates.append(candidate)
                 continue
@@ -187,7 +196,7 @@ def _read_vocabulary_candidates(course_path: Path) -> list[_LexicalCandidate]:
                 logger.warning("Unrecognized vocabulary file %r in %s", tsv_path.name, course_path)
                 continue
             for row in reader:
-                candidate = _read_word_translation_row(row, tsv_path.name, pos)
+                candidate = _read_word_translation_row(row, tsv_path.name, pos, source_course=course_path.name)
                 if candidate is not None:
                     candidates.append(candidate)
     return candidates
@@ -247,6 +256,7 @@ def run(
                 sources,
                 level=candidate.level,
                 tags=candidate.tags,
+                source_course=candidate.source_course,
             )
         except Exception as exc:
             report.failed += 1

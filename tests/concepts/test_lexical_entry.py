@@ -42,7 +42,7 @@ def _eee_engine_stub(grc_forms_by_backend=None, el_forms=None):
     matching collect_slot_forms()'s real return shape."""
     engine = Mock()
 
-    def _collect(lemma, pos, language, backend=None, gap_filler=None, cache=None):
+    def _collect(lemma, pos, language, backend=None, gap_filler=None, cache=None, source_course=None):
         if language == "el":
             return el_forms or {}
         return (grc_forms_by_backend or {}).get(backend, {})
@@ -228,6 +228,43 @@ def test_build_passes_non_none_cache_whenever_gap_filler_is_configured():
     call_kwargs = engine.collect_slot_forms.call_args.kwargs
     assert call_kwargs.get("gap_filler") is gap_filler
     assert call_kwargs.get("cache") is not None
+
+
+def test_build_forwards_source_course_to_both_ancient_and_modern_call_sites():
+    engine = _eee_engine_stub(
+        grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})},
+        el_forms=_rule_based({"Nom.Sing": {"νόστος"}}),
+    )
+    sources = SourceBundle(
+        eee_engine=engine,
+        morpheus=Mock(analyze=Mock(return_value=[])),
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(),
+        wikipedia=Mock(),
+    )
+
+    build("νόστος", "noun", ["homeric", "modern"], sources, level=["B1"], tags=["test"], source_course="odyssey")
+
+    assert engine.collect_slot_forms.call_count == 2
+    for call in engine.collect_slot_forms.call_args_list:
+        assert call.kwargs.get("source_course") == "odyssey"
+
+
+def test_build_omitting_source_course_defaults_to_none():
+    engine = _eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})})
+    sources = SourceBundle(
+        eee_engine=engine,
+        morpheus=Mock(analyze=Mock(return_value=[])),
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(),
+        wikipedia=Mock(),
+    )
+
+    build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"])
+
+    assert engine.collect_slot_forms.call_args.kwargs.get("source_course") is None
 
 
 def test_build_output_unchanged_when_no_gap_filler_configured(morpheus_client, wiktextract_index):

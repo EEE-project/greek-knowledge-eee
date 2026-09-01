@@ -10,6 +10,7 @@ from enum import Enum, auto
 
 import eee_project as eee
 
+from okfbuild import course_context
 from okfbuild.sources import llm_gap_filler
 
 
@@ -43,6 +44,7 @@ def collect_slot_forms(
     backend: str | None = None,
     gap_filler: "llm_gap_filler.GapFillerConfig | None" = None,
     cache: "llm_gap_filler.GapFillCache | None" = None,
+    source_course: str | None = None,
 ) -> dict[str, SlotForms]:
     """As the former inflect_all_attested() (eee.get_slot_templates() +
     per-template eee.inflect_slot()), but: (1) the return type is
@@ -51,10 +53,10 @@ def collect_slot_forms(
     template's inflect_slot() call returns a CLEAN EMPTY set() -- never
     when inflect_slot() raises, that exception propagates unchanged --
     calls llm_gap_filler.fill_gap(lemma, template.features, pos,
-    language, gap_filler, cache) -- only for templates where
-    template.features is not None (ag-paradigm slots have no features
-    dict and are structurally unfillable by the LLM regardless of
-    gap_filler being configured). A template whose rule-based query
+    language, gap_filler, cache, context=...) -- only for templates
+    where template.features is not None (ag-paradigm slots have no
+    features dict and are structurally unfillable by the LLM regardless
+    of gap_filler being configured). A template whose rule-based query
     succeeds is never sent to the gap-filler, regardless of gap_filler
     being configured -- LLM calls only ever happen for a clean, genuine
     gap. `cache` should be constructed once per pipeline.run() invocation
@@ -63,9 +65,16 @@ def collect_slot_forms(
 
     `backend` selects a named backend variant (eee.get_slot_templates's/
     eee.inflect_slot's own `backend=` parameter) instead of "the default
-    backend" for `language` -- unchanged from before this section, and
-    not passed to fill_gap() (the LLM gap-filler doesn't distinguish
-    periods that way)."""
+    backend" for `language` -- unchanged from before this section.
+    `backend` (as a period, e.g. "homeric"/"attic") and `source_course`
+    (looked up in course_context.COURSE_CONTEXT for author/work/dialect,
+    when it names a known course) are not passed to fill_gap() directly
+    -- both are folded into a single `context` string alongside the
+    slot's own template.label, so the LLM gap-filler is told which slot
+    and (when known) which period/dialect/author/work it's filling. This
+    is course-level metadata ("sourced from the Odyssey course"), not an
+    attestation claim ("Homer's own text uses this exact form") -- no
+    such claim is made or checked anywhere in this pipeline."""
     if gap_filler is not None and cache is None:
         # fill_gap() requires a real GapFillCache (its first line calls
         # cache.make_key(...)) -- catch a caller that supplied gap_filler
@@ -77,6 +86,8 @@ def collect_slot_forms(
     if not templates:
         return {}
 
+    course = course_context.COURSE_CONTEXT.get(source_course) if source_course else None
+
     result: dict[str, SlotForms] = {}
     for template in templates:
         forms = eee.inflect_slot(lemma, template, pos, language=language, backend=backend)
@@ -85,8 +96,20 @@ def collect_slot_forms(
             continue
 
         if gap_filler is not None and template.features is not None:
+            parts = [template.label]
+            if backend:
+                parts.append(f"period={backend}")
+            if course is not None:
+                if course.author:
+                    parts.append(f"author={course.author}")
+                if course.work:
+                    parts.append(f"work={course.work}")
+                if course.dialect:
+                    parts.append(f"dialect={course.dialect}")
+            context = ", ".join(parts)
+
             gap_result = llm_gap_filler.fill_gap(
-                lemma, template.features, pos, language, gap_filler, cache
+                lemma, template.features, pos, language, gap_filler, cache, context=context
             )
             if gap_result.forms:
                 result[template.label] = SlotForms(
