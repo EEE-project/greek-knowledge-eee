@@ -3,6 +3,8 @@ import shutil
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 from okfbuild.sources.morpheus_client import MorpheusClient
 
 FIXTURES_DIR = Path(__file__).parent.parent / "fixtures" / "sources"
@@ -54,3 +56,27 @@ def test_analyze_falls_back_to_http_when_no_cache_file_exists(tmp_path):
     assert result[0]["lemma"] == "other-lemma"
     assert result[0]["dial"] == ["Doric", "Aeolic"]
     assert (cache_dir / "other-word.json").exists()
+
+
+def test_analyze_raise_on_error_true_reraises_the_underlying_exception(tmp_path):
+    client = MorpheusClient(tmp_path / "cache")
+
+    with (
+        patch("okfbuild.sources.morpheus_client.urllib.request.urlopen", side_effect=OSError("network down")),
+        pytest.raises(OSError, match="network down"),
+    ):
+        client.analyze("failing-word", raise_on_error=True)
+
+
+def test_analyze_default_and_explicit_false_preserve_swallow_to_empty_list(tmp_path):
+    """Every existing caller (lexical_entry.build()'s citation lookup) omits
+    raise_on_error entirely -- both the implicit default and an explicit
+    False must preserve today's exact log-and-return-[] behavior."""
+    client = MorpheusClient(tmp_path / "cache")
+
+    with patch("okfbuild.sources.morpheus_client.urllib.request.urlopen", side_effect=OSError("network down")):
+        default_result = client.analyze("failing-word-a")
+        explicit_false_result = client.analyze("failing-word-b", raise_on_error=False)
+
+    assert default_result == []
+    assert explicit_false_result == []

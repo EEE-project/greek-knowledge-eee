@@ -40,7 +40,7 @@ class MorpheusClient:
         self._cache = KeyedJsonCache(cache_dir)
         self.cache_dir = self._cache.cache_dir
 
-    def analyze(self, word: str, lang: str = "grc") -> list[dict]:
+    def analyze(self, word: str, lang: str = "grc", raise_on_error: bool = False) -> list[dict]:
         """Query (or read from local cache) Morpheus's analysis for `word`.
         Reuses the existing cache-file-per-word convention and error
         shape from query_morpheus.py.
@@ -52,7 +52,18 @@ class MorpheusClient:
         list[dict] as declared, and callers (section-04 concept builders)
         can treat a Morpheus miss uniformly whether it's "no entry" or
         "request failed" for what is enrichment data, not a hard
-        dependency."""
+        dependency.
+
+        raise_on_error: when True, a request failure (network error,
+        timeout, non-2xx response, malformed JSON) re-raises the
+        underlying exception instead of being logged-and-swallowed into
+        an empty list. Every existing caller (lexical_entry.build()'s
+        lemma-level citation lookup) omits this, so its behavior is
+        completely unchanged — Morpheus is enrichment there, not a hard
+        dependency. okfbuild/morpheus_crosscheck.py is the only caller
+        that passes True, because for THAT caller "the request failed"
+        and "Morpheus has no opinion" are not the same finding and must
+        not be reported identically."""
         hit, raw = self._cache.read(word)
         if not hit:
             encoded = urllib.parse.quote(word)
@@ -62,6 +73,8 @@ class MorpheusClient:
                 with urllib.request.urlopen(req, timeout=15) as resp:
                     raw = json.loads(resp.read().decode("utf-8"))
             except Exception as e:
+                if raise_on_error:
+                    raise
                 logger.warning("Morpheus request failed for %r: %s", word, e)
                 return []
             self._cache.write(word, raw)
