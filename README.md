@@ -107,3 +107,10 @@ silent real charge:
 ```bash
 uv run pytest --run-paid-llm-tests -m "integration and paid_llm_api"
 ```
+The one such test today (`tests/test_gap_filler_pilot.py`, the real gap-filler
+pilot) reads its API key from `GREEK_KNOWLEDGE_OPENROUTER_API_KEY` — a real
+[OpenRouter](https://openrouter.ai/) key, used to query two models
+(`openai/gpt-4o-mini`, `anthropic/claude-3.5-haiku`) through one endpoint.
+Output goes to the gitignored `build/gap-filler-pilot/`, never the tracked
+`words/`/`grammar`/`culture` trees — review and selectively copy from there
+by hand.

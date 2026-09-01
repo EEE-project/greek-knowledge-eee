@@ -1,5 +1,6 @@
 """Shared pytest fixtures for okfbuild's test suite."""
 
+import dataclasses
 import os
 from pathlib import Path
 from unittest.mock import Mock
@@ -9,6 +10,7 @@ import pytest
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
+from okfbuild.sources.llm_gap_filler import GapFillerConfig, LLMModelConfig
 from okfbuild.sources.lsj_index import LSJIndex
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
@@ -239,3 +241,63 @@ def pilot_build_report(repo_root, real_source_bundle, created_with_eee_root):
     # bulk run itself succeeded.
     enrich_nostos_with_beekes(repo_root, real_source_bundle)
     return report
+
+
+# --- section-04 gap-filler pilot: real, gated OpenRouter-backed fixtures ---
+#
+# Do NOT modify real_source_bundle/pilot_build_report/test_pilot_acceptance.py
+# above -- these two fixtures build on top of real_source_bundle without
+# touching it (see real_source_bundle_with_gap_filler's own docstring).
+
+_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+_OPENROUTER_API_KEY_ENV = "GREEK_KNOWLEDGE_OPENROUTER_API_KEY"
+
+
+def _build_real_gap_filler_config() -> GapFillerConfig:
+    """The real_gap_filler_config fixture's own construction logic, factored
+    out as a plain, directly-callable function -- lets a unit test verify
+    the two-model config shape without going through the session-scoped
+    fixture (and its require_paid_llm_gate() call, already exhaustively
+    tested on its own in tests/test_paid_llm_gating.py)."""
+    return GapFillerConfig(
+        models=(
+            LLMModelConfig(
+                name="gpt-4o-mini",
+                model="openai/gpt-4o-mini",
+                api_key_env=_OPENROUTER_API_KEY_ENV,
+                base_url=_OPENROUTER_BASE_URL,
+            ),
+            LLMModelConfig(
+                name="claude-3.5-haiku",
+                model="anthropic/claude-3.5-haiku",
+                api_key_env=_OPENROUTER_API_KEY_ENV,
+                base_url=_OPENROUTER_BASE_URL,
+            ),
+        ),
+        max_requests_per_run=500,  # safety cap against a runaway/misconfigured run, not cost minimization
+    )
+
+
+@pytest.fixture(scope="session")
+def real_gap_filler_config() -> GapFillerConfig:
+    """Real, two-model GapFillerConfig via OpenRouter (one API key, two
+    genuinely different model families for a meaningful independent second
+    opinion). Gated by require_paid_llm_gate() -- called first, before
+    anything else in this fixture body -- so this fixture is itself the
+    fixture-level double-gate section-03 describes as the actual
+    enforcement boundary; it does not re-implement that gate's checks,
+    only depends on it."""
+    require_paid_llm_gate(_OPENROUTER_API_KEY_ENV)
+    return _build_real_gap_filler_config()
+
+
+@pytest.fixture(scope="session")
+def real_source_bundle_with_gap_filler(real_source_bundle, real_gap_filler_config) -> SourceBundle:
+    """Identical to real_source_bundle in every field except llm_gap_filler
+    -- built via dataclasses.replace() (a NEW instance), never in-place
+    mutation. SourceBundle is a plain, mutable @dataclass, so
+    `real_source_bundle.llm_gap_filler = ...` would compile but silently
+    corrupt the shared, session-scoped real_source_bundle fixture for
+    every other test in the session, including pilot_build_report/
+    test_pilot_acceptance.py."""
+    return dataclasses.replace(real_source_bundle, llm_gap_filler=real_gap_filler_config)

@@ -56,6 +56,9 @@ class LLMModelConfig:
     name: str
     model: str
     api_key_env: str
+    # TODO: base_url is caller-supplied and never validated against an allowlist --
+    # SSRF hardening is a deliberate, deferred non-goal that must be revisited before
+    # use in any automated/multi-user context (a human configures this today).
     base_url: str | None = None
 
 
@@ -121,7 +124,14 @@ class GapFillResult:
     single empty/non-empty bit."""
 
     forms: set[str]
-    method: str  # e.g. "llm:gpt-4o-mini" -- names the model(s) actually queried this call
+    # e.g. "llm:gpt-4o-mini" -- names the model(s) REQUESTED for this call, not necessarily
+    # the model that actually served it. Confirmed (OpenRouter's own API reference, and
+    # llm-backend-eee v0.2.1's _openai.py: call_openai() reads only
+    # resp.choices[0].message.content, never resp.model) that a routing/fallback provider
+    # (e.g. OpenRouter) CAN silently substitute a different underlying model, and that
+    # llm-backend-eee v0.2.1 has no mechanism to surface which model actually responded --
+    # fixing this would require a change in that separate package, out of scope here.
+    method: str
     llm_backend_version: str  # installed llm-backend-eee version, for reproducibility
     sample_statuses: tuple[SampleStatus, ...]
 

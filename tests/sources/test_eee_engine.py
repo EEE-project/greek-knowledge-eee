@@ -122,6 +122,7 @@ def test_collect_slot_forms_calls_fill_gap_on_clean_empty_result():
             source_type=FormSourceType.LLM_INFERRED,
             method="llm:gpt-4o-mini",
             llm_backend_version="0.2.1",
+            features=template.features,
         )
     }
 

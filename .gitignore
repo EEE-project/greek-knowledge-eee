@@ -6,3 +6,4 @@ dist/
 .pytest_cache/
 CLAUDE.md
 data/wiktextract/*.jsonl
+build/gap-filler-pilot/

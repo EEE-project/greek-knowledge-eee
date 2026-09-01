@@ -35,6 +35,7 @@ class SlotForms:
     source_type: FormSourceType
     method: str | None = None  # populated only when source_type == FormSourceType.LLM_INFERRED
     llm_backend_version: str | None = None  # ditto -- from GapFillResult, for reproducibility
+    features: dict[str, str] | None = None  # ditto -- the template.features used for the fill_gap() call
 
 
 def collect_slot_forms(
@@ -117,5 +118,6 @@ def collect_slot_forms(
                     source_type=FormSourceType.LLM_INFERRED,
                     method=gap_result.method,
                     llm_backend_version=gap_result.llm_backend_version,
+                    features=template.features,
                 )
     return result

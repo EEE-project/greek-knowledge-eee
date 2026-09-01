@@ -513,3 +513,92 @@ def test_build_fallback_cache_is_a_real_gapfillcache_instance_not_merely_non_non
 
     passed_cache = engine.collect_slot_forms.call_args.kwargs.get("cache")
     assert isinstance(passed_cache, GapFillCache)
+
+
+def test_build_on_llm_inferred_fires_once_per_form_for_llm_inferred_slots_only():
+    """Mix of RULE_BASED and LLM_INFERRED in the same period -- the
+    callback must fire only for the LLM_INFERRED slot, once per distinct
+    form in that slot's forms set, and never for the RULE_BASED one."""
+    engine = _eee_engine_stub(
+        grc_forms_by_backend={
+            "homeric": {
+                **_rule_based({"Nom.Sing": {"νόστος"}}),
+                "Gen.Sing": SlotForms(
+                    forms={"νόστου", "νόστοιο"},
+                    source_type=FormSourceType.LLM_INFERRED,
+                    method="llm:gpt-4o-mini",
+                    llm_backend_version="0.2.1",
+                    features={"Case": "Gen", "Number": "Sing"},
+                ),
+            }
+        }
+    )
+    sources = SourceBundle(
+        eee_engine=engine,
+        morpheus=Mock(analyze=Mock(return_value=[])),
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(),
+        wikipedia=Mock(),
+    )
+    records = []
+
+    build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"], on_llm_inferred=records.append)
+
+    assert len(records) == 2  # one per form in the LLM-inferred slot's forms set
+    assert {r.form for r in records} == {"νόστου", "νόστοιο"}
+    assert not any(r.slot_label == "Nom.Sing" for r in records)  # the RULE_BASED slot never produces a record
+    for record in records:
+        assert record.lemma == "νόστος"
+        assert record.slot_label == "Gen.Sing"
+        assert record.features == {"Case": "Gen", "Number": "Sing"}
+        assert record.pos == "noun"
+        assert record.language == "grc"
+        assert record.period == "homeric"
+        assert record.method == "llm:gpt-4o-mini"
+        assert record.llm_backend_version == "0.2.1"
+
+
+def test_build_on_llm_inferred_period_is_none_for_modern():
+    engine = _eee_engine_stub(el_forms=_llm_inferred({"Nom.Sing": {"form"}}, method="llm:gpt-4o-mini"))
+    sources = SourceBundle(
+        eee_engine=engine,
+        morpheus=Mock(analyze=Mock(return_value=[])),
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(),
+        wikipedia=Mock(),
+    )
+    records = []
+
+    build("word", "noun", ["modern"], sources, level=["B1"], tags=["test"], on_llm_inferred=records.append)
+
+    assert len(records) == 1
+    assert records[0].language == "el"
+    assert records[0].period is None
+    # _llm_inferred() (this file's helper) never sets SlotForms.features,
+    # so it defaults to None -- confirms the `slot_forms.features or {}`
+    # fallback in emit_llm_inferred_records() actually maps that to {},
+    # not just that it doesn't crash.
+    assert records[0].features == {}
+
+
+def test_build_omitting_on_llm_inferred_is_a_no_op():
+    """Every LLM-inferred-output test elsewhere in this file already omits
+    on_llm_inferred -- this confirms explicitly that build() doesn't
+    require it, with no behavior change to the returned ConceptFile."""
+    engine = _eee_engine_stub(
+        grc_forms_by_backend={"homeric": _llm_inferred({"Gen.Sing": {"νόστου"}}, method="llm:gpt-4o-mini")}
+    )
+    sources = SourceBundle(
+        eee_engine=engine,
+        morpheus=Mock(analyze=Mock(return_value=[])),
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(),
+        wikipedia=Mock(),
+    )
+
+    concept = build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"])  # on_llm_inferred omitted
+
+    assert "νόστου†" in concept.body

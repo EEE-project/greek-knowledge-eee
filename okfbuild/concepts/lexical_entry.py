@@ -31,6 +31,9 @@ necessarily fit. Rule-based forms are unaffected either way; this module's
 output is byte-identical to before when sources.llm_gap_filler is None.
 """
 
+from collections.abc import Callable
+from dataclasses import dataclass
+
 from okfbuild.concepts import GENERATED_BY
 from okfbuild.okf import ConceptFile, Source
 from okfbuild.sources import SourceBundle
@@ -38,6 +41,25 @@ from okfbuild.sources.eee_engine import FormSourceType, SlotForms
 from okfbuild.sources.llm_gap_filler import GapFillCache
 
 _ANCIENT_PERIODS = ("homeric", "attic")
+
+
+@dataclass(frozen=True)
+class GapFillRecord:
+    """One LLM_INFERRED form, with enough context to become one JSON
+    handoff entry (see gap_filler_pilot.run_gap_filler_pilot()). Captured
+    directly from the structured SlotForms result as the run executes --
+    never derived by parsing rendered markdown body text back apart."""
+
+    lemma: str
+    form: str
+    slot_label: str
+    features: dict[str, str]
+    pos: str
+    language: str
+    period: str | None
+    method: str
+    llm_backend_version: str
+
 
 _EEE_ENGINE_SOURCE = {
     "resource": "https://codeberg.org/EEE-project/eee-project",
@@ -79,6 +101,7 @@ def build(
     beekes_citation: str | None = None,
     source_course: str | None = None,
     cache: "GapFillCache | None" = None,
+    on_llm_inferred: "Callable[[GapFillRecord], None] | None" = None,
 ) -> ConceptFile:
     """Assemble a Lexical Entry for `lemma`, querying each source relevant
     to the requested `periods`: eee_engine + morpheus_client for
@@ -105,7 +128,15 @@ def build(
     `beekes_citation`, if given, should embed its own page locator inline
     as normal scholarly prose would (e.g. "...(Beekes 2010, p. 1017)") —
     build() has no separate parameter for it, since different lemmas cite
-    different pages of the same work."""
+    different pages of the same work.
+
+    `on_llm_inferred`, if given, is called once per individual LLM-inferred
+    form (a GapFillRecord each) as soon as each period's collect_slot_forms()
+    result comes back — this is the ONLY point in the whole pipeline where
+    the structured SlotForms data (features, method, llm_backend_version)
+    is still available; it is discarded once rendered into this function's
+    markdown `body`. Omitting it (the default) is a pure no-op — behavior
+    and output are byte-identical to before this parameter existed."""
     concept_sources: list[Source] = []
     seen_source_ids: set[str] = set()
     body_sections: list[str] = []
@@ -115,6 +146,27 @@ def build(
         if source_id not in seen_source_ids:
             concept_sources.append(Source(id=source_id, resource=resource, title=title, author=author))
             seen_source_ids.add(source_id)
+
+    def emit_llm_inferred_records(forms: dict[str, SlotForms], language: str, period_arg: str | None) -> None:
+        if on_llm_inferred is None:
+            return
+        for slot_label, slot_forms in forms.items():
+            if slot_forms.source_type != FormSourceType.LLM_INFERRED:
+                continue
+            for form in slot_forms.forms:
+                on_llm_inferred(
+                    GapFillRecord(
+                        lemma=lemma,
+                        form=form,
+                        slot_label=slot_label,
+                        features=slot_forms.features or {},
+                        pos=pos,
+                        language=language,
+                        period=period_arg,
+                        method=slot_forms.method,
+                        llm_backend_version=slot_forms.llm_backend_version,
+                    )
+                )
 
     # collect_slot_forms() requires a real GapFillCache whenever gap_filler
     # is set (raises ValueError otherwise). A caller-supplied `cache` is
@@ -141,6 +193,7 @@ def build(
                 lemma, pos, "grc", backend=period, gap_filler=sources.llm_gap_filler, cache=gap_fill_cache,
                 source_course=source_course,
             )
+            emit_llm_inferred_records(ancient_forms, "grc", period)
             if morpheus_readings is None:
                 morpheus_readings = sources.morpheus.analyze(lemma)
             section = _ancient_period_section(period, ancient_forms, morpheus_readings, cite)
@@ -153,6 +206,7 @@ def build(
                     lemma, pos, "el", gap_filler=sources.llm_gap_filler, cache=gap_fill_cache,
                     source_course=source_course,
                 )
+                emit_llm_inferred_records(modern_forms, "el", None)
             if wiktextract_entry is None:
                 wiktextract_entry = sources.wiktextract.lookup(lemma)
             section = _modern_period_section(modern_forms, wiktextract_entry, cite)

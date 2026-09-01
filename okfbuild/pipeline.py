@@ -8,11 +8,13 @@ import csv
 import logging
 import re
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 from okfbuild import okf
 from okfbuild.concepts import cultural_context, grammatical_rule, lexical_entry
+from okfbuild.concepts.lexical_entry import GapFillRecord
 from okfbuild.okf import ConceptFile
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.llm_gap_filler import GapFillCache
@@ -254,6 +256,7 @@ def run(
     grammar_rules: list[GrammarRuleSpec] | None = None,
     cultural_topics: list[CulturalTopicSpec] | None = None,
     gap_fill_cache_dir: Path | None = None,
+    on_llm_inferred: "Callable[[GapFillRecord], None] | None" = None,
 ) -> BuildReport:
     """For each course in course_paths: extract candidate lemmas from its
     vocabulary TSVs, build a Lexical Entry per lemma (always querying all
@@ -281,6 +284,11 @@ def run(
     run instead of re-paying for already-resolved gaps. A run that
     completes normally removes its own cache file — see
     _resolve_gap_fill_run_path() and GapFillCache.save()/load().
+
+    on_llm_inferred, if given, is forwarded unchanged to every
+    lexical_entry.build() call in the lexical-candidate loop — see that
+    function's own docstring for what it does. Omitting it (the default)
+    is a pure no-op.
     """
     report = BuildReport()
     touched: set[Path] = set()
@@ -311,6 +319,7 @@ def run(
                     tags=candidate.tags,
                     source_course=candidate.source_course,
                     cache=gap_fill_cache,
+                    on_llm_inferred=on_llm_inferred,
                 )
             except Exception as exc:
                 report.failed += 1
