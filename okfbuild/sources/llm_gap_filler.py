@@ -11,19 +11,22 @@ the caller's responsibility (see okfbuild/sources/eee_engine.py), not this
 module's.
 """
 
+import json
 import logging
 import os
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor, wait
-from dataclasses import dataclass, field, replace
+from dataclasses import asdict, dataclass, field, replace
 from enum import Enum, auto
 from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
 
 from llm_backend_eee import LLMBackend
 
 logger = logging.getLogger(__name__)
 
 _DEFAULT_CALL_TIMEOUT_SECONDS = 30.0
+_CACHE_FORMAT_VERSION = 1
 
 REQUEST_BUDGET_ERROR = "GapFiller exceeded its configured max_requests_per_run budget"
 
@@ -133,6 +136,68 @@ def normalize_form(form: str) -> str:
     return unicodedata.normalize("NFC", form.strip())
 
 
+def _encode_key_element(element: str | tuple | GapFillerConfig) -> dict:
+    """Tags each cache-key tuple element with its type so load() can
+    reconstruct it exactly. A key element is always one of these three
+    shapes (see make_key()) -- this deliberately does not assume how many
+    elements the key has or in what order, only what each element's own
+    type can be."""
+    if isinstance(element, GapFillerConfig):
+        return {"type": "config", "value": _encode_config(element)}
+    if isinstance(element, tuple):
+        return {"type": "tuple", "value": [list(pair) for pair in element]}
+    return {"type": "str", "value": element}
+
+
+def _decode_key_element(encoded: dict) -> str | tuple | GapFillerConfig:
+    kind = encoded["type"]
+    if kind == "config":
+        return _decode_config(encoded["value"])
+    if kind == "tuple":
+        return tuple(tuple(pair) for pair in encoded["value"])
+    if kind == "str":
+        return encoded["value"]
+    raise ValueError(f"GapFillCache.load(): unknown cache key element type {kind!r}")
+
+
+def _encode_config(config: GapFillerConfig) -> dict:
+    """Every GapFillerConfig/LLMModelConfig field is already a JSON-safe
+    primitive (str/int/None or a tuple of such), so asdict() alone is
+    sufficient -- no custom field-by-field handling needed."""
+    return asdict(config)
+
+
+def _decode_config(data: dict) -> GapFillerConfig:
+    """Reconstructs a REAL GapFillerConfig, not a plain dict -- because
+    both dataclasses are frozen with structural equality/hashing, this
+    reconstructed-but-not-identical instance still correctly compares
+    equal to (and hashes the same as) whatever live GapFillerConfig a
+    resumed run's caller constructs, as long as field values match. That
+    equality is what makes a resumed run's cache hits actually work."""
+    models = tuple(LLMModelConfig(**model) for model in data["models"])
+    return GapFillerConfig(
+        models=models, samples_per_model=data["samples_per_model"], max_requests_per_run=data["max_requests_per_run"]
+    )
+
+
+def _encode_result(result: GapFillResult) -> dict:
+    return {
+        "forms": sorted(result.forms),
+        "method": result.method,
+        "llm_backend_version": result.llm_backend_version,
+        "sample_statuses": [status.name for status in result.sample_statuses],
+    }
+
+
+def _decode_result(data: dict) -> GapFillResult:
+    return GapFillResult(
+        forms=set(data["forms"]),
+        method=data["method"],
+        llm_backend_version=data["llm_backend_version"],
+        sample_statuses=tuple(SampleStatus[name] for name in data["sample_statuses"]),
+    )
+
+
 @dataclass
 class GapFillCache:
     """Run-local (in-process, single pipeline invocation) memoization,
@@ -142,11 +207,21 @@ class GapFillCache:
     across courses/periods within one run. Also caches a "no result"
     outcome (disagreement/failure), not just successes, within the run --
     otherwise the same unfillable gap re-triggers the full call batch
-    every time it recurs. Persistent (cross-run) caching is explicitly
-    deferred to a later, not-yet-planned follow-up.
+    every time it recurs. Optional, run-scoped disk persistence (save()/
+    load(), below) lets a caller resume an interrupted run without
+    re-spending on already-resolved gaps -- see pipeline.run()'s
+    gap_fill_cache_dir for the orchestration; this class itself has no
+    opinion on *when* to persist, only how.
 
     Also tracks `request_count`, the running total of LLM calls issued
-    through this cache -- see fill_gap()'s request-budget enforcement."""
+    through this cache -- see fill_gap()'s request-budget enforcement.
+
+    NOT thread-safe: `_results` is a plain dict and `request_count` a
+    plain int, neither guarded by a lock. Harmless today since
+    pipeline.run()'s lexical-candidate loop is single-threaded; save()
+    additionally assumes no concurrent set() call is mutating this
+    instance while it serializes. A parallelized caller would need its
+    own locking around both."""
 
     _results: dict[tuple, GapFillResult] = field(default_factory=dict)
     request_count: int = 0
@@ -185,6 +260,63 @@ class GapFillCache:
 
     def set(self, key: tuple, result: GapFillResult) -> None:
         self._results[key] = result
+
+    def __len__(self) -> int:
+        """Current entry count -- lets a caller outside this module (e.g.
+        pipeline.run()'s checkpoint-by-new-entries logic) observe cache
+        growth without reaching into `_results` directly."""
+        return len(self._results)
+
+    def save(self, path: Path) -> None:
+        """Atomically writes this cache to `path`: writes a `.tmp` sibling
+        first, then os.replace()s it onto `path` -- a process killed
+        mid-write leaves the previous good `path` untouched instead of a
+        truncated, unparseable file. Entries whose sample_statuses are ALL
+        CALL_FAILED are excluded from the written file (this in-memory
+        instance is unaffected) -- persisting a transient infrastructure
+        failure as a stable "already tried" result would wrongly block a
+        legitimate retry on resume."""
+        entries = [
+            {"key": [_encode_key_element(element) for element in key], "result": _encode_result(result)}
+            for key, result in self._results.items()
+            if any(status is not SampleStatus.CALL_FAILED for status in result.sample_statuses)
+        ]
+        data = {"format_version": _CACHE_FORMAT_VERSION, "request_count": self.request_count, "entries": entries}
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp_path = path.with_name(path.name + ".tmp")
+        tmp_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        os.replace(tmp_path, path)
+
+    @staticmethod
+    def load(path: Path) -> "GapFillCache":
+        """A missing `path` means there is nothing to resume -- returns a
+        fresh, empty GapFillCache, not an error. A `path` that exists but
+        fails to parse as JSON, or parses but carries a format_version
+        this code doesn't recognize, raises ValueError naming `path` --
+        silently falling back to an empty cache here would silently
+        re-spend on every gap that had already been resolved before
+        whatever produced this file."""
+        if not path.exists():
+            return GapFillCache()
+
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"GapFillCache.load(): corrupt cache file at {path}: {exc}") from exc
+
+        format_version = data.get("format_version")
+        if format_version != _CACHE_FORMAT_VERSION:
+            raise ValueError(
+                f"GapFillCache.load(): unsupported cache format_version {format_version!r} at {path} "
+                f"(expected {_CACHE_FORMAT_VERSION})"
+            )
+
+        cache = GapFillCache(request_count=data["request_count"])
+        for entry in data["entries"]:
+            key = tuple(_decode_key_element(element) for element in entry["key"])
+            cache._results[key] = _decode_result(entry["result"])
+        return cache
 
 
 def _call_one(

@@ -78,6 +78,7 @@ def build(
     tags: list[str],
     beekes_citation: str | None = None,
     source_course: str | None = None,
+    cache: "GapFillCache | None" = None,
 ) -> ConceptFile:
     """Assemble a Lexical Entry for `lemma`, querying each source relevant
     to the requested `periods`: eee_engine + morpheus_client for
@@ -92,6 +93,14 @@ def build(
     collect_slot_forms() call, opaquely — this function never inspects a
     GapFillerConfig's internals. When it is None (the default), behavior
     and output are unchanged from before LLM gap-filling existed.
+
+    `cache`, if given, is used as-is for every collect_slot_forms() call in
+    this invocation instead of constructing a fresh GapFillCache
+    internally — this is what lets a caller share one cache across many
+    build() calls (see pipeline.run()). Omitting it (the default) falls
+    back to today's per-build()-call, ephemeral cache whenever
+    sources.llm_gap_filler is set; every caller that predates this
+    parameter is unaffected.
 
     `beekes_citation`, if given, should embed its own page locator inline
     as normal scholarly prose would (e.g. "...(Beekes 2010, p. 1017)") —
@@ -108,14 +117,19 @@ def build(
             seen_source_ids.add(source_id)
 
     # collect_slot_forms() requires a real GapFillCache whenever gap_filler
-    # is set (raises ValueError otherwise). pipeline.py's run() doesn't yet
-    # thread a run-spanning cache through to build(), so this build()-scoped
-    # instance is still shared across every collect_slot_forms() call within
-    # THIS build() invocation (so a gap recurring across e.g. the homeric
-    # and modern queries for the same lemma is still memoized once), just
-    # not across separate build() calls -- that's the explicitly deferred
-    # follow-up (real, pipeline.run()-spanning memoization).
-    gap_fill_cache = GapFillCache() if sources.llm_gap_filler is not None else None
+    # is set (raises ValueError otherwise). A caller-supplied `cache` is
+    # used as-is -- this is what lets pipeline.run() share one GapFillCache
+    # across every candidate it processes, not just across the homeric/
+    # modern queries within one build() call. Falling back to a fresh,
+    # build()-scoped instance keeps every caller that predates `cache`
+    # (and any direct build() call that just wants an ephemeral cache)
+    # working unchanged.
+    if cache is not None:
+        gap_fill_cache = cache
+    elif sources.llm_gap_filler is not None:
+        gap_fill_cache = GapFillCache()
+    else:
+        gap_fill_cache = None
 
     morpheus_readings = None
     modern_forms = None

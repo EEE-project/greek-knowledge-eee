@@ -7,6 +7,7 @@ files under out_dir/{words,grammar,culture}.
 import csv
 import logging
 import re
+import uuid
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
@@ -14,10 +15,15 @@ from okfbuild import okf
 from okfbuild.concepts import cultural_context, grammatical_rule, lexical_entry
 from okfbuild.okf import ConceptFile
 from okfbuild.sources import SourceBundle
+from okfbuild.sources.llm_gap_filler import GapFillCache
 
 logger = logging.getLogger(__name__)
 
 _ALL_PERIODS = ["homeric", "attic", "byzantine", "modern"]
+
+_GAP_FILL_RUNS_DIRNAME = ".gap_fill_runs"
+_GAP_FILL_CACHE_FILENAME = "cache.json"
+_GAP_FILL_CHECKPOINT_INTERVAL = 10  # new cache entries between checkpoint saves -- see run()
 
 _FILENAME_TO_POS: dict[str, str] = {
     "nouns.tsv": "noun",
@@ -220,12 +226,34 @@ def _apply_write(report: BuildReport, concept: ConceptFile, path: Path) -> None:
         report.unchanged += 1
 
 
+def _resolve_gap_fill_run_path(gap_fill_cache_dir: Path) -> Path:
+    """Picks the run-ID-scoped cache.json path for this run(): resumes the
+    most recently checkpointed still-incomplete run (a run-ID subdirectory
+    that still has a cache.json — a run that completes successfully
+    removes its own, see run()'s cleanup) if one exists, else starts a
+    fresh run ID. cache.json's mere presence, not a separate "completed"
+    marker, is what distinguishes an incomplete run."""
+    runs_dir = gap_fill_cache_dir / _GAP_FILL_RUNS_DIRNAME
+    incomplete_runs = []
+    if runs_dir.is_dir():
+        for run_dir in runs_dir.iterdir():
+            cache_path = run_dir / _GAP_FILL_CACHE_FILENAME
+            if cache_path.is_file():
+                incomplete_runs.append(cache_path)
+
+    if incomplete_runs:
+        return max(incomplete_runs, key=lambda path: path.stat().st_mtime)
+
+    return runs_dir / uuid.uuid4().hex / _GAP_FILL_CACHE_FILENAME
+
+
 def run(
     course_paths: list[Path],
     out_dir: Path,
     sources: SourceBundle,
     grammar_rules: list[GrammarRuleSpec] | None = None,
     cultural_topics: list[CulturalTopicSpec] | None = None,
+    gap_fill_cache_dir: Path | None = None,
 ) -> BuildReport:
     """For each course in course_paths: extract candidate lemmas from its
     vocabulary TSVs, build a Lexical Entry per lemma (always querying all
@@ -240,6 +268,19 @@ def run(
     material — its frontmatter `status` is flipped to "deprecated" (via
     okf.write(), so a human's `verified:` entry survives) rather than
     deleting the file; a human decides whether to actually remove it.
+
+    gap_fill_cache_dir: when sources.llm_gap_filler is set, run() shares
+    exactly one GapFillCache across every lexical candidate it processes.
+    Leaving gap_fill_cache_dir at its default (None) makes that cache
+    purely in-memory/ephemeral — identical to every caller before this
+    parameter existed, with no .load()/.save() calls at all. Passing a
+    directory engages run-ID-scoped, interruption-safe disk persistence
+    under gap_fill_cache_dir/.gap_fill_runs/<run-id>/cache.json: the cache
+    is periodically checkpointed, and the next run() call against the same
+    gap_fill_cache_dir automatically resumes the most recent incomplete
+    run instead of re-paying for already-resolved gaps. A run that
+    completes normally removes its own cache file — see
+    _resolve_gap_fill_run_path() and GapFillCache.save()/load().
     """
     report = BuildReport()
     touched: set[Path] = set()
@@ -247,74 +288,116 @@ def run(
     grammar_dir = out_dir / "grammar"
     culture_dir = out_dir / "culture"
 
-    for candidate in _collect_lexical_candidates(course_paths):
-        try:
-            concept = lexical_entry.build(
-                candidate.lemma,
-                candidate.pos,
-                _ALL_PERIODS,
-                sources,
-                level=candidate.level,
-                tags=candidate.tags,
-                source_course=candidate.source_course,
-            )
-        except Exception as exc:
-            report.failed += 1
-            report.errors.append(f"lexical_entry {candidate.lemma!r}: {exc}")
-            continue
+    gap_fill_cache: GapFillCache | None = None
+    gap_fill_cache_path: Path | None = None
+    if sources.llm_gap_filler is not None:
+        if gap_fill_cache_dir is not None:
+            gap_fill_cache_path = _resolve_gap_fill_run_path(gap_fill_cache_dir)
+            gap_fill_cache = GapFillCache.load(gap_fill_cache_path)
+        else:
+            gap_fill_cache = GapFillCache()
+    last_checkpoint_len = len(gap_fill_cache) if gap_fill_cache is not None else 0
 
-        if not concept.extra_frontmatter.get("periods"):
-            report.failed += 1
-            report.errors.append(f"lexical_entry {candidate.lemma!r}: no attested data in any source")
-            continue
+    completed_normally = False
+    try:
+        for candidate in _collect_lexical_candidates(course_paths):
+            try:
+                concept = lexical_entry.build(
+                    candidate.lemma,
+                    candidate.pos,
+                    _ALL_PERIODS,
+                    sources,
+                    level=candidate.level,
+                    tags=candidate.tags,
+                    source_course=candidate.source_course,
+                    cache=gap_fill_cache,
+                )
+            except Exception as exc:
+                report.failed += 1
+                report.errors.append(f"lexical_entry {candidate.lemma!r}: {exc}")
+                continue
 
-        try:
-            slug = okf.resolve_slug(words_dir, _slugify(candidate.lemma), lemma=candidate.lemma)
-            path = words_dir / f"{slug}.md"
-            _apply_write(report, concept, path)
-            touched.add(path)
-        except Exception as exc:
-            report.failed += 1
-            report.errors.append(f"lexical_entry {candidate.lemma!r}: {exc}")
+            if not concept.extra_frontmatter.get("periods"):
+                report.failed += 1
+                report.errors.append(f"lexical_entry {candidate.lemma!r}: no attested data in any source")
+                continue
 
-    for spec in grammar_rules or []:
-        try:
-            concept = grammatical_rule.build(
-                spec.rule_id,
-                spec.sophocles_excerpt,
-                spec.example_forms,
-                spec.period_from,
-                spec.period_to,
-                level=spec.level,
-                tags=spec.tags,
-            )
-            path = grammar_dir / f"{_slugify(spec.rule_id)}.md"
-            _apply_write(report, concept, path)
-            touched.add(path)
-        except Exception as exc:
-            report.failed += 1
-            report.errors.append(f"grammatical_rule {spec.rule_id!r}: {exc}")
+            try:
+                slug = okf.resolve_slug(words_dir, _slugify(candidate.lemma), lemma=candidate.lemma)
+                path = words_dir / f"{slug}.md"
+                _apply_write(report, concept, path)
+                touched.add(path)
+            except Exception as exc:
+                report.failed += 1
+                report.errors.append(f"lexical_entry {candidate.lemma!r}: {exc}")
 
-    for spec in cultural_topics or []:
-        try:
-            concept = cultural_context.build(
-                spec.topic_id,
-                spec.lesson_prose,
-                spec.wiki_title,
-                sources,
-                level=spec.level,
-                tags=spec.tags,
-                related_words=spec.related_words,
-                related_lessons=spec.related_lessons,
-            )
-            path = culture_dir / f"{_slugify(spec.topic_id)}.md"
-            _apply_write(report, concept, path)
-            touched.add(path)
-        except Exception as exc:
-            report.failed += 1
-            report.errors.append(f"cultural_context {spec.topic_id!r}: {exc}")
+            if (
+                gap_fill_cache_path is not None
+                and len(gap_fill_cache) - last_checkpoint_len >= _GAP_FILL_CHECKPOINT_INTERVAL
+            ):
+                gap_fill_cache.save(gap_fill_cache_path)
+                last_checkpoint_len = len(gap_fill_cache)
 
-    _prune(out_dir, touched, report)
+        for spec in grammar_rules or []:
+            try:
+                concept = grammatical_rule.build(
+                    spec.rule_id,
+                    spec.sophocles_excerpt,
+                    spec.example_forms,
+                    spec.period_from,
+                    spec.period_to,
+                    level=spec.level,
+                    tags=spec.tags,
+                )
+                path = grammar_dir / f"{_slugify(spec.rule_id)}.md"
+                _apply_write(report, concept, path)
+                touched.add(path)
+            except Exception as exc:
+                report.failed += 1
+                report.errors.append(f"grammatical_rule {spec.rule_id!r}: {exc}")
+
+        for spec in cultural_topics or []:
+            try:
+                concept = cultural_context.build(
+                    spec.topic_id,
+                    spec.lesson_prose,
+                    spec.wiki_title,
+                    sources,
+                    level=spec.level,
+                    tags=spec.tags,
+                    related_words=spec.related_words,
+                    related_lessons=spec.related_lessons,
+                )
+                path = culture_dir / f"{_slugify(spec.topic_id)}.md"
+                _apply_write(report, concept, path)
+                touched.add(path)
+            except Exception as exc:
+                report.failed += 1
+                report.errors.append(f"cultural_context {spec.topic_id!r}: {exc}")
+
+        _prune(out_dir, touched, report)
+        completed_normally = True
+    finally:
+        # Protects against ordinary exception unwinding (an unexpected bug
+        # above, KeyboardInterrupt) -- NOT SIGKILL/power loss, which only
+        # the periodic checkpoint above protects against. A failure here
+        # is logged, never allowed to replace/mask a real exception
+        # already propagating out of this function. Skipped when the try
+        # block above completed normally -- the cleanup step right below
+        # is about to delete this same file, so saving it first would
+        # just be wasted work on every successful run.
+        if gap_fill_cache_path is not None and not completed_normally:
+            try:
+                gap_fill_cache.save(gap_fill_cache_path)
+            except Exception:
+                logger.exception("gap-filler: failed to save final checkpoint at %s", gap_fill_cache_path)
+
+    # Only reached if the try block above returned normally -- "successful
+    # completion" for cache-cleanup purposes, regardless of report.failed
+    # (individual candidate failures are already isolated above and never
+    # reach here as a propagating exception).
+    if gap_fill_cache_path is not None:
+        gap_fill_cache_path.unlink(missing_ok=True)
 
     return report
 

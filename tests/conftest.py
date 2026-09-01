@@ -42,9 +42,13 @@ def make_source_bundle():
     SourceBundle whose eee_engine reports attested homeric forms only for
     the given lemmas; every other source client is stubbed to return
     nothing. A lemma not named in attested_lemmas gets no data from any
-    source — the "candidate with no data anywhere" case."""
+    source — the "candidate with no data anywhere" case. `llm_gap_filler`
+    is opaque here (never inspected by anything this stub does) — a test
+    that needs it set only cares that pipeline.run() sees a non-None
+    value on sources.llm_gap_filler, to engage its gap-fill-cache
+    construction/persistence logic."""
 
-    def _make(attested_lemmas: set[str] = frozenset()) -> SourceBundle:
+    def _make(attested_lemmas: set[str] = frozenset(), llm_gap_filler=None) -> SourceBundle:
         return SourceBundle(
             eee_engine=_eee_engine_stub(set(attested_lemmas)),
             morpheus=Mock(analyze=Mock(return_value=[])),
@@ -52,6 +56,7 @@ def make_source_bundle():
             wiktextract=Mock(lookup=Mock(return_value=None)),
             lsj=Mock(),
             wikipedia=Mock(),
+            llm_gap_filler=llm_gap_filler,
         )
 
     return _make

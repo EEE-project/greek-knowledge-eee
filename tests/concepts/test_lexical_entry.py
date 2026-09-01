@@ -10,7 +10,11 @@ from okfbuild.okf import Source
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
-from okfbuild.sources.llm_gap_filler import GapFillerConfig, LLMModelConfig
+from okfbuild.sources.llm_gap_filler import (
+    GapFillCache,
+    GapFillerConfig,
+    LLMModelConfig,
+)
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import WiktextractIndex
 
@@ -464,3 +468,48 @@ def test_build_llm_marker_and_source_never_leak_into_rule_based_or_disabled_outp
 
     assert "†" not in rule_based_only_concept.body
     assert not any(s.id.startswith("llm-gap-filler-") for s in rule_based_only_concept.sources)
+
+
+def test_build_reuses_caller_supplied_cache_instance_across_multiple_calls():
+    engine = _eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})})
+    gap_filler = GapFillerConfig(models=(LLMModelConfig(name="a", model="gpt-4o-mini", api_key_env="TEST_LLM_KEY"),))
+    sources = SourceBundle(
+        eee_engine=engine,
+        morpheus=Mock(analyze=Mock(return_value=[])),
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(),
+        wikipedia=Mock(),
+        llm_gap_filler=gap_filler,
+    )
+    shared_cache = GapFillCache()
+
+    build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"], cache=shared_cache)
+    build("φίλος", "noun", ["homeric"], sources, level=["B1"], tags=["test"], cache=shared_cache)
+
+    assert engine.collect_slot_forms.call_count == 2
+    for call in engine.collect_slot_forms.call_args_list:
+        assert call.kwargs.get("cache") is shared_cache
+
+
+def test_build_fallback_cache_is_a_real_gapfillcache_instance_not_merely_non_none():
+    """Distinct from test_build_passes_non_none_cache_whenever_gap_filler_is_configured:
+    that test only checks `is not None`; this confirms the fallback cache
+    build() constructs internally (cache= omitted) is genuinely a
+    GapFillCache, not some other truthy non-None stand-in."""
+    engine = _eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})})
+    gap_filler = GapFillerConfig(models=(LLMModelConfig(name="a", model="gpt-4o-mini", api_key_env="TEST_LLM_KEY"),))
+    sources = SourceBundle(
+        eee_engine=engine,
+        morpheus=Mock(analyze=Mock(return_value=[])),
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(),
+        wikipedia=Mock(),
+        llm_gap_filler=gap_filler,
+    )
+
+    build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"])  # cache omitted
+
+    passed_cache = engine.collect_slot_forms.call_args.kwargs.get("cache")
+    assert isinstance(passed_cache, GapFillCache)

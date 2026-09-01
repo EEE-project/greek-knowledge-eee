@@ -1,3 +1,4 @@
+import json
 import logging
 import threading
 import time
@@ -11,6 +12,7 @@ from okfbuild.sources.llm_gap_filler import (
     REQUEST_BUDGET_ERROR,
     GapFillCache,
     GapFillerConfig,
+    GapFillResult,
     LLMModelConfig,
     SampleStatus,
     fill_gap,
@@ -504,3 +506,132 @@ def test_fill_gap_stops_and_raises_once_budget_exceeded(monkeypatch):
             fill_gap("lemma-2", {}, "noun", "grc", config, cache)  # different key -> miss -> budget check fires
 
     assert len(constructed) == 1
+
+
+# --- GapFillCache persistence (save/load) --------------------------------
+
+
+def _result(forms=(), *, statuses=(SampleStatus.SUCCESS,), method="llm:gpt-4o-mini", llm_backend_version="0.2.1"):
+    return GapFillResult(forms=set(forms), method=method, llm_backend_version=llm_backend_version, sample_statuses=statuses)
+
+
+def test_gap_fill_cache_save_writes_atomically_via_tmp_file_and_os_replace(tmp_path):
+    cache = GapFillCache()
+    config = GapFillerConfig(models=(_model(),))
+    cache.set(cache.make_key("lemma", {}, "noun", "grc", config), _result({"form"}))
+    path = tmp_path / "cache.json"
+
+    with patch("okfbuild.sources.llm_gap_filler.os.replace") as mock_replace:
+        cache.save(path)
+
+    mock_replace.assert_called_once()
+    src, dst = mock_replace.call_args.args
+    assert src.name == "cache.json.tmp"
+    assert src.parent == tmp_path
+    assert dst == path
+
+
+def test_gap_fill_cache_load_missing_path_returns_fresh_empty_cache(tmp_path):
+    cache = GapFillCache.load(tmp_path / "does-not-exist.json")
+
+    assert len(cache) == 0
+    assert cache.request_count == 0
+
+
+def test_gap_fill_cache_save_load_round_trips_entries_and_request_count(tmp_path):
+    cache = GapFillCache()
+    config = GapFillerConfig(models=(_model(),))
+    key_a = cache.make_key("lemma-a", {"Case": "Gen"}, "noun", "grc", config, context="Gen.Sing")
+    key_b = cache.make_key("lemma-b", {}, "noun", "grc", config)
+    cache.set(key_a, _result({"form-a"}))
+    cache.set(key_b, _result({"form-b"}))
+    cache.request_count = 7
+    path = tmp_path / "cache.json"
+
+    cache.save(path)
+    loaded = GapFillCache.load(path)
+
+    assert loaded.get(key_a) == cache.get(key_a)
+    assert loaded.get(key_b) == cache.get(key_b)
+    assert loaded.request_count == 7
+
+
+def test_gap_fill_cache_load_corrupt_json_raises_naming_path(tmp_path):
+    path = tmp_path / "cache.json"
+    path.write_text("{not valid json", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="corrupt") as exc_info:
+        GapFillCache.load(path)
+    assert str(path) in str(exc_info.value)
+
+
+def test_gap_fill_cache_load_wrong_format_version_raises_distinctly_from_corrupt_json(tmp_path):
+    path = tmp_path / "cache.json"
+    path.write_text(json.dumps({"format_version": 999, "request_count": 0, "entries": []}), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="format_version") as exc_info:
+        GapFillCache.load(path)
+    assert "corrupt" not in str(exc_info.value)
+
+
+def test_gap_fill_cache_save_excludes_all_call_failed_entries(tmp_path):
+    cache = GapFillCache()
+    config = GapFillerConfig(models=(_model(),))
+    failed_key = cache.make_key("lemma", {}, "noun", "grc", config)
+    cache.set(failed_key, _result(statuses=(SampleStatus.CALL_FAILED, SampleStatus.CALL_FAILED)))
+    path = tmp_path / "cache.json"
+
+    cache.save(path)
+    loaded = GapFillCache.load(path)
+
+    assert loaded.get(failed_key) is None
+    assert cache.get(failed_key) is not None  # in-memory original unaffected by the save-time filter
+
+
+def test_gap_fill_cache_save_keeps_genuine_negative_results(tmp_path):
+    cache = GapFillCache()
+    config = GapFillerConfig(models=(_model(),))
+    abstained_key = cache.make_key("lemma-a", {}, "noun", "grc", config)
+    disagreement_key = cache.make_key("lemma-b", {}, "noun", "grc", config)
+    cache.set(abstained_key, _result(statuses=(SampleStatus.ABSTAINED, SampleStatus.ABSTAINED)))
+    cache.set(disagreement_key, _result(forms=(), statuses=(SampleStatus.SUCCESS, SampleStatus.SUCCESS)))
+    path = tmp_path / "cache.json"
+
+    cache.save(path)
+    loaded = GapFillCache.load(path)
+
+    assert loaded.get(abstained_key) is not None
+    assert loaded.get(disagreement_key) is not None
+
+
+def test_gap_fill_cache_request_count_round_trips_through_save_load(tmp_path):
+    cache = GapFillCache()
+    cache.request_count = 42
+    path = tmp_path / "cache.json"
+
+    cache.save(path)
+    loaded = GapFillCache.load(path)
+
+    assert loaded.request_count == 42
+
+
+def test_gap_fill_cache_full_round_trip_mixed_entries(tmp_path):
+    cache = GapFillCache()
+    config = GapFillerConfig(models=(_model(),))
+    good_key = cache.make_key("lemma-good", {"Case": "Gen"}, "noun", "grc", config, context="Gen.Sing")
+    negative_key = cache.make_key("lemma-negative", {}, "noun", "grc", config)
+    failed_key = cache.make_key("lemma-failed", {}, "noun", "grc", config)
+    cache.set(good_key, _result({"form"}))
+    cache.set(negative_key, _result(statuses=(SampleStatus.ABSTAINED,)))
+    cache.set(failed_key, _result(statuses=(SampleStatus.CALL_FAILED,)))
+    cache.request_count = 3
+    path = tmp_path / "cache.json"
+
+    cache.save(path)
+    loaded = GapFillCache.load(path)
+
+    assert loaded.get(good_key) == cache.get(good_key)
+    assert loaded.get(negative_key) == cache.get(negative_key)
+    assert loaded.get(failed_key) is None
+    assert loaded.request_count == 3
+    assert len(loaded) == 2
