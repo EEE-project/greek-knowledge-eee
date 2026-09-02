@@ -84,6 +84,11 @@ _BEEKES_SOURCE = {
     "title": "Etymological Dictionary of Greek",
     "author": "Robert Beekes",
 }
+_LSJ_SOURCE = {
+    "resource": "https://github.com/PerseusDL/lexica/tree/master/CTS_XML_TEI/perseus/pdllex/grc/lsj",
+    "title": "Liddell-Scott-Jones Greek-English Lexicon",
+    "author": "Perseus Digital Library",
+}
 _LLM_GAP_FILLER_SOURCE = {
     "resource": "llm-backend-eee gap-filler",
     "title": "LLM-inferred (unverified)",
@@ -111,6 +116,15 @@ def build(
     form becomes a cited footnote. A requested period with no data in any
     relevant source produces no section — `periods` in the returned
     ConceptFile may be a subset of the requested `periods`.
+
+    If `periods` includes homeric and/or attic and `sources.lsj` has an
+    entry for `lemma`, a single "Ancient Greek meaning" section is added
+    after the per-period sections (once, not duplicated per period — LSJ
+    entries aren't period-scoped the way inflected forms are). Independent
+    of morphological attestation: a lemma with no eee_engine/Morpheus hits
+    for either ancient period can still get this section on its own,
+    matching how a Modern-period Wiktextract gloss doesn't require
+    attested inflected forms either.
 
     `sources.llm_gap_filler` (if set) is forwarded to every
     collect_slot_forms() call, opaquely — this function never inspects a
@@ -186,6 +200,8 @@ def build(
     morpheus_readings = None
     modern_forms = None
     wiktextract_entry = None
+    lsj_entry = None
+    lsj_looked_up = False
 
     for period in periods:
         if period in _ANCIENT_PERIODS:
@@ -196,6 +212,15 @@ def build(
             emit_llm_inferred_records(ancient_forms, "grc", period)
             if morpheus_readings is None:
                 morpheus_readings = sources.morpheus.analyze(lemma)
+            # A separate flag, not `if lsj_entry is None:` -- lookup()'s
+            # legitimate "no entry" return value is also None, so that
+            # sentinel would re-query on every ancient period whenever
+            # nothing was found (the common case today: every LSJIndex
+            # constructed anywhere in this codebase is still the empty
+            # placeholder, see data/lsj/README.md).
+            if not lsj_looked_up:
+                lsj_entry = sources.lsj.lookup(lemma)
+                lsj_looked_up = True
             section = _ancient_period_section(period, ancient_forms, morpheus_readings, cite)
         elif period == "byzantine":
             forms = sources.byzantine_forms.get(lemma)
@@ -219,6 +244,20 @@ def build(
 
     if any(source_id.startswith("llm-gap-filler-") for source_id in seen_source_ids):
         body_sections.append(_LLM_MARKER_LEGEND)
+
+    if lsj_entry:
+        source_id = "lsj"
+        cite(source_id, **_LSJ_SOURCE)
+        body_sections.append(f"## Ancient Greek meaning\n\n{lsj_entry}[^{source_id}]")
+        # attested_periods must reflect this too, not just body_sections --
+        # pipeline.py's real candidate-acceptance gate discards any concept
+        # whose extra_frontmatter["periods"] comes back empty ("no attested
+        # data in any source"). Without this, a lemma with an LSJ entry but
+        # no eee_engine/Morpheus/wiktextract/byzantine hit anywhere would
+        # have its whole concept silently dropped, LSJ content included.
+        for ancient_period in _ANCIENT_PERIODS:
+            if ancient_period in periods and ancient_period not in attested_periods:
+                attested_periods.append(ancient_period)
 
     if beekes_citation:
         source_id = "beekes-edg"

@@ -55,6 +55,14 @@ def _eee_engine_stub(grc_forms_by_backend=None, el_forms=None):
     return engine
 
 
+def _no_lsj_entry() -> Mock:
+    """A fresh Mock per call (not a shared instance) -- a test that asserts
+    on lsj.lookup's call history (e.g. assert_called_once_with) needs its
+    own Mock, not one whose history already includes every other test's
+    calls."""
+    return Mock(lookup=Mock(return_value=None))
+
+
 @pytest.fixture
 def morpheus_client(tmp_path):
     cache_dir = tmp_path / "morpheus_cache"
@@ -75,7 +83,7 @@ def test_build_single_attested_period_produces_one_section(morpheus_client):
         morpheus=morpheus_client,
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -100,7 +108,7 @@ def test_build_two_attested_periods_each_get_own_footnote(morpheus_client, wikte
         morpheus=morpheus_client,
         byzantine_forms={},
         wiktextract=wiktextract_index,
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -120,7 +128,7 @@ def test_build_skips_period_with_no_attested_data(morpheus_client):
         morpheus=morpheus_client,
         byzantine_forms=byzantine_forms,
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -130,13 +138,126 @@ def test_build_skips_period_with_no_attested_data(morpheus_client):
     assert concept.body.count("## ") == 1
 
 
+def test_build_includes_lsj_meaning_section_when_entry_found(morpheus_client):
+    sources = SourceBundle(
+        eee_engine=_eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})}),
+        morpheus=morpheus_client,
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(lookup=Mock(return_value="return, homecoming; a coming back.")),
+        wikipedia=Mock(),
+    )
+
+    concept = build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"])
+
+    assert "## Ancient Greek meaning" in concept.body
+    assert "return, homecoming; a coming back." in concept.body
+    assert "[^lsj]" in concept.body
+    assert "lsj" in {s.id for s in concept.sources}
+
+
+def test_build_skips_lsj_section_when_no_entry(morpheus_client):
+    sources = SourceBundle(
+        eee_engine=_eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})}),
+        morpheus=morpheus_client,
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=_no_lsj_entry(),
+        wikipedia=Mock(),
+    )
+
+    concept = build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"])
+
+    assert "## Ancient Greek meaning" not in concept.body
+    assert "lsj" not in {s.id for s in concept.sources}
+
+
+def test_build_lsj_meaning_not_duplicated_across_both_ancient_periods(morpheus_client, wiktextract_index):
+    """LSJ entries aren't period-scoped -- requesting both homeric and attic
+    must still look the lemma up once and render one section, not two."""
+    lsj = Mock(lookup=Mock(return_value="return, homecoming."))
+    sources = SourceBundle(
+        eee_engine=_eee_engine_stub(
+            grc_forms_by_backend={
+                "homeric": _rule_based({"Nom.Sing": {"νόστος"}}),
+                "attic": _rule_based({"Nom.Sing": {"νόστος"}}),
+            }
+        ),
+        morpheus=morpheus_client,
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=lsj,
+        wikipedia=Mock(),
+    )
+
+    concept = build("νόστος", "noun", ["homeric", "attic"], sources, level=["B1"], tags=["test"])
+
+    assert concept.body.count("## Ancient Greek meaning") == 1
+    assert concept.body.count("return, homecoming.") == 1
+    lsj.lookup.assert_called_once_with("νόστος")
+
+
+def test_build_lsj_lookup_called_once_even_when_no_entry_found(morpheus_client, wiktextract_index):
+    """Regression test: an earlier version memoized via `if lsj_entry is
+    None:`, which collides with lookup()'s legitimate "no entry" return
+    value of None -- that sentinel re-queries on every ancient period
+    whenever nothing is found, the common case today since every LSJIndex
+    constructed anywhere in this codebase is still the empty placeholder
+    (data/lsj/README.md)."""
+    lsj = _no_lsj_entry()
+    sources = SourceBundle(
+        eee_engine=_eee_engine_stub(
+            grc_forms_by_backend={
+                "homeric": _rule_based({"Nom.Sing": {"νόστος"}}),
+                "attic": _rule_based({"Nom.Sing": {"νόστος"}}),
+            }
+        ),
+        morpheus=morpheus_client,
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=lsj,
+        wikipedia=Mock(),
+    )
+
+    build("νόστος", "noun", ["homeric", "attic"], sources, level=["B1"], tags=["test"])
+
+    lsj.lookup.assert_called_once_with("νόστος")
+
+
+def test_build_lsj_meaning_independent_of_attested_forms(morpheus_client):
+    """LSJ is an independent dictionary source, not derived from
+    morphological analysis -- a lemma with zero eee_engine/Morpheus hits
+    for the ancient period must still get its LSJ meaning shown, matching
+    how a Modern-period Wiktextract gloss doesn't require attested forms
+    either. `periods` must still list "homeric" despite no "## Homeric"
+    heading (no rule-based/LLM/Morpheus content, so _ancient_period_section
+    itself returns None) -- pipeline.py's real candidate-acceptance gate
+    discards any concept whose `periods` comes back empty, so an LSJ-only
+    lemma must not look unattested just because its content landed in the
+    separate "Ancient Greek meaning" section instead of a period heading."""
+    sources = SourceBundle(
+        eee_engine=_eee_engine_stub(grc_forms_by_backend={}),
+        morpheus=Mock(analyze=Mock(return_value=[])),
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(lookup=Mock(return_value="return, homecoming.")),
+        wikipedia=Mock(),
+    )
+
+    concept = build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"])
+
+    assert "## Ancient Greek meaning" in concept.body
+    assert "## Homeric" not in concept.body
+    assert "homeric" in concept.extra_frontmatter["periods"]
+
+
 def test_build_includes_beekes_etymology_section_when_supplied(morpheus_client):
     sources = SourceBundle(
         eee_engine=_eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})}),
         morpheus=morpheus_client,
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -165,7 +286,7 @@ def test_build_homeric_and_attic_query_independently_scoped_backends():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -191,7 +312,7 @@ def test_build_modern_period_labels_multiple_distinct_senses():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=multi_sense_entry)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -221,7 +342,7 @@ def test_build_passes_non_none_cache_whenever_gap_filler_is_configured():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
         llm_gap_filler=gap_filler,
     )
@@ -244,7 +365,7 @@ def test_build_forwards_source_course_to_both_ancient_and_modern_call_sites():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -262,7 +383,7 @@ def test_build_omitting_source_course_defaults_to_none():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -286,7 +407,7 @@ def test_build_output_unchanged_when_no_gap_filler_configured(morpheus_client, w
         morpheus=morpheus_client,
         byzantine_forms={},
         wiktextract=wiktextract_index,
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -357,7 +478,7 @@ def test_build_llm_inferred_slot_gets_distinct_source_and_dagger_marker():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -388,7 +509,7 @@ def test_build_two_llm_inferred_labels_same_period_same_method_dedupe_to_one_sou
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -417,7 +538,7 @@ def test_build_two_llm_inferred_slots_same_method_dedupe_to_one_source():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -443,7 +564,7 @@ def test_build_llm_marker_and_source_never_leak_into_rule_based_or_disabled_outp
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 
@@ -461,7 +582,7 @@ def test_build_llm_marker_and_source_never_leak_into_rule_based_or_disabled_outp
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
     rule_based_only_concept = build("νόστος", "noun", ["homeric"], rule_based_only_sources, level=["B1"], tags=["test"])
@@ -478,7 +599,7 @@ def test_build_reuses_caller_supplied_cache_instance_across_multiple_calls():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
         llm_gap_filler=gap_filler,
     )
@@ -504,7 +625,7 @@ def test_build_fallback_cache_is_a_real_gapfillcache_instance_not_merely_non_non
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
         llm_gap_filler=gap_filler,
     )
@@ -538,7 +659,7 @@ def test_build_on_llm_inferred_fires_once_per_form_for_llm_inferred_slots_only()
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
     records = []
@@ -566,7 +687,7 @@ def test_build_on_llm_inferred_period_is_none_for_modern():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
     records = []
@@ -595,7 +716,7 @@ def test_build_omitting_on_llm_inferred_is_a_no_op():
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(),
+        lsj=_no_lsj_entry(),
         wikipedia=Mock(),
     )
 

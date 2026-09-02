@@ -105,7 +105,7 @@ def make_source_bundle():
             morpheus=Mock(analyze=Mock(return_value=[])),
             byzantine_forms={},
             wiktextract=Mock(lookup=Mock(return_value=None)),
-            lsj=Mock(),
+            lsj=Mock(lookup=Mock(return_value=None)),
             wikipedia=Mock(),
             llm_gap_filler=llm_gap_filler,
         )
@@ -155,12 +155,13 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     backend names exactly.
 
     lsj is deliberately an empty LSJIndex({}), not a real downloaded Perseus
-    dump: none of the three concept builders needed for this pilot's
-    required deliverables (lexical_entry / grammatical_rule /
-    cultural_context) ever read sources.lsj — confirmed by reading all three
-    modules directly, not assumed. Downloading and parsing the 27 real LSJ
-    TEI-XML files would add real time/disk cost for zero effect on this
-    pilot's actual output.
+    dump: lexical_entry.build() does read sources.lsj for homeric/attic
+    lemmas (added after this docstring's original "never read" claim), but
+    an empty index's lookup() correctly returns None for every lemma, so
+    this pilot's actual output is unaffected either way. Downloading and
+    parsing the 27 real LSJ TEI-XML files would add real time/disk cost for
+    zero effect on this pilot's required deliverables until that download
+    actually happens.
 
     wiktextract is a CachedWiktextractIndex: lemmas already resolved on a
     prior run come from data/wiktextract-cache/ (small, git-tracked) with no
