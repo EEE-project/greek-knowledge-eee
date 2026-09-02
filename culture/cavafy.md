@@ -16,14 +16,14 @@ sources:
   author: Wikipedia
 generated:
   by: process:greek-knowledge-eee-builder/0.1.0
-  at: '2026-08-14T07:24:54.414256+00:00'
+  at: '2026-09-02T18:24:37.966054+00:00'
 related_words:
 - νόστος
 related_lessons:
 - kavafis_ithaki/1
 - kavafis_ithaki/2
-status: draft
 verified: []
+status: draft
 ---
 ## Who was Cavafy
 
