@@ -10,7 +10,7 @@ dependencies = [
     "eee-project==1.6.0",
     "ancient-greek-backend-eee>=2.0.0",
     "modern-greek-backend-eee>=1.0.0",
-    "modern-greek-inflexion-eee>=2.1.4",
+    "modern-greek-inflexion-eee>=2.1.10",
     "pyyaml>=6.0.3",
     "defusedxml>=0.7.1",
     "llm-backend-eee",

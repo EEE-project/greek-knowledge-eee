@@ -274,7 +274,7 @@ requires-dist = [
     { name = "eee-project", specifier = "==1.6.0" },
     { name = "llm-backend-eee", git = "https://codeberg.org/EEE-project/llm-backend-eee?tag=v0.2.1" },
     { name = "modern-greek-backend-eee", specifier = ">=1.0.0" },
-    { name = "modern-greek-inflexion-eee", specifier = ">=2.1.4" },
+    { name = "modern-greek-inflexion-eee", specifier = ">=2.1.10" },
     { name = "pyyaml", specifier = ">=6.0.3" },
 ]
 
@@ -646,14 +646,14 @@ wheels = [
 
 [[package]]
 name = "modern-greek-inflexion-eee"
-version = "2.1.9"
+version = "2.1.10"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "modern-greek-accentuation-eee" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/08/6d/11e89cbaef1e896e576f19f67568d4b67717a0a88238003d35656cecc667/modern_greek_inflexion_eee-2.1.9.tar.gz", hash = "sha256:19428f3411674a89a2a88a9750ded23b8bb95b15a18d6c28d5794b23ac29f958", size = 9426234, upload-time = "2026-08-20T21:35:16.291Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/92/30/41bd4f706c3de4532bacc9e94d1005a2513fa7c9ff1c63e22e28f5923e24/modern_greek_inflexion_eee-2.1.10.tar.gz", hash = "sha256:ea322181bd3aaafcb6de148cf0765d9f216a017ff8bfa1a73f18d0745075ee32", size = 9426866, upload-time = "2026-09-02T20:25:15.809Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/19/18/a90f44043fd2e1f85c2af729bdefeef46ba9238548f4d640bad3d6f3a3db/modern_greek_inflexion_eee-2.1.9-py3-none-any.whl", hash = "sha256:37bbde6e75a8ca78bdde9f2f3c9e5b475b9fb2200575d2eac53fa1304e2e0fb1", size = 9741484, upload-time = "2026-08-20T21:35:14.128Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/6e/febc4b2aed8a1c8d4d3dea4c5b34a31d86b752c2275f8e83d8ed2c97f107/modern_greek_inflexion_eee-2.1.10-py3-none-any.whl", hash = "sha256:e6f6a05aaf7247d81fce376b712d3163ccd3efa452923ac72a8ca298d31d7993", size = 9741963, upload-time = "2026-09-02T20:25:13.311Z" },
 ]
 
 [[package]]
