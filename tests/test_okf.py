@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import pytest
 import yaml
 
@@ -128,6 +130,20 @@ def test_render_includes_footnote_block_per_source():
     assert "[^src-1]:" in rendered
 
 
+def test_render_does_not_duplicate_footnote_when_body_already_has_one():
+    """A body already ending with a footnote-definitions block (e.g. from
+    read() reconstructing a ConceptFile that was rendered once before) must
+    not get a second block appended on top -- the real-world trigger is
+    pipeline.py's pruning step: read() an existing file, flip `status`, and
+    write() it back unchanged otherwise."""
+    concept = _minimal_concept(
+        sources=[Source(id="src-1", resource="https://example.com", title="Example Source", author="test")],
+        body="A claim here[^src-1]\n\n[^src-1]: Example Source, test (https://example.com)\n",
+    )
+    rendered = render(concept)
+    assert rendered.count("[^src-1]:") == 1
+
+
 # --- write() ---
 
 
@@ -168,6 +184,26 @@ def test_write_handles_malformed_existing_file_gracefully(tmp_path):
 
     assert result is True
     assert "new body" in path.read_text()
+
+
+def test_write_rewrite_via_read_does_not_duplicate_footnote(tmp_path):
+    """End-to-end regression for the real pipeline.py pruning path: build a
+    concept with a real citation, write it, read() it back, change an
+    unrelated field (mirroring the status flip _prune() does), and write()
+    again -- the footnote must still appear exactly once, not twice."""
+    concept = _minimal_concept(
+        sources=[Source(id="src-1", resource="https://example.com", title="Example Source", author="test")],
+        body="A claim here[^src-1]",
+    )
+    path = tmp_path / "test.md"
+    write(concept, path)
+    assert path.read_text().count("[^src-1]:") == 1
+
+    reread = read(path)
+    modified = replace(reread, extra_frontmatter={**reread.extra_frontmatter, "status": "deprecated"})
+    write(modified, path)
+
+    assert path.read_text().count("[^src-1]:") == 1
 
 
 def test_write_preserves_manually_added_verified_entry(tmp_path):

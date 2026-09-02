@@ -17,6 +17,7 @@ CONCEPT_TYPES = {"Lexical Entry", "Grammatical Rule", "Cultural Context"}
 _COMMON_FIELDS = ("title", "description", "tags", "level", "sources", "generated", "status")
 
 _FOOTNOTE_REF_RE = re.compile(r"\[\^([^\]]+)\]")
+_FOOTNOTE_DEF_LINE_RE = re.compile(r"^\[\^[^\]]+\]:.*\n?", re.MULTILINE)
 
 
 @dataclass
@@ -101,14 +102,25 @@ def render(concept: ConceptFile) -> str:
 
     yaml_text = yaml.safe_dump(frontmatter, allow_unicode=True, sort_keys=False)
 
-    referenced_ids = set(_FOOTNOTE_REF_RE.findall(concept.body))
+    # concept.body can already end with a footnote-definitions block from a
+    # previous render() -- read() reconstructs a ConceptFile's body as
+    # everything after the frontmatter fence, footnotes included (see its
+    # own docstring), so a caller that reads an existing file, changes an
+    # unrelated field (e.g. pipeline.py's pruning step flipping `status`),
+    # and writes it back would otherwise get a second footnote block
+    # appended on top of the first. Stripping any such lines before
+    # recomputing keeps this idempotent regardless of where `body` came
+    # from, and self-heals a file already corrupted by this bug's absence.
+    body = _FOOTNOTE_DEF_LINE_RE.sub("", concept.body).rstrip("\n")
+
+    referenced_ids = set(_FOOTNOTE_REF_RE.findall(body))
     footnote_lines = [
         f"[^{source.id}]: {source.title}, {source.author} ({source.resource})"
         for source in concept.sources
         if source.id in referenced_ids
     ]
 
-    text = f"---\n{yaml_text}---\n{concept.body}"
+    text = f"---\n{yaml_text}---\n{body}"
     if footnote_lines:
         text += "\n\n" + "\n".join(footnote_lines) + "\n"
     return text
