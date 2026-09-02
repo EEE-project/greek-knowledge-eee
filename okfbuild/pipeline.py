@@ -17,7 +17,7 @@ from okfbuild.concepts import cultural_context, grammatical_rule, lexical_entry
 from okfbuild.concepts.lexical_entry import GapFillRecord
 from okfbuild.okf import ConceptFile
 from okfbuild.sources import SourceBundle
-from okfbuild.sources.llm_gap_filler import GapFillCache
+from okfbuild.sources.llm_gap_filler import GapFillCache, RequestBudgetExceededError
 
 logger = logging.getLogger(__name__)
 
@@ -149,21 +149,32 @@ def _read_vocabulary_candidates(course_path: Path) -> list[_LexicalCandidate]:
     courses nest one vocabulary file per chapter). Each file is dispatched
     per its own header/filename shape:
 
-    1. A `lemma` column present -> the reading-course format
-       (lemma/pos/level/tags, semicolon-separated level/tags).
+    1. `lemma` AND `pos` columns both present -> the reading-course format
+       (lemma/pos/level/tags, semicolon-separated level/tags). `pos` is
+       required, not just `lemma`, specifically to rule out
+       translation_presence.tsv below -- across every course in this
+       repo family, that's the only other `lemma`-column shape, and it
+       has no `pos` column at all.
     2. A `_XX.tsv` language-suffix filename -> skipped quietly (a
        translation twin of a sibling file, e.g. nouns_ru.tsv).
-    3. Exactly `vocabulary.tsv` -> Word/Translation/Type format, pos from
+    3. Exactly `translation_presence.tsv` -> skipped quietly. This is a
+       per-lesson quiz answer key (see translation_presence_SCHEMA.md in
+       the course repo), not vocabulary -- it has its own `lemma` column
+       (naming which word each row judges) that would otherwise satisfy
+       case 1 above, feeding every row -- including intentionally
+       comment-prefixed stale ones (`#`-prefixed lemma, e.g. "#ἐγώ") --
+       into the build as a bogus candidate with no attested data.
+    4. Exactly `vocabulary.tsv` -> Word/Translation/Type format, pos from
        the per-row Type column via _VOCABULARY_TYPE_TO_POS.
-    4. Filename is a key in _FILENAME_TO_POS -> Word/Translation format,
+    5. Filename is a key in _FILENAME_TO_POS -> Word/Translation format,
        pos fixed per file.
-    5. Anything else -> skipped, with a warning (an unrecognized vocab
+    6. Anything else -> skipped, with a warning (an unrecognized vocab
        file this code doesn't know how to read yet)."""
     candidates = []
     for tsv_path in sorted(course_path.rglob("*.tsv")):
         with tsv_path.open(newline="", encoding="utf-8") as fh:
             reader = csv.DictReader(fh, delimiter="\t")
-            if reader.fieldnames and "lemma" in reader.fieldnames:
+            if reader.fieldnames and "lemma" in reader.fieldnames and "pos" in reader.fieldnames:
                 for row in reader:
                     lemma = (row.get("lemma") or "").strip()
                     if not lemma:
@@ -183,6 +194,10 @@ def _read_vocabulary_candidates(course_path: Path) -> list[_LexicalCandidate]:
 
             if _LANGUAGE_SUFFIX_RE.search(tsv_path.name):
                 logger.info("Skipping translation-twin vocabulary file %r in %s", tsv_path.name, course_path)
+                continue
+
+            if tsv_path.name == "translation_presence.tsv":
+                logger.info("Skipping translation-presence quiz file %r in %s (not vocabulary)", tsv_path.name, course_path)
                 continue
 
             if tsv_path.name == "vocabulary.tsv":
@@ -249,6 +264,22 @@ def _resolve_gap_fill_run_path(gap_fill_cache_dir: Path) -> Path:
     return runs_dir / uuid.uuid4().hex / _GAP_FILL_CACHE_FILENAME
 
 
+def _persist_gap_fill_cache(cache: GapFillCache, path: Path) -> None:
+    """Saves the gap-fill cache to path, protected against I/O failures so a
+    save error never masks/replaces a real exception or turns an otherwise-
+    clean early stop into a raised one. Shared by both non-normal-completion
+    exits of run()'s try/except/else below (a crash, and budget
+    exhaustion) -- both need an unconditional attempt (even with zero new
+    entries since the last periodic checkpoint) so cache.json still exists
+    on disk for _resolve_gap_fill_run_path() to find on resume; resumability
+    depends on the file's existence, not on whether this particular exit
+    happened to grow the cache."""
+    try:
+        cache.save(path)
+    except Exception:
+        logger.exception("gap-filler: failed to save checkpoint at %s", path)
+
+
 def run(
     course_paths: list[Path],
     out_dir: Path,
@@ -284,6 +315,13 @@ def run(
     run instead of re-paying for already-resolved gaps. A run that
     completes normally removes its own cache file — see
     _resolve_gap_fill_run_path() and GapFillCache.save()/load().
+    Exhausting config.max_requests_per_run (llm_gap_filler.RequestBudgetExceededError)
+    stops the run early rather than letting every remaining candidate fail
+    the same way one-by-one, and does NOT count as "completed normally"
+    for cache-cleanup purposes — the cache is preserved (grammar_rules/
+    cultural_topics/pruning are also skipped, since the run never reached
+    the rest of the course) so a later run with a higher budget resumes
+    instead of re-paying for every already-resolved gap.
 
     on_llm_inferred, if given, is forwarded unchanged to every
     lexical_entry.build() call in the lexical-candidate loop — see that
@@ -305,6 +343,7 @@ def run(
         else:
             gap_fill_cache = GapFillCache()
     last_checkpoint_len = len(gap_fill_cache) if gap_fill_cache is not None else 0
+    budget_exhausted = False
 
     try:
         for candidate in _collect_lexical_candidates(course_paths):
@@ -323,6 +362,24 @@ def run(
             except Exception as exc:
                 report.failed += 1
                 report.errors.append(f"lexical_entry {candidate.lemma!r}: {exc}")
+                if isinstance(exc, RequestBudgetExceededError):
+                    # Every remaining candidate would immediately fail this
+                    # exact same way (cache.request_count already exceeds
+                    # the budget) -- stop now rather than burning through
+                    # the rest one-by-one, each producing its own
+                    # uninformative "exceeded budget" entry. grammar_rules/
+                    # cultural_topics/_prune() are skipped below too: this
+                    # run never reached the rest of the course, so pruning
+                    # would wrongly mark still-current, not-yet-attempted
+                    # concepts as deprecated.
+                    logger.warning(
+                        "gap-filler: max_requests_per_run exhausted at lemma=%r -- "
+                        "stopping this run early instead of re-attempting (and "
+                        "re-failing) every remaining candidate",
+                        candidate.lemma,
+                    )
+                    budget_exhausted = True
+                    break
                 continue
 
             if not concept.extra_frontmatter.get("periods"):
@@ -346,44 +403,45 @@ def run(
                 gap_fill_cache.save(gap_fill_cache_path)
                 last_checkpoint_len = len(gap_fill_cache)
 
-        for spec in grammar_rules or []:
-            try:
-                concept = grammatical_rule.build(
-                    spec.rule_id,
-                    spec.sophocles_excerpt,
-                    spec.example_forms,
-                    spec.period_from,
-                    spec.period_to,
-                    level=spec.level,
-                    tags=spec.tags,
-                )
-                path = grammar_dir / f"{_slugify(spec.rule_id)}.md"
-                _apply_write(report, concept, path)
-                touched.add(path)
-            except Exception as exc:
-                report.failed += 1
-                report.errors.append(f"grammatical_rule {spec.rule_id!r}: {exc}")
+        if not budget_exhausted:
+            for spec in grammar_rules or []:
+                try:
+                    concept = grammatical_rule.build(
+                        spec.rule_id,
+                        spec.sophocles_excerpt,
+                        spec.example_forms,
+                        spec.period_from,
+                        spec.period_to,
+                        level=spec.level,
+                        tags=spec.tags,
+                    )
+                    path = grammar_dir / f"{_slugify(spec.rule_id)}.md"
+                    _apply_write(report, concept, path)
+                    touched.add(path)
+                except Exception as exc:
+                    report.failed += 1
+                    report.errors.append(f"grammatical_rule {spec.rule_id!r}: {exc}")
 
-        for spec in cultural_topics or []:
-            try:
-                concept = cultural_context.build(
-                    spec.topic_id,
-                    spec.lesson_prose,
-                    spec.wiki_title,
-                    sources,
-                    level=spec.level,
-                    tags=spec.tags,
-                    related_words=spec.related_words,
-                    related_lessons=spec.related_lessons,
-                )
-                path = culture_dir / f"{_slugify(spec.topic_id)}.md"
-                _apply_write(report, concept, path)
-                touched.add(path)
-            except Exception as exc:
-                report.failed += 1
-                report.errors.append(f"cultural_context {spec.topic_id!r}: {exc}")
+            for spec in cultural_topics or []:
+                try:
+                    concept = cultural_context.build(
+                        spec.topic_id,
+                        spec.lesson_prose,
+                        spec.wiki_title,
+                        sources,
+                        level=spec.level,
+                        tags=spec.tags,
+                        related_words=spec.related_words,
+                        related_lessons=spec.related_lessons,
+                    )
+                    path = culture_dir / f"{_slugify(spec.topic_id)}.md"
+                    _apply_write(report, concept, path)
+                    touched.add(path)
+                except Exception as exc:
+                    report.failed += 1
+                    report.errors.append(f"cultural_context {spec.topic_id!r}: {exc}")
 
-        _prune(out_dir, touched, report)
+            _prune(out_dir, touched, report)
     except BaseException:
         # Protects against ordinary exception unwinding (an unexpected bug
         # above, KeyboardInterrupt) -- NOT SIGKILL/power loss, which only
@@ -396,18 +454,28 @@ def run(
         # this run's own gap_fill_cache_path rather than silently losing
         # track of the attempt.
         if gap_fill_cache_path is not None:
-            try:
-                gap_fill_cache.save(gap_fill_cache_path)
-            except Exception:
-                logger.exception("gap-filler: failed to save final checkpoint at %s", gap_fill_cache_path)
+            _persist_gap_fill_cache(gap_fill_cache, gap_fill_cache_path)
         raise
     else:
         # Only reached if the try block above returned normally --
         # "successful completion" for cache-cleanup purposes, regardless
         # of report.failed (individual candidate failures are already
         # isolated above and never reach here as a propagating exception).
+        # budget_exhausted is the one exception to that: it never raises
+        # (the loop breaks cleanly), but the run is genuinely incomplete --
+        # most candidates were never attempted -- so it gets the same
+        # cache-preserving treatment as the except BaseException branch
+        # above, not deleted like a real completion. Also re-saves rather
+        # than trusting the periodic checkpoint, which can be up to
+        # _GAP_FILL_CHECKPOINT_INTERVAL entries stale -- unconditionally,
+        # via the same shared, protected save as the crash path above (see
+        # _persist_gap_fill_cache's own docstring for why "unconditional"
+        # matters here too).
         if gap_fill_cache_path is not None:
-            gap_fill_cache_path.unlink(missing_ok=True)
+            if budget_exhausted:
+                _persist_gap_fill_cache(gap_fill_cache, gap_fill_cache_path)
+            else:
+                gap_fill_cache_path.unlink(missing_ok=True)
 
     return report
 

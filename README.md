@@ -30,9 +30,105 @@ uv sync --dev
 
 ## Usage
 
-*(Filled in once `okfbuild/pipeline.py` exists — section-05-pipeline. Until
-then, this repo's code is a Python API (`from okfbuild.pipeline import
-run`), not yet a CLI wrapper.)*
+This repo's code is a Python API, not a CLI. Run it with `uv run python`
+(a script, or a REPL) from inside this directory — not a bare `python` or
+any other environment, even another EEE repo's venv. This repo has one
+dependency (`llm-backend-eee`) not on PyPI at all, pinned via a Codeberg
+git tag; only `uv`'s own project-managed `.venv/` here has it installed.
+Two entry points cover most needs, both taking a `SourceBundle` -- wire one
+first (this is the same wiring `tests/conftest.py`'s `real_source_bundle`
+fixture uses):
+```python
+from pathlib import Path
+from okfbuild.sources import SourceBundle, eee_engine, wikipedia_client
+from okfbuild.sources.morpheus_client import MorpheusClient
+from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
+from okfbuild.sources.lsj_index import LSJIndex
+from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
+
+import eee_project as eee
+from ancient_greek_backend_eee import AncientGreekBackend
+from modern_greek_backend_eee import ModernGreekBackend
+
+# Backend registration is the caller's responsibility, once per process
+# (see eee_engine.py's own module docstring).
+eee.register_backend("grc", AncientGreekBackend.for_period("epic"), backend="homeric")
+eee.register_backend("grc", AncientGreekBackend.for_period("attic"), backend="attic")
+eee.register_backend("el", ModernGreekBackend())
+
+sources = SourceBundle(
+    eee_engine=eee_engine,
+    morpheus=MorpheusClient(cache_dir=Path("data/morpheus-cache")),
+    # Ships in the sibling greek-inflexion-eee checkout, not this repo --
+    # adjust the path to wherever yours lives.
+    byzantine_forms=load_byzantine_forms(
+        Path("../greek-inflexion-eee/src/greek_inflexion_eee/data/byzantine_verbs_lexicon.yaml")
+    ),
+    wiktextract=CachedWiktextractIndex(
+        cache_dir=Path("data/wiktextract-cache"), jsonl_path=None, lang_code="el"
+    ),
+    lsj=LSJIndex({}),
+    wikipedia=wikipedia_client,
+)
+```
+
+**Build and write one concept file** (continues in the same session as the
+`sources` wiring above -- both examples below need that `sources` object
+to already exist, they don't redefine it):
+```python
+from okfbuild.concepts import lexical_entry
+from okfbuild.okf import write
+
+concept = lexical_entry.build(
+    "νόστος", "noun", ["homeric", "attic", "byzantine", "modern"], sources,
+    level=[], tags=[],
+)
+write(concept, Path("words/νόστος.md"))
+```
+Expect `write()` to return `True` (a new file, or content that changed) or
+`False` (the file already had this exact content) -- both are success, it
+never raises for a normal build. `concept` itself is a `ConceptFile`, not
+yet written to disk until `write()` is called.
+
+**Or run the full pipeline over one or more courses** (extracts vocabulary
+from each course's TSVs, builds every concept, prunes stale files no longer
+touched) -- an alternative to the single-concept example above, not a
+continuation of it, but it still needs the same `sources` from the wiring
+step. Unlike that example, `out_dir` here is not a safe default to point at
+this repo's own root: anything under `out_dir/{words,grammar,culture}` not
+touched by *this specific call* gets pruned (`status` flipped to
+`deprecated`) -- including this repo's own real `grammar/`/`culture/`
+content, since this example doesn't pass `grammar_rules=`/
+`cultural_topics=` (see `okfbuild/pilot_content.py`'s `GRAMMAR_RULES`/
+`CULTURAL_TOPICS`, and `tests/conftest.py`'s `pilot_build_report` fixture
+for how the real pilot run passes those correctly). Use a scratch
+directory, as below, unless you mean to regenerate this repo's own tracked
+content and are passing everything the real pilot run does:
+```python
+from okfbuild import pipeline
+
+report = pipeline.run([Path("path/to/a/course")], Path("/tmp/okf-output"), sources)
+print(report.written, report.unchanged, report.failed)
+```
+`Path(...)` does not expand a leading `~` to your home directory on its
+own (that needs `Path(...).expanduser()`) -- a literal `~` in the string
+is just a nonexistent directory named `~`, so course_paths silently finds
+zero vocabulary files and `report` comes back `(0, 0, 0)` with nothing
+written, no error raised, and `out_dir` never even created.
+
+Expect `written + unchanged` to equal the course's total vocabulary size,
+and `report.failed` to be `0` on a course with no coverage gaps -- if it's
+not, `report.errors` has one string per failure, worth reading before
+assuming the pipeline itself is broken (a handful of genuinely rare or
+unattested words failing is expected on a large real course, not a bug --
+see "Development" below for how large that number gets on this repo's own
+two pilot courses).
+
+To also fill morphology gaps via a real LLM, pass a `GapFillerConfig` as
+`sources.llm_gap_filler` and a `gap_fill_cache_dir` to `run()` — see
+`okfbuild/gap_filler_pilot.py`'s `run_gap_filler_pilot()` for the reference
+wiring, and "Development" below for the paid-test gating this same
+mechanism uses.
 
 
 ## Content model
@@ -107,10 +203,20 @@ silent real charge:
 ```bash
 uv run pytest --run-paid-llm-tests -m "integration and paid_llm_api"
 ```
-The one such test today (`tests/test_gap_filler_pilot.py`, the real gap-filler
-pilot) reads its API key from `GREEK_KNOWLEDGE_OPENROUTER_API_KEY` — a real
+The one such test today (`tests/test_gap_filler_pilot.py`) reads its API key
+from `GREEK_KNOWLEDGE_OPENROUTER_API_KEY` — a real
 [OpenRouter](https://openrouter.ai/) key, used to query two models
-(`openai/gpt-4o-mini`, `anthropic/claude-3.5-haiku`) through one endpoint.
-Output goes to the gitignored `build/gap-filler-pilot/`, never the tracked
-`words/`/`grammar`/`culture` trees — review and selectively copy from there
-by hand.
+(`openai/gpt-4o-mini`, `anthropic/claude-3.5-haiku`) through one endpoint. It
+does not attempt full completion of a course scan — a real, zero-cost
+measurement found that needs on the order of 90,000 real LLM requests, far
+more than any single run should attempt. Instead it verifies the mechanism
+cheaply (a handful of real requests): a small real budget stops the run
+cleanly, its cache is preserved, and a second real run against that cache
+genuinely resumes. Output goes to an isolated `tmp_path`, discarded after the
+test.
+
+To actually (re)generate real content with the gap-filler, run it directly —
+`okfbuild.gap_filler_pilot.run_gap_filler_pilot()` — rather than via this
+test. Output goes to the gitignored `build/gap-filler-pilot/`, never the
+tracked `words/`/`grammar`/`culture` trees — review and selectively copy from
+there by hand.

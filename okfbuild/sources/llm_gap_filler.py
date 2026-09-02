@@ -32,6 +32,19 @@ _CACHE_FORMAT_VERSION = 1
 REQUEST_BUDGET_ERROR = "GapFiller exceeded its configured max_requests_per_run budget"
 
 
+class RequestBudgetExceededError(RuntimeError):
+    """Raised by fill_gap() once cache.request_count would exceed
+    config.max_requests_per_run. A dedicated class, not a bare RuntimeError
+    matched by message string (pipeline.run() used to do
+    `isinstance(exc, RuntimeError) and str(exc) == REQUEST_BUDGET_ERROR`) --
+    that comparison would silently stop recognizing budget exhaustion the
+    moment anyone improved the message wording (e.g. to include the actual
+    request count), degrading a clean early stop into an ordinary
+    per-candidate failure with no visible error. Still a RuntimeError
+    subclass, so existing `except RuntimeError` handling elsewhere is
+    unaffected."""
+
+
 def _installed_llm_backend_version() -> str:
     try:
         return version("llm-backend-eee")
@@ -195,6 +208,17 @@ def load_versioned_json(path: Path, expected_version: int, label: str) -> dict:
     return data
 
 
+@cache
+def _normalize_config_for_cache_key(config: GapFillerConfig) -> GapFillerConfig:
+    """The max_requests_per_run normalization make_key() applies before
+    using a config as part of a cache key (see that method's own
+    docstring for why). Memoized: within one run, fill_gap() passes the
+    identical (frozen, hashable) config object on every call -- tens of
+    thousands of times on a full-course run -- so re-deriving this via
+    dataclasses.replace() from scratch every time would be pure waste."""
+    return replace(config, max_requests_per_run=1)
+
+
 def _encode_config(config: GapFillerConfig) -> dict:
     """Every GapFillerConfig/LLMModelConfig field is already a JSON-safe
     primitive (str/int/None or a tuple of such), so asdict() alone is
@@ -276,15 +300,27 @@ class GapFillCache:
     ) -> tuple:
         """GapFillerConfig and LLMModelConfig are frozen dataclasses with
         structural equality/hashing, so using `config` itself as part of
-        the key is sufficient -- any field difference (models, sample
-        count, budget) naturally produces a different key. `features` is
+        the key is sufficient -- any field difference in models or sample
+        count (both of which genuinely change what answer a query would
+        produce) naturally produces a different key. max_requests_per_run
+        is deliberately normalized to a fixed placeholder (1, the smallest
+        value GapFillerConfig.__post_init__ accepts -- 0 would be more
+        obviously a sentinel but fails that same validation) before
+        building the key: it is a run-level administrative cap, not a
+        parameter that affects the correct answer to any single query, so
+        two configs differing only in budget must still hash identically
+        -- otherwise resuming an exhausted run with a *raised* budget (the
+        whole point of that recovery path) would silently invalidate every
+        previously-cached gap instead of reusing it, defeating
+        resumability in exactly the situation it exists for. `features` is
         sorted so insertion-order differences don't cause spurious cache
         misses. `context` (the slot/period/dialect/author string also sent
         to the LLM as the prompt's `label`) is part of the key too -- a
         query asked under different context must never be served from a
         differently-scoped cache hit."""
         feature_key = tuple(sorted(features.items()))
-        return (lemma, feature_key, pos, language, config, context)
+        cache_relevant_config = _normalize_config_for_cache_key(config)
+        return (lemma, feature_key, pos, language, cache_relevant_config, context)
 
     def get(self, key: tuple) -> GapFillResult | None:
         """Returns a copy with its own `forms` set, not the stored instance
@@ -445,9 +481,10 @@ def fill_gap(
     does not re-trigger the full call batch every time.
 
     Once `cache.request_count` would exceed `config.max_requests_per_run`,
-    this raises RuntimeError(REQUEST_BUDGET_ERROR) instead of issuing any
-    new calls -- a budget-exhausted run must fail loudly, not silently
-    return an empty result indistinguishable from a real disagreement.
+    this raises RequestBudgetExceededError(REQUEST_BUDGET_ERROR) instead of
+    issuing any new calls -- a budget-exhausted run must fail loudly, not
+    silently return an empty result indistinguishable from a real
+    disagreement.
     """
     key = cache.make_key(lemma, features, pos, language, config, context)
     cached = cache.get(key)
@@ -457,7 +494,7 @@ def fill_gap(
     calls = [model_config for model_config in config.models for _ in range(config.samples_per_model)]
 
     if cache.request_count + len(calls) > config.max_requests_per_run:
-        raise RuntimeError(REQUEST_BUDGET_ERROR)
+        raise RequestBudgetExceededError(REQUEST_BUDGET_ERROR)
     cache.request_count += len(calls)
 
     # Not a `with ThreadPoolExecutor(...) as executor:` block: __exit__ calls

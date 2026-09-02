@@ -13,6 +13,7 @@ from okfbuild.sources.llm_gap_filler import (
     GapFillCache,
     GapFillerConfig,
     LLMModelConfig,
+    RequestBudgetExceededError,
 )
 
 
@@ -305,3 +306,64 @@ def test_run_final_save_failure_does_not_mask_original_exception(tmp_path, make_
         run([course_dir], out_dir, sources, gap_fill_cache_dir=cache_dir)
 
     assert "disk full" in caplog.text  # the save failure itself was logged, not silently dropped
+
+
+def test_run_budget_exhaustion_stops_early_and_preserves_cache(tmp_path, make_source_bundle, caplog):
+    course_dir = tmp_path / "course"
+    _write_vocabulary_tsv(
+        course_dir,
+        [
+            {"lemma": "ἀνήρ", "pos": "noun", "level": "", "tags": ""},
+            {"lemma": "θεός", "pos": "noun", "level": "", "tags": ""},
+            {"lemma": "νόστος", "pos": "noun", "level": "", "tags": ""},
+        ],
+    )
+    out_dir = tmp_path / "out"
+    cache_dir = tmp_path / "cache-dir"
+    sources = make_source_bundle(
+        attested_lemmas={"ἀνήρ", "θεός", "νόστος"}, llm_gap_filler=_gap_filler()
+    )
+
+    with (
+        caplog.at_level(logging.WARNING, logger="okfbuild.pipeline"),
+        patch(
+            "okfbuild.pipeline.lexical_entry.build",
+            side_effect=[_fake_build("ἀνήρ", "noun", None, None, [], []), RequestBudgetExceededError()],
+        ) as mock_build,
+    ):
+        report = run([course_dir], out_dir, sources, gap_fill_cache_dir=cache_dir)
+
+    # θεός exhausts the budget; νόστος (sorted after θεός) is never attempted --
+    # not a third mock_build call, not a third report.errors entry.
+    assert mock_build.call_count == 2
+    assert report.written == 1
+    assert report.failed == 1
+    assert "θεός" in caplog.text and "exhausted" in caplog.text
+
+    # A budget-exhausted run is not "completed normally" for cache-cleanup
+    # purposes -- the resumable cache must survive so a later run with a
+    # higher budget can pick up where this one left off.
+    cache_files = list((cache_dir / ".gap_fill_runs").rglob("cache.json"))
+    assert len(cache_files) == 1
+
+
+def test_run_budget_exhaustion_skips_pruning(tmp_path, make_source_bundle):
+    """Pruning assumes every candidate that should exist was attempted
+    this run -- flip an existing file's status to "deprecated" (a
+    positive, human-visible signal) despite the run never actually
+    reaching it would be actively wrong, not just incomplete."""
+    course_dir = tmp_path / "course"
+    _write_vocabulary_tsv(course_dir, [{"lemma": "νόστος", "pos": "noun", "level": "", "tags": ""}])
+    out_dir = tmp_path / "out"
+    sources = make_source_bundle(attested_lemmas={"νόστος"})
+
+    run([course_dir], out_dir, sources)
+    existing_path = out_dir / "words" / "νόστος.md"
+    assert _read_frontmatter(existing_path)["status"] == "draft"
+
+    _write_vocabulary_tsv(course_dir, [{"lemma": "φίλος", "pos": "noun", "level": "", "tags": ""}])
+    gap_filler_sources = make_source_bundle(attested_lemmas={"φίλος"}, llm_gap_filler=_gap_filler())
+    with patch("okfbuild.pipeline.lexical_entry.build", side_effect=RequestBudgetExceededError()):
+        run([course_dir], out_dir, gap_filler_sources, gap_fill_cache_dir=tmp_path / "cache-dir")
+
+    assert _read_frontmatter(existing_path)["status"] == "draft"  # untouched, not "deprecated"

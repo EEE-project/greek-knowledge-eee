@@ -253,12 +253,18 @@ _OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 _OPENROUTER_API_KEY_ENV = "GREEK_KNOWLEDGE_OPENROUTER_API_KEY"
 
 
-def _build_real_gap_filler_config() -> GapFillerConfig:
+def _build_real_gap_filler_config(max_requests_per_run: int = 500) -> GapFillerConfig:
     """The real_gap_filler_config fixture's own construction logic, factored
     out as a plain, directly-callable function -- lets a unit test verify
     the two-model config shape without going through the session-scoped
     fixture (and its require_paid_llm_gate() call, already exhaustively
-    tested on its own in tests/test_paid_llm_gating.py)."""
+    tested on its own in tests/test_paid_llm_gating.py). max_requests_per_run
+    defaults to 500 (the real fixture's own value, "a safety cap against a
+    runaway/misconfigured run, not cost minimization") but is overridable --
+    test_real_gated_pilot_run_stops_and_resumes_cleanly passes a small value
+    to cheaply exercise the stop/resume mechanism for real, rather than the
+    default (which a full two-course run cannot complete under regardless --
+    confirmed at ~92,700 real requests needed, see that test's own docstring)."""
     return GapFillerConfig(
         models=(
             LLMModelConfig(
@@ -274,7 +280,7 @@ def _build_real_gap_filler_config() -> GapFillerConfig:
                 base_url=_OPENROUTER_BASE_URL,
             ),
         ),
-        max_requests_per_run=500,  # safety cap against a runaway/misconfigured run, not cost minimization
+        max_requests_per_run=max_requests_per_run,
     )
 
 

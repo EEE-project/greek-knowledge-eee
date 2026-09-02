@@ -14,6 +14,7 @@ from okfbuild.sources.llm_gap_filler import (
     GapFillerConfig,
     GapFillResult,
     LLMModelConfig,
+    RequestBudgetExceededError,
     SampleStatus,
     fill_gap,
     normalize_form,
@@ -442,6 +443,35 @@ def test_gap_fill_cache_different_model_config_is_a_cache_miss(monkeypatch):
     assert len(constructed) == 2
 
 
+def test_gap_fill_cache_different_max_requests_per_run_is_still_a_cache_hit(monkeypatch):
+    """max_requests_per_run is a run-level administrative cap, not a
+    parameter that changes what answer a query should get -- unlike
+    test_gap_fill_cache_different_model_config_is_a_cache_miss's model
+    change, two configs differing ONLY in budget must be treated as the
+    SAME query. This is what makes resuming a budget-exhausted run with a
+    *raised* budget (pipeline.py's whole point in preserving the cache
+    for that case) actually reuse the earlier run's results instead of
+    every key silently changing and paying for them all again."""
+    monkeypatch.setenv("TEST_KEY_A", "secret")
+    config_small_budget = GapFillerConfig(models=(_model(),), samples_per_model=1, max_requests_per_run=6)
+    config_larger_budget = GapFillerConfig(models=(_model(),), samples_per_model=1, max_requests_per_run=12)
+    cache = GapFillCache()
+
+    constructed = []
+
+    def construct(*, model, api_key, base_url, use_cache):
+        constructed.append(1)
+        instance = MagicMock()
+        instance.inflect.return_value = {"form"}
+        return instance
+
+    with patch("okfbuild.sources.llm_gap_filler.LLMBackend", side_effect=construct):
+        fill_gap("lemma", {}, "noun", "grc", config_small_budget, cache)
+        fill_gap("lemma", {}, "noun", "grc", config_larger_budget, cache)
+
+    assert len(constructed) == 1
+
+
 def test_gap_fill_cache_different_context_is_a_cache_miss(monkeypatch):
     monkeypatch.setenv("TEST_KEY_A", "secret")
     config = GapFillerConfig(models=(_model(),), samples_per_model=1)
@@ -502,7 +532,7 @@ def test_fill_gap_stops_and_raises_once_budget_exceeded(monkeypatch):
 
     with patch("okfbuild.sources.llm_gap_filler.LLMBackend", side_effect=construct):
         fill_gap("lemma-1", {}, "noun", "grc", config, cache)  # consumes the entire budget
-        with pytest.raises(RuntimeError, match=REQUEST_BUDGET_ERROR):
+        with pytest.raises(RequestBudgetExceededError, match=REQUEST_BUDGET_ERROR):
             fill_gap("lemma-2", {}, "noun", "grc", config, cache)  # different key -> miss -> budget check fires
 
     assert len(constructed) == 1

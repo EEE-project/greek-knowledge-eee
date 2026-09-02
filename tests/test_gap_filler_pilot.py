@@ -9,7 +9,6 @@ bottom is marked integration + paid_llm_api.
 
 import dataclasses
 import json
-from datetime import UTC, datetime
 from unittest.mock import Mock, patch
 
 import pytest
@@ -168,35 +167,7 @@ def test_run_gap_filler_pilot_handoff_faithfully_forwards_whatever_it_is_given(t
 # --- The one real, gated end-to-end test ------------------------------------
 
 
-@pytest.mark.integration
-@pytest.mark.paid_llm_api
-def test_real_gated_pilot_run_produces_valid_handoff(
-    repo_root, created_with_eee_root, real_source_bundle_with_gap_filler
-):
-    """Never run in this section's own verification pass -- requires
-    --run-paid-llm-tests, a real GREEK_KNOWLEDGE_OPENROUTER_API_KEY, and
-    GREEK_KNOWLEDGE_RUN_PAID_LLM_TESTS=1 (see require_paid_llm_gate() via
-    the real_gap_filler_config fixture this one transitively depends on).
-    Exercised only via the separate manual step:
-    uv run pytest -m "integration and paid_llm_api" --run-paid-llm-tests tests/test_gap_filler_pilot.py
-
-    Structural assertions only (both plan reviews flagged a content-based
-    assertion like "at least one dagger marker" as brittle, unrelated to
-    whether the integration itself works) -- the run completes without
-    raising, produces zero failures, and the handoff file is well-formed.
-    Content correctness is section-05's Morpheus cross-check's job, not
-    this test's."""
-    out_dir = repo_root / "build" / "gap-filler-pilot"
-    run_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%f")
-    handoff_path = out_dir / f"handoff-{run_id}.json"
-    course_paths = [
-        created_with_eee_root / "ancient_greek" / "odyssey",
-        created_with_eee_root / "modern_greek" / "b1greeklanguageandculture" / "kavafis_ithaki",
-    ]
-
-    report = run_gap_filler_pilot(real_source_bundle_with_gap_filler, course_paths, out_dir, handoff_path)
-
-    assert report.failed == 0
+def _assert_handoff_well_formed(handoff_path):
     assert handoff_path.exists()
     data = json.loads(handoff_path.read_text(encoding="utf-8"))
     assert data["format_version"] == 1
@@ -205,3 +176,82 @@ def test_real_gated_pilot_run_produces_valid_handoff(
         assert entry.keys() == {
             "lemma", "form", "slot_label", "features", "pos", "language", "period", "method", "llm_backend_version",
         }
+
+
+@pytest.mark.integration
+@pytest.mark.paid_llm_api
+def test_real_gated_pilot_run_stops_and_resumes_cleanly(
+    tmp_path, created_with_eee_root, real_source_bundle_with_gap_filler
+):
+    """Never run in this section's own verification pass -- requires
+    --run-paid-llm-tests, a real GREEK_KNOWLEDGE_OPENROUTER_API_KEY, and
+    GREEK_KNOWLEDGE_RUN_PAID_LLM_TESTS=1 (see require_paid_llm_gate() via
+    the real_gap_filler_config fixture real_source_bundle_with_gap_filler
+    transitively depends on -- requested here purely for that gating side
+    effect; its own default-500-budget llm_gap_filler is replaced below).
+    Exercised only via the separate manual step:
+    uv run pytest -m "integration and paid_llm_api" --run-paid-llm-tests tests/test_gap_filler_pilot.py
+
+    Does NOT assert report.failed == 0 or attempt full completion -- a real,
+    zero-cost measurement (stubbing fill_gap() to count would-be calls
+    without making them) found the two real courses need ~92,700 real
+    requests for one pass, split roughly 63k verb / 29k noun / 1k pronoun.
+    At real-world latency that is many hours, not a run any test suite
+    should attempt -- "raise the budget" cannot make this test complete,
+    only more expensive. What actually matters, and is real-money-cheap to
+    verify for real: a run that exhausts its budget stops cleanly (never
+    more than the one candidate that hit the wall, never a cascade of
+    identical failures for every remaining candidate -- pipeline.py's own
+    fix for that), preserves its cache rather than deleting it, and a
+    second real run against that same cache genuinely resumes -- makes new
+    progress, not an immediate re-fail with nothing accomplished. Uses a
+    deliberately tiny budget (6, then 12) so this stays a real, cheap check
+    (a handful of real requests) rather than an expensive one; tmp_path
+    keeps it isolated from any manually-run pilot output under
+    build/gap-filler-pilot/, unlike the shared repo_root this test used
+    before. Content correctness is section-05's Morpheus cross-check's job,
+    not this test's."""
+    out_dir = tmp_path / "gap-filler-pilot"
+    course_paths = [
+        created_with_eee_root / "ancient_greek" / "odyssey",
+        created_with_eee_root / "modern_greek" / "b1greeklanguageandculture" / "kavafis_ithaki",
+    ]
+
+    small_budget_sources = dataclasses.replace(
+        real_source_bundle_with_gap_filler,
+        llm_gap_filler=conftest._build_real_gap_filler_config(max_requests_per_run=6),
+    )
+    handoff_path_1 = out_dir / "handoff-1.json"
+    report1 = run_gap_filler_pilot(small_budget_sources, course_paths, out_dir, handoff_path_1)
+
+    assert report1.failed == 1
+    assert "max_requests_per_run" in report1.errors[0]
+    cache_files = list((out_dir / ".gap_fill_runs").rglob("cache.json"))
+    assert len(cache_files) == 1
+    request_count_after_round_1 = json.loads(cache_files[0].read_text(encoding="utf-8"))["request_count"]
+    assert request_count_after_round_1 == 6  # the whole small budget was genuinely spent, not left idle
+
+    larger_budget_sources = dataclasses.replace(
+        real_source_bundle_with_gap_filler,
+        llm_gap_filler=conftest._build_real_gap_filler_config(max_requests_per_run=12),
+    )
+    handoff_path_2 = out_dir / "handoff-2.json"
+    report2 = run_gap_filler_pilot(larger_budget_sources, course_paths, out_dir, handoff_path_2)
+
+    # Not report2.written/.unchanged: a single lemma can need more than one
+    # round's whole budget just for its own gaps (ἀνήρ, a noun, took 3+
+    # rounds at this size) -- lexical_entry.build() never partially writes,
+    # so written/unchanged can legitimately stay 0 across several genuinely
+    # progressing rounds. The cache's own request_count is the direct,
+    # unambiguous measure: it must grow past round 1's total, proving round
+    # 2 issued new real calls rather than immediately re-hitting an
+    # already-exhausted cap with nothing left to do.
+    assert report2.failed <= 1
+    if report2.failed:
+        assert "max_requests_per_run" in report2.errors[0]
+    request_count_after_round_2 = json.loads(cache_files[0].read_text(encoding="utf-8"))["request_count"]
+    assert request_count_after_round_2 == 12
+    assert request_count_after_round_2 > request_count_after_round_1
+
+    _assert_handoff_well_formed(handoff_path_1)
+    _assert_handoff_well_formed(handoff_path_2)

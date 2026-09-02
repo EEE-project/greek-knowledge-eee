@@ -258,6 +258,7 @@ dependencies = [
     { name = "eee-project" },
     { name = "llm-backend-eee" },
     { name = "modern-greek-backend-eee" },
+    { name = "modern-greek-inflexion-eee" },
     { name = "pyyaml" },
 ]
 
@@ -273,6 +274,7 @@ requires-dist = [
     { name = "eee-project", specifier = "==1.6.0" },
     { name = "llm-backend-eee", git = "https://codeberg.org/EEE-project/llm-backend-eee?tag=v0.2.1" },
     { name = "modern-greek-backend-eee", specifier = ">=1.0.0" },
+    { name = "modern-greek-inflexion-eee", specifier = ">=2.1.4" },
     { name = "pyyaml", specifier = ">=6.0.3" },
 ]
 
@@ -644,14 +646,14 @@ wheels = [
 
 [[package]]
 name = "modern-greek-inflexion-eee"
-version = "2.1.4"
+version = "2.1.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "modern-greek-accentuation-eee" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/92/ce/6ffbd528a3e525232a29ade0aa0e885918a3d85d540206ee9933a9b3ea99/modern_greek_inflexion_eee-2.1.4.tar.gz", hash = "sha256:24763326c6b8f8afd9bb7aa4227d474472f3a73bee22e9f365069a8007c3d80c", size = 9434054, upload-time = "2026-08-09T20:55:20.269Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/08/6d/11e89cbaef1e896e576f19f67568d4b67717a0a88238003d35656cecc667/modern_greek_inflexion_eee-2.1.9.tar.gz", hash = "sha256:19428f3411674a89a2a88a9750ded23b8bb95b15a18d6c28d5794b23ac29f958", size = 9426234, upload-time = "2026-08-20T21:35:16.291Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c6/53/d76702883e7e933c3edb83f6170587e97ad07221c838734527e51dc80bf3/modern_greek_inflexion_eee-2.1.4-py3-none-any.whl", hash = "sha256:d99b1b606e181cdd837067864e3753034085edafb90479cf5a5188f28d71adfb", size = 9743764, upload-time = "2026-08-09T20:55:17.854Z" },
+    { url = "https://files.pythonhosted.org/packages/19/18/a90f44043fd2e1f85c2af729bdefeef46ba9238548f4d640bad3d6f3a3db/modern_greek_inflexion_eee-2.1.9-py3-none-any.whl", hash = "sha256:37bbde6e75a8ca78bdde9f2f3c9e5b475b9fb2200575d2eac53fa1304e2e0fb1", size = 9741484, upload-time = "2026-08-20T21:35:14.128Z" },
 ]
 
 [[package]]
