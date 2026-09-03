@@ -40,7 +40,16 @@ unresolved link in a markdown viewer), never a duplicated or corrupted
 footnote. Not fixed for the same reason as above: a general, root-cause
 fix (distinguishing LSJ's own bracket notation from Beta Code artifacts)
 needs more of the raw markup's structure than a text-only extraction
-preserves.
+preserves. Also known (found reviewing the real 465-file content batch):
+etymological citations sometimes use Latin `v` for digamma (Ϝ) inside a
+`lang="greek"` span, e.g. raw `va/stu` in ἄστυ's own entry (confirmed
+directly in `grc.lsj.perseus-eng1.xml`) -- standard Beta Code has no
+digamma mapping, so `v` isn't part of what `beta_code_to_greek()`
+recognizes and passes through unconverted. Not garbled, reads fine as the
+`v` scholarly convention already is in print -- not fixed, since treating
+it as real Beta Code content would require guessing where digamma
+notation starts/ends versus other legitimate uses of Latin letters in
+the same span.
 
 Parsed by `okfbuild/sources/lsj_index.py` (added in
 section-03-source-clients), which must disable XML entity
