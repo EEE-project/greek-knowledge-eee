@@ -43,7 +43,7 @@ from pathlib import Path
 from okfbuild.sources import SourceBundle, eee_engine, wikipedia_client
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
-from okfbuild.sources.lsj_index import LSJIndex
+from okfbuild.sources.lsj_index import CachedLSJIndex
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 
 import eee_project as eee
@@ -67,7 +67,7 @@ sources = SourceBundle(
     wiktextract=CachedWiktextractIndex(
         cache_dir=Path("data/wiktextract-cache"), jsonl_path=None, lang_code="el"
     ),
-    lsj=LSJIndex({}),
+    lsj=CachedLSJIndex(cache_dir=Path("data/lsj-cache"), tei_xml_dir=None),
     wikipedia=wikipedia_client,
 )
 ```

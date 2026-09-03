@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from types import ModuleType
 
 from okfbuild.sources.llm_gap_filler import GapFillerConfig
-from okfbuild.sources.lsj_index import LSJIndex
+from okfbuild.sources.lsj_index import CachedLSJIndex, LSJIndex
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex, WiktextractIndex
 
@@ -22,6 +22,6 @@ class SourceBundle:
     morpheus: MorpheusClient
     byzantine_forms: dict[str, dict[str, "str | list[str]"]]
     wiktextract: "WiktextractIndex | CachedWiktextractIndex"
-    lsj: LSJIndex
+    lsj: "LSJIndex | CachedLSJIndex"
     wikipedia: ModuleType
     llm_gap_filler: "GapFillerConfig | None" = None

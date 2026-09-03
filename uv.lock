@@ -60,6 +60,15 @@ wheels = [
 ]
 
 [[package]]
+name = "beta-code"
+version = "1.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/50/65/fe109ece485728b8558a3c872504bef76c120cf403a7a32cbc225048b758/beta_code-1.1.1.tar.gz", hash = "sha256:d1057f73fd6eab24659638cd39594044bbf3661c40e2d96214586c74e2de5136", size = 9172, upload-time = "2024-12-07T02:52:06.028Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f1/f7/2c211f43b0b3573ad60d79de1dd1feea7971ba52e90fb962e1aa15d0ec53/beta_code-1.1.1-py3-none-any.whl", hash = "sha256:c65017358740c7b825044375757cce642439bba20794dd6a19c484a6f1b72893", size = 8382, upload-time = "2024-12-07T02:52:03.919Z" },
+]
+
+[[package]]
 name = "cffi"
 version = "2.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -254,6 +263,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "ancient-greek-backend-eee" },
+    { name = "beta-code" },
     { name = "defusedxml" },
     { name = "eee-project" },
     { name = "llm-backend-eee" },
@@ -270,6 +280,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "ancient-greek-backend-eee", specifier = ">=2.0.0" },
+    { name = "beta-code", specifier = ">=1.1.1" },
     { name = "defusedxml", specifier = ">=0.7.1" },
     { name = "eee-project", specifier = "==1.6.0" },
     { name = "llm-backend-eee", git = "https://codeberg.org/EEE-project/llm-backend-eee?tag=v0.2.1" },

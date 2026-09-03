@@ -11,7 +11,7 @@ from okfbuild.sources import SourceBundle
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
 from okfbuild.sources.llm_gap_filler import GapFillerConfig, LLMModelConfig
-from okfbuild.sources.lsj_index import LSJIndex
+from okfbuild.sources.lsj_index import CachedLSJIndex
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
 from okfbuild.sources import wikipedia_client
@@ -154,14 +154,13 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     ModernGreekBackend for "el", matching lexical_entry.build()'s expected
     backend names exactly.
 
-    lsj is deliberately an empty LSJIndex({}), not a real downloaded Perseus
-    dump: lexical_entry.build() does read sources.lsj for homeric/attic
-    lemmas (added after this docstring's original "never read" claim), but
-    an empty index's lookup() correctly returns None for every lemma, so
-    this pilot's actual output is unaffected either way. Downloading and
-    parsing the 27 real LSJ TEI-XML files would add real time/disk cost for
-    zero effect on this pilot's required deliverables until that download
-    actually happens.
+    lsj is a CachedLSJIndex, mirroring wiktextract below: headwords already
+    resolved on a prior run come from data/lsj-cache/ (small, git-tracked)
+    with no need for the raw TEI-XML dump at all; a genuinely new headword
+    falls back to the real 27-file Perseus dump if present locally (a
+    one-time, gitignored download, see data/lsj/README.md). A cache miss
+    with no dump available returns None rather than skipping — LSJ is
+    enrichment, not a hard requirement, same as wiktextract below.
 
     wiktextract is a CachedWiktextractIndex: lemmas already resolved on a
     prior run come from data/wiktextract-cache/ (small, git-tracked) with no
@@ -204,12 +203,21 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
         lang_code="el",
     )
 
+    # data/lsj/ always exists (it has its own README.md even before the real
+    # dump is downloaded) -- checking for one of the 27 expected files, not
+    # just directory existence, matches wiktextract's is_file() check above.
+    lsj_tei_xml_dir = repo_root / "data" / "lsj"
+    lsj = CachedLSJIndex(
+        cache_dir=repo_root / "data" / "lsj-cache",
+        tei_xml_dir=lsj_tei_xml_dir if (lsj_tei_xml_dir / "grc.lsj.perseus-eng1.xml").is_file() else None,
+    )
+
     return SourceBundle(
         eee_engine=eee_engine_wrapper,
         morpheus=morpheus,
         byzantine_forms=byzantine_forms,
         wiktextract=wiktextract,
-        lsj=LSJIndex({}),
+        lsj=lsj,
         wikipedia=wikipedia_client,
     )
 
