@@ -1,0 +1,1 @@
+{"RDF": {"Annotation": {"about": "urn:TuftsMorphologyService:πραγμάτεια:morpheusgrc", "creator": {"Agent": {"about": "org.perseus:tools:morpheus.v1"}}, "created": {"$": "2020-01-01T00:00:00.000000"}, "hasTarget": {"Description": {"about": "urn:word:πραγμάτεια"}}, "title": {}}}}
