@@ -117,24 +117,55 @@ _CENTURY = r"[ivxlcdm]+"
 _ERA = r"B\.?\s?C\.?|A\.?\s?D\.?"
 _TRAILING_UNCERTAINTY_RE = re.compile(r"\s*\(\?\)\s*$")
 _WRAPPING_PARENS_RE = re.compile(r"^\((.*)\)$")
-_ERA_SPAN_SLASH_RE = re.compile(
-    rf"^(?P<c1>{_CENTURY})\.?\s*B\.?\s?C\.?\s*/\s*(?P=c1)\.?\s*A\.?\s?D\.?$", re.IGNORECASE
-)
-_ERA_SPAN_OR_RE = re.compile(
-    rf"^(?P<c1>{_CENTURY})\.?\s*B\.?\s?C\.?\s+or\s+(?P=c1)\.?\s*A\.?\s?D\.?$", re.IGNORECASE
-)
+
+
+def _era_span_pattern(joiner: str, joiner_spacing: str) -> str:
+    """A single century (identical on both sides, via a backreference)
+    with the era spanning BC to AD, joined by `joiner` -- the two real
+    separators found in the live front matter (a literal "/" and the
+    word "or", each with its own required spacing -- "/" needs none,
+    "or" needs at least one space on each side so it doesn't fuse with
+    adjacent text). Factored out because the two real patterns built
+    from it are otherwise byte-identical apart from this one joiner."""
+    return rf"(?P<c1>{_CENTURY})\.?\s*B\.?\s?C\.?{joiner_spacing}{joiner}{joiner_spacing}(?P=c1)\.?\s*A\.?\s?D\.?"
+
+
+# Every pattern below matches one whole date string (fully anchored,
+# ^...$) and is tried in the order listed by parse_date_text(). Grouped
+# by which axis of the date varies, per the real formats actually found
+# in the live front matter (not a full N-by-M composition of every
+# axis-combination -- several combinations below have never been
+# observed, and inventing regex support for an untested combination
+# would mean guessing what it should parse to, which parse_date_text()
+# deliberately never does). A future real format belongs in whichever
+# group below it varies along; if it doesn't fit any group, that's a
+# genuinely new axis, not a missing combination of these three.
+
+# -- era-axis variants: the CENTURY is fixed (same value both sides,
+# enforced via backreference), the ERA is what spans BC to AD --
+_ERA_SPAN_SLASH_RE = re.compile(rf"^{_era_span_pattern('/', r'\s*')}$", re.IGNORECASE)
+_ERA_SPAN_OR_RE = re.compile(rf"^{_era_span_pattern('or', r'\s+')}$", re.IGNORECASE)
+
+# -- century-axis variants: the ERA is a single, ordinary designator;
+# the CENTURY is what varies (a genuine alternative reading, a nested
+# parenthetical alternative, or a span) --
 _NESTED_UNCERTAIN_RE = re.compile(
     rf"^(?P<c1>{_CENTURY})\.?\s*\(\s*(?P<c2>{_CENTURY})\.?\s*\?\s*\)\s*(?P<era>{_ERA})$", re.IGNORECASE
 )
 _OR_RE = re.compile(rf"^(?P<c1>{_CENTURY})\.?\s+or\s+(?P<c2>{_CENTURY})\.?\s*(?P<era>{_ERA})$", re.IGNORECASE)
 _CENTURY_SPAN_RE = re.compile(rf"^(?P<c1>{_CENTURY})\.?\s*/\s*(?P<c2>{_CENTURY})\.?\s*(?P<era>{_ERA})$", re.IGNORECASE)
+
+# -- year-axis variants: a plain decimal year (not a roman-numeral
+# century at all), either a single circa-marked year or a year range --
 _CIRCA_YEAR_RE = re.compile(rf"^ca?\.\s*(?P<year>\d+)\s*(?P<era>{_ERA})$", re.IGNORECASE)
 _YEAR_RANGE_RE = re.compile(rf"^(?P<y1>\d+)\s*-\s*(?P<y2>\d+)\s*(?P<era>{_ERA})$")
-# A single leading word/phrase (e.g. the real "translated iv B.C.") is
-# tolerated here, but nowhere else -- every other pattern is fully
-# anchored, so a genuinely malformed or truncated string (the real "B.C."
-# with no numeral, or "iv B" missing its "C.") still correctly falls
-# through to the unparsed/None case below rather than being guessed at.
+
+# -- the base case: one century, one era. A single leading word/phrase
+# (e.g. the real "translated iv B.C.") is tolerated here, but nowhere
+# else -- every other pattern above is fully anchored, so a genuinely
+# malformed or truncated string (the real "B.C." with no numeral, or
+# "iv B" missing its "C.") still correctly falls through to the
+# unparsed/None case below rather than being guessed at.
 _SIMPLE_RE = re.compile(rf"^(?:.*\s)?(?P<c1>{_CENTURY})\.?\s*(?P<era>{_ERA})$", re.IGNORECASE)
 
 

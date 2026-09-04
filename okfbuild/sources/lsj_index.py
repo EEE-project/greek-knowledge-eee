@@ -216,13 +216,28 @@ _WORD_FORM_MARKER = object()  # Phase-1 token marking an <orth>/<foreign> positi
 _SENSE_BOUNDARY = object()  # Phase-1 token marking a <sense> position -- Pattern A's broad
 # dialect inheritance resets here, per section-01's table.
 
-# The tags section-01's investigation directly verified can appear
-# between a dialect marker and its target citation without breaking
-# adjacency. Not exhaustive by section-01's own account ("etc.") --
-# these are only the ones with real, confirmed evidence; extend this set
-# if a future real example needs another one, rather than guessing ahead
-# of the evidence.
-_TRANSPARENT_GRAMMAR_TAGS = {"per", "number", "tns"}
+# Tags directly verified, by real example, to appear between a dialect
+# marker and its target citation without breaking adjacency -- extended
+# beyond section-01's original per/number/tns finding by scanning every
+# real dialect-tagged entry in the full dump for what tags genuinely
+# occur in this position (not from the Perseus TEI DTD's own structural-
+# validity list, which isn't locally available and, more importantly,
+# would answer a different question -- "what's schema-legal here" isn't
+# "what's actually been confirmed to mean the same kind of thing
+# per/number/tns do"). Each of these was individually inspected against
+# a real example before inclusion: all are short, category-label content
+# (a grammatical code, an inflection-type marker, a page-break marker),
+# never substantive linguistic or bibliographic content. Deliberately
+# NOT included despite also appearing in this position, because their
+# real content is NOT this kind of transparent label: `etym` (a real
+# cognate word reference, e.g. the entry for a)legi/zw citing "a)le/gw"),
+# `title` (a bibliographic title, e.g. "NT" for New Testament -- found
+# bare, outside any <bibl>, in the one real example checked), `date` (an
+# inline date embedded directly in entry prose, carrying real temporal
+# information, unlike the front matter's own separately-handled dates).
+# Still not claimed exhaustive -- extend this set if a future real
+# example needs another one, rather than guessing ahead of the evidence.
+_TRANSPARENT_GRAMMAR_TAGS = {"per", "number", "tns", "itype", "mood", "gen", "pos", "abbr", "pron", "subc", "pb"}
 
 
 def _flatten_for_dialect_scope(el, in_greek: bool = False) -> list:
@@ -262,7 +277,16 @@ def _flatten_for_dialect_scope(el, in_greek: bool = False) -> list:
                 raw_text = " ".join(_extract_text(child, this_greek).split())
                 tokens.append(_DialectMarker(dialects, raw_text))
             else:
-                tokens.extend(_flatten_for_dialect_scope(child, this_greek))
+                # A gramGrp carrying some OTHER kind of <gram> (e.g.
+                # type="voice", "Pass.") -- real, confirmed examples show
+                # this is the same short, category-label content
+                # _TRANSPARENT_GRAMMAR_TAGS' bare tags carry, just
+                # wrapped in a <gramGrp> rather than being one itself, so
+                # it gets the same transparent-for-adjacency treatment,
+                # not the generic recurse-as-ordinary-content fallback.
+                text = _extract_text(child, this_greek)
+                if text:
+                    tokens.append(_TransparentText(text))
         elif tag in ("cit", "bibl"):
             tokens.append(_build_citation(child, this_greek))
         elif tag in ("orth", "foreign"):

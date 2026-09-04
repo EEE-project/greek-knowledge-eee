@@ -212,6 +212,35 @@ def test_dialect_transparent_grammar_markup_does_not_break_pattern_b():
     assert by_abbrev["Hdt."].dialects == ("Ion.",)
 
 
+def test_dialect_transparent_extended_tags_and_non_dialect_gramgrp():
+    """The transparent-tag set found by scanning the whole real dump for
+    what actually appears between a dialect marker and its citation
+    (beyond section-01's original per/number/tns): itype/mood/gen/pos/
+    abbr/pron/subc/pb, plus a non-dialect <gramGrp> (e.g. a real example:
+    <gramGrp><gram type="voice">Pass.</gram></gramGrp>) -- structurally
+    different from the bare tags (it's a gramGrp, just not a dialect
+    one) but the same short-label kind of content, so it needs its own
+    dispatch branch, not just a name in _TRANSPARENT_GRAMMAR_TAGS."""
+    xml = """<entryFree key="test">
+        <sense><cit><quote lang="greek">a)ge/rqh</quote>
+        <bibl n="urn:cts:greekLit:tlg0001.tlg001:1"><author>X.</author></bibl></cit>,
+        <gramGrp><gram type="dialect">Dor.</gram></gramGrp>
+        <itype lang="greek">h=os</itype> <mood>part.</mood> <gen lang="greek">o(</gen>
+        <pos>Adj.</pos> <abbr>v.</abbr> <pron>u_</pron> <subc>Dep.</subc>
+        <gramGrp><gram type="voice">Pass.</gram></gramGrp>
+        <cit><quote lang="greek">a)ge/rqen</quote>
+        <bibl n="urn:cts:greekLit:tlg0016.tlg001.perseus-grc1:1:1"><author>Hdt.</author></bibl></cit>.</sense>
+    </entryFree>"""
+    root = ET.fromstring(xml)
+    citations = [s for s in _extract_segments(root) if isinstance(s, LSJCitation)]
+    by_abbrev = {c.author_abbreviation: c for c in citations}
+    assert by_abbrev["X."].dialects == ()
+    assert by_abbrev["Hdt."].dialects == ("Dor.",), (
+        "the whole chain of transparent markup between Dor. and the Hdt. citation "
+        "must not have broken adjacency"
+    )
+
+
 def test_dialect_untagged_mention_out_of_structural_scope():
     """Row 5 of section-01's table: a dialect abbreviation with no <gram
     type="dialect"> wrapper at all (real example: θεός's bare
