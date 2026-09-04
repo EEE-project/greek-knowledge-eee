@@ -15,13 +15,13 @@ sources:
   title: Greek Lexicon of the Roman and Byzantine Periods (1887)
   author: E. A. Sophocles
 generated:
-  by: process:greek-knowledge-eee-builder/0.1.0
-  at: '2026-08-14T07:24:54.139720+00:00'
+  by: process:greek-knowledge-eee-builder/0.2.0
+  at: '2026-09-04T18:42:36.233263+00:00'
 periods_spanned:
   from: attic
   to: byzantine
-status: draft
 verified: []
+status: draft
 ---
 ## The -οσαν aorist/imperfect 3rd plural
 

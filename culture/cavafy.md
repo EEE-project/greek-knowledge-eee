@@ -15,8 +15,8 @@ sources:
   title: Constantine P. Cavafy
   author: Wikipedia
 generated:
-  by: process:greek-knowledge-eee-builder/0.1.0
-  at: '2026-09-02T18:24:37.966054+00:00'
+  by: process:greek-knowledge-eee-builder/0.2.0
+  at: '2026-09-04T18:42:36.485428+00:00'
 related_words:
 - νόστος
 related_lessons:
