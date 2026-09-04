@@ -2,6 +2,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import defusedxml.common
+import defusedxml.ElementTree as ET
 import pytest
 
 from okfbuild.sources.lsj_index import (
@@ -178,8 +179,6 @@ def test_dialect_pattern_c_parenthetical_after_foreign_quote():
     exactly (this project's own real example: e)fi/hmi's "thnei\\ ga\\r
     e)fi/sdei (Dor.) Theoc. 5.97"). No fixture entry exercises this
     shape, so constructed directly."""
-    import defusedxml.ElementTree as ET
-
     xml = """<entryFree key="test">
         <sense><foreign lang="greek">quoted form</foreign> (<gramGrp><gram type="dialect">Dor.</gram></gramGrp>)
         <bibl n="urn:cts:greekLit:tlg0005.tlg001.perseus-grc1:5:97"><author>Theoc.</author></bibl>.</sense>
@@ -199,8 +198,6 @@ def test_dialect_transparent_grammar_markup_does_not_break_pattern_b():
     caught: <per>3</per>/<number>pl.</number>'s own text contains word
     characters, which a naive "real prose breaks adjacency" check
     mistook for real intervening prose)."""
-    import defusedxml.ElementTree as ET
-
     xml = """<entryFree key="test">
         <sense><cit><quote lang="greek">e)fi/hti</quote>
         <bibl n="urn:cts:greekLit:tlg0033.tlg004.perseus-grc1:2:9"><author>Pi.</author></bibl></cit>,
@@ -222,8 +219,6 @@ def test_dialect_untagged_mention_out_of_structural_scope():
     it's just an ordinary citation whose own text happens to look like a
     dialect name, with an empty dialects tuple like any other untagged
     citation."""
-    import defusedxml.ElementTree as ET
-
     xml = """<entryFree key="test">
         <sense><tr>form</tr>, <bibl><author>Cypr.</author></bibl>.</sense>
     </entryFree>"""
@@ -239,8 +234,6 @@ def test_dialect_sense_boundary_resets_active_dialect():
     boundary into unrelated citations -- constructed directly against
     _extract_segments() rather than the fixture file, to isolate this
     one rule without depending on the fixture's own entry shapes."""
-    import defusedxml.ElementTree as ET
-
     xml = """<entryFree key="test">
         <orth lang="greek">form</orth>, <gramGrp><gram type="dialect">Dor.</gram></gramGrp>
         <orth lang="greek">variant</orth>, <sense><tr>meaning</tr>,
@@ -263,8 +256,6 @@ def test_dialect_consecutive_adjacent_markers_merge_for_one_target():
     entry exercises the genuine-citation case, so this constructs one
     directly to verify the merge mechanism itself works, independent of
     whether real data happens to hit it."""
-    import defusedxml.ElementTree as ET
-
     xml = """<entryFree key="test">
         <orth lang="greek">form</orth>, <gramGrp><gram type="dialect">Aeol.</gram></gramGrp>
         <gramGrp><gram type="dialect">Dor.</gram></gramGrp>

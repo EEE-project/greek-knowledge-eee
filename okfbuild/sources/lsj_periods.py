@@ -229,13 +229,35 @@ def parse_date_text(raw: str) -> "Period | None":
     return None
 
 
+def _iter_diorisis_rows(tsv_path: Path) -> "Iterator[tuple[str, str, int]]":
+    """Shared row-extraction for parse_diorisis_catalog() and
+    _build_diorisis_author_fallback() -- both need every row's
+    (tlgAuthor, tlgId, signed year), so this reads and validates
+    catalog.tsv exactly once per call site instead of each function
+    opening and re-parsing the same file independently. Yields
+    (tlgAuthor, tlgId) already zero-padded to CTS URN convention
+    (4-digit author, 3-digit work) regardless of the raw file's own
+    padding -- read as strings throughout, never cast through int, since
+    a leading zero is significant here. A row with an unparseable
+    date/id is logged and skipped, not raised -- AttributeError covers a
+    short row: DictReader fills its missing trailing columns with None,
+    not a KeyError, and .strip() on that None is what actually raises."""
+    with open(tsv_path, encoding="utf-8", newline="") as f:
+        for row in csv.DictReader(f, delimiter="\t"):
+            try:
+                year = int(row["date"].strip())
+                tlg_author = row["tlgAuthor"].strip().zfill(4)
+                tlg_id = row["tlgId"].strip().zfill(3)
+            except (ValueError, KeyError, AttributeError):
+                logger.warning("Diorisis catalog row with unparseable date/id fields: %r", row)
+                continue
+            yield tlg_author, tlg_id, year
+
+
 def parse_diorisis_catalog(tsv_path: Path) -> "dict[tuple[str, str], Period]":
     """Parse Diorisis's catalog.tsv (header: author, title, tlgAuthor,
     tlgId, lang, date, genre, subgenre; one row per WORK) into
-    {(tlgAuthor, tlgId): Period}, both zero-padded strings matching CTS
-    URN convention (4-digit author, 3-digit work) regardless of the raw
-    file's own padding, read as strings throughout -- never cast through
-    int, since a leading zero is significant here.
+    {(tlgAuthor, tlgId): Period}.
 
     The real, live catalog.tsv (verified directly) has 2 (tlgAuthor,
     tlgId) keys that repeat across more than one row -- Aristotle's
@@ -246,44 +268,28 @@ def parse_diorisis_catalog(tsv_path: Path) -> "dict[tuple[str, str], Period]":
     produces the same Period regardless of which duplicate "wins" -- not
     treated as an error."""
     result: "dict[tuple[str, str], Period]" = {}
-    with open(tsv_path, encoding="utf-8", newline="") as f:
-        for row in csv.DictReader(f, delimiter="\t"):
-            try:
-                year = int(row["date"].strip())
-                tlg_author = row["tlgAuthor"].strip().zfill(4)
-                tlg_id = row["tlgId"].strip().zfill(3)
-            except (ValueError, KeyError, AttributeError):
-                # AttributeError: DictReader fills a short row's missing
-                # trailing columns with None, not a KeyError -- .strip()
-                # on that None is what actually raises for a malformed row.
-                logger.warning("Diorisis catalog row with unparseable date/id fields: %r", row)
-                continue
-            era: Literal["BC", "AD"] = "BC" if year < 0 else "AD"
-            result[(tlg_author, tlg_id)] = Period(centuries=(_year_to_century(year),), era=era, uncertain=False)
+    for tlg_author, tlg_id, year in _iter_diorisis_rows(tsv_path):
+        era: Literal["BC", "AD"] = "BC" if year < 0 else "AD"
+        result[(tlg_author, tlg_id)] = Period(centuries=(_year_to_century(year),), era=era, uncertain=False)
     return result
 
 
 def _build_diorisis_author_fallback(tsv_path: Path) -> "dict[str, Period]":
     """Groups catalog.tsv rows by tlgAuthor and keeps only the earliest
     (numerically smallest signed year, i.e. chronologically first) dated
-    work's Period per author -- read directly from the raw TSV rather
-    than derived from parse_diorisis_catalog()'s already-Period-ified
-    dict, because Period doesn't retain the original signed year needed
-    to compare "earliest" across the BC/AD boundary."""
+    work's Period per author -- via the same _iter_diorisis_rows() rows
+    parse_diorisis_catalog() reads, not derived from that function's
+    already-Period-ified dict, because Period doesn't retain the
+    original signed year needed to compare "earliest" across the BC/AD
+    boundary."""
     earliest_year: "dict[str, int]" = {}
     earliest_period: "dict[str, Period]" = {}
-    with open(tsv_path, encoding="utf-8", newline="") as f:
-        for row in csv.DictReader(f, delimiter="\t"):
-            try:
-                year = int(row["date"].strip())
-                tlg_author = row["tlgAuthor"].strip().zfill(4)
-            except (ValueError, KeyError, AttributeError):
-                continue
-            if tlg_author in earliest_year and year >= earliest_year[tlg_author]:
-                continue
-            earliest_year[tlg_author] = year
-            era: Literal["BC", "AD"] = "BC" if year < 0 else "AD"
-            earliest_period[tlg_author] = Period(centuries=(_year_to_century(year),), era=era, uncertain=False)
+    for tlg_author, _tlg_id, year in _iter_diorisis_rows(tsv_path):
+        if tlg_author in earliest_year and year >= earliest_year[tlg_author]:
+            continue
+        earliest_year[tlg_author] = year
+        era: Literal["BC", "AD"] = "BC" if year < 0 else "AD"
+        earliest_period[tlg_author] = Period(centuries=(_year_to_century(year),), era=era, uncertain=False)
     return earliest_period
 
 
@@ -521,19 +527,21 @@ class LSJPeriodMap:
         guessed; (4) None, if nothing above resolves. Only reads
         citation.author_abbreviation, .tlg_author, .tlg_work -- .text
         and .dialects are irrelevant here."""
-        if citation.tlg_author and citation.tlg_work:
-            period = self._diorisis_work.get((citation.tlg_author.zfill(4), citation.tlg_work.zfill(3)))
+        tlg_author = citation.tlg_author.zfill(4) if citation.tlg_author else None
+
+        if tlg_author and citation.tlg_work:
+            period = self._diorisis_work.get((tlg_author, citation.tlg_work.zfill(3)))
             if period is not None:
                 return period
 
-        if citation.tlg_author:
-            period = self._diorisis_author_fallback.get(citation.tlg_author.zfill(4))
+        if tlg_author:
+            period = self._diorisis_author_fallback.get(tlg_author)
             if period is not None:
                 return period
 
         abbreviation = citation.author_abbreviation
-        if citation.tlg_author:
-            candidates = self._tlg_abbreviation_map.get(citation.tlg_author.zfill(4))
+        if tlg_author:
+            candidates = self._tlg_abbreviation_map.get(tlg_author)
             if candidates and abbreviation not in candidates:
                 if len(candidates) == 1:
                     abbreviation = next(iter(candidates))

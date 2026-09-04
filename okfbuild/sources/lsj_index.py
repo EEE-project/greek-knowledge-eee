@@ -193,21 +193,6 @@ class _DialectMarker:
     raw_text: str
 
 
-class _WordFormMarker:
-    """Phase-1 token marking an <orth>/<foreign> position (a headword
-    spelling or word-form variant) -- a singleton; only identity matters
-    to Phase 2, never any field."""
-
-    __slots__ = ()
-
-
-class _SenseBoundary:
-    """Phase-1 token marking a <sense> position -- a singleton; Pattern
-    A's broad dialect inheritance resets here, per section-01's table."""
-
-    __slots__ = ()
-
-
 @dataclass(frozen=True)
 class _TransparentText:
     """Phase-1 token for text belonging to one of _TRANSPARENT_GRAMMAR_TAGS
@@ -226,8 +211,10 @@ class _TransparentText:
     text: str
 
 
-_WORD_FORM_MARKER = _WordFormMarker()
-_SENSE_BOUNDARY = _SenseBoundary()
+_WORD_FORM_MARKER = object()  # Phase-1 token marking an <orth>/<foreign> position (a headword
+# spelling or word-form variant) -- only ever compared by identity in Phase 2, same as _CACHE_MISS below.
+_SENSE_BOUNDARY = object()  # Phase-1 token marking a <sense> position -- Pattern A's broad
+# dialect inheritance resets here, per section-01's table.
 
 # The tags section-01's investigation directly verified can appear
 # between a dialect marker and its target citation without breaking
@@ -241,9 +228,10 @@ _TRANSPARENT_GRAMMAR_TAGS = {"per", "number", "tns"}
 def _flatten_for_dialect_scope(el, in_greek: bool = False) -> list:
     """Phase 1 of dialect-aware extraction: walk `el`'s subtree in
     document order, producing a FLAT list mixing plain text (str),
-    _DialectMarker, _WordFormMarker, _SenseBoundary, and already-built
-    LSJCitation objects (dialects=() for now -- Phase 2 fills them in)
-    for each <cit> or bare <bibl>. A <cit>'s own internal <quote>/<bibl>
+    _DialectMarker instances, the _WORD_FORM_MARKER/_SENSE_BOUNDARY
+    sentinels, and already-built LSJCitation objects (dialects=() for
+    now -- Phase 2 fills them in) for each <cit> or bare <bibl>. A
+    <cit>'s own internal <quote>/<bibl>
     structure is deliberately NOT flattened further -- the whole subtree
     collapses to one LSJCitation token, matching the invariant that
     every citable unit becomes exactly one LSJCitation.
@@ -297,7 +285,7 @@ def _flatten_for_dialect_scope(el, in_greek: bool = False) -> list:
 _WORD_CHAR_RE = re.compile(r"\w")
 
 
-def _resolve_dialect_scope(tokens: list) -> "list[LSJText | LSJCitation]":
+def _resolve_dialect_scope(tokens: list) -> "list[LSJSegment]":
     r"""Phase 2: a single left-to-right scan over Phase 1's flat token
     list, implementing section-01's verified scope-precedence table for
     <gram type="dialect"> (from this project's
@@ -362,7 +350,7 @@ def _resolve_dialect_scope(tokens: list) -> "list[LSJText | LSJCitation]":
     this is left as a documented imprecision rather than adding an
     unverified heuristic (e.g. "an untagged bare dialect-name mention
     resets scope") to guess around it."""
-    segments: "list[LSJText | LSJCitation]" = []
+    segments: "list[LSJSegment]" = []
     text_parts: list[str] = []
     active_dialect: "tuple[str, ...]" = ()
     pending: "list[_DialectMarker]" = []
@@ -417,7 +405,7 @@ def _resolve_dialect_scope(tokens: list) -> "list[LSJText | LSJCitation]":
     return segments
 
 
-def _extract_segments(el, in_greek: bool = False) -> "list[LSJText | LSJCitation]":
+def _extract_segments(el, in_greek: bool = False) -> "list[LSJSegment]":
     """Entry-body extraction, replacing the old flat-string
     _extract_text() for that purpose (which is retained -- see its own
     docstring -- as the citation/prose-level text flattener
@@ -432,7 +420,7 @@ def _extract_segments(el, in_greek: bool = False) -> "list[LSJText | LSJCitation
 def _load_entries(
     tei_xml_dir: Path,
     tlg_abbreviation_collector: "dict[str, set[str]] | None" = None,
-) -> "dict[str, list[LSJText | LSJCitation]]":
+) -> "dict[str, list[LSJSegment]]":
     """Parse the 27 Perseus LSJ TEI-XML files (~270MB, see
     claude-research.md §2.2 for the exact source) into a headword-keyed
     dict of segment lists.
@@ -512,7 +500,7 @@ def _load_entries(
     plan's scope currently constructs such a caller (that's SourceBundle
     wiring, a later section's job) -- this only makes the capability
     exist and directly tested."""
-    entries: "dict[str, list[LSJText | LSJCitation]]" = {}
+    entries: "dict[str, list[LSJSegment]]" = {}
     for xml_file in sorted(Path(tei_xml_dir).glob("*.xml")):
         root = ET.parse(xml_file, parser=_LSJXMLParser()).getroot()
         if tlg_abbreviation_collector is not None:
@@ -546,7 +534,7 @@ _CACHE_FORMAT_VERSION = 2
 _CACHE_MISS = object()
 
 
-def _encode_cached_entry(segments: "list[LSJText | LSJCitation] | None") -> object:
+def _encode_cached_entry(segments: "list[LSJSegment] | None") -> object:
     """A plain dataclass isn't automatically JSON-serializable -- convert
     explicitly on write, with a `kind` key per segment (not inferred from
     which fields are present) so decoding never has to guess, and a
@@ -567,7 +555,7 @@ def _encode_cached_entry(segments: "list[LSJText | LSJCitation] | None") -> obje
     return {"format_version": _CACHE_FORMAT_VERSION, "segments": encoded_segments}
 
 
-def _decode_cached_entry(cached: object) -> "list[LSJText | LSJCitation] | None | object":
+def _decode_cached_entry(cached: object) -> "list[LSJSegment] | None | object":
     """Inverse of _encode_cached_entry(). Returns _CACHE_MISS (a private
     sentinel, distinct from a real None) for anything that isn't a
     None-or-current-format-version value -- an old bare-string cache
@@ -580,7 +568,7 @@ def _decode_cached_entry(cached: object) -> "list[LSJText | LSJCitation] | None 
         return None
     if not isinstance(cached, dict) or cached.get("format_version") != _CACHE_FORMAT_VERSION:
         return _CACHE_MISS
-    segments: "list[LSJText | LSJCitation]" = []
+    segments: "list[LSJSegment]" = []
     for item in cached["segments"]:
         if item["kind"] == "text":
             segments.append(LSJText(text=item["text"]))
@@ -598,7 +586,7 @@ def _decode_cached_entry(cached: object) -> "list[LSJText | LSJCitation] | None 
 
 
 class LSJIndex:
-    def __init__(self, entries: "dict[str, list[LSJText | LSJCitation]]"):
+    def __init__(self, entries: "dict[str, list[LSJSegment]]"):
         self._entries = entries
 
     @classmethod
@@ -609,7 +597,7 @@ class LSJIndex:
         looked up."""
         return cls(_load_entries(tei_xml_dir))
 
-    def lookup(self, headword: str) -> "list[LSJText | LSJCitation] | None":
+    def lookup(self, headword: str) -> "list[LSJSegment] | None":
         """Return the LSJ entry's segments for `headword`, or None."""
         return self._entries.get(headword)
 
@@ -632,9 +620,9 @@ class CachedLSJIndex:
         self._cache = KeyedJsonCache(cache_dir)
         self.cache_dir = self._cache.cache_dir
         self._tei_xml_dir = tei_xml_dir
-        self._full_index: "dict[str, list[LSJText | LSJCitation]] | None" = None
+        self._full_index: "dict[str, list[LSJSegment]] | None" = None
 
-    def lookup(self, headword: str) -> "list[LSJText | LSJCitation] | None":
+    def lookup(self, headword: str) -> "list[LSJSegment] | None":
         hit, cached = self._cache.read(headword)
         if hit:
             decoded = _decode_cached_entry(cached)

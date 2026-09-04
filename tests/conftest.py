@@ -228,6 +228,19 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     # though that one's git-tracked so always present) isn't available --
     # LSJPeriodMap is enrichment, not a hard requirement, same as lsj/
     # wiktextract elsewhere in this fixture.
+    # KNOWN GAP, not fixed here: `lsj` (lazy, built above) and
+    # `lsj_period_map` (eager, built below) each independently scan the
+    # full 27-file dump on a cold cache -- `_load_entries()`'s own
+    # `tlg_abbreviation_collector` parameter exists precisely to let one
+    # caller share a single scan for both (see its docstring), but this
+    # fixture is the one real place that constructs both together and it
+    # doesn't use it, so a genuinely fresh clone/dump-download still
+    # costs two full scans, not one. Not fixed here because a real fix
+    # means resolving a design mismatch, not just adding a parameter:
+    # CachedLSJIndex only scans lazily, on the first actual cache miss
+    # (possibly never, if every needed headword is already cached) --
+    # forcing it to scan eagerly just to share this pass would change
+    # its whole "only resolve headwords actually looked up" contract.
     diorisis_catalog_path = repo_root / "data" / "diorisis" / "catalog.tsv"
     lsj_period_map = (
         LSJPeriodMap.build(

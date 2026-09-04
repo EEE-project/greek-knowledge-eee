@@ -39,7 +39,7 @@ from okfbuild.okf import ConceptFile, Source
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
 from okfbuild.sources.llm_gap_filler import GapFillCache
-from okfbuild.sources.lsj_index import LSJCitation, LSJText
+from okfbuild.sources.lsj_index import LSJCitation, LSJSegment, LSJText
 from okfbuild.sources.lsj_periods import LSJPeriodMap
 
 _ANCIENT_PERIODS = ("homeric", "attic")
@@ -112,7 +112,7 @@ def _lsj_citation_tag(citation: LSJCitation, period_map: "LSJPeriodMap | None") 
     return f"**[{', '.join(parts)}]**" if parts else None
 
 
-def render_lsj_entry(segments: "list[LSJText | LSJCitation]", period_map: "LSJPeriodMap | None" = None) -> str:
+def render_lsj_entry(segments: "list[LSJSegment]", period_map: "LSJPeriodMap | None" = None) -> str:
     """Turn a headword's LSJ segment list (produced by
     okfbuild.sources.lsj_index's segment-producing extraction) into the
     markdown string for the "## Ancient Greek meaning" section body
