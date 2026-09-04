@@ -60,4 +60,73 @@ mechanism and why one of the two, `%PersDict`, is actually external, not
 internal, yet still safe), which a blanket "forbid all entities" policy
 would otherwise reject too.
 
+## Period/dialect stratification
+
+Each `LSJCitation` extracted from the dump can carry a resolved historical
+period and/or dialect(s), rendered as an inline `**[5th c. BC, Doric]**`-
+style tag immediately before the citation's own text (`render_lsj_entry()`
+in `okfbuild/concepts/lexical_entry.py`) whenever either is known — a
+citation with neither renders untagged, exactly as before this capability
+existed.
+
+**Period resolution** (`okfbuild/sources/lsj_periods.py`,
+`LSJPeriodMap.period_for_citation()`), in order: (1) Diorisis work-level,
+when the citation's TLG author+work both resolve and a matching
+`data/diorisis/catalog.tsv` row exists; (2) Diorisis author-level fallback
+(that author's earliest dated work), when only the author resolves; (3)
+LSJ's own front-matter author-date list (`_frontmatter_file()`); (4) no
+period. `data/diorisis/catalog.tsv` is Diorisis's own small (821-line)
+catalog file, downloaded once from `jtauber/diorisis` on GitHub and
+committed directly (unlike the 270MB LSJ dump itself) — not the full
+820-file/2.5GB per-word-annotated corpus (see
+[`references/sources/diorisis.md`](diorisis.md)), so only Diorisis's
+author/work/date metadata is used here, not its morphological analysis.
+
+**Dialect resolution** (`okfbuild/sources/lsj_index.py`,
+`_resolve_dialect_scope()`) implements a scope-precedence table derived
+from directly sampling the real dump, not assumed from the DTD: a
+`<gramGrp>` immediately preceding an `<orth>`/`<foreign>` word-form variant
+scopes broadly (everything until the next marker or entry/sense boundary);
+a `<gramGrp>` between two `<cit>` elements scopes to only the immediately
+following citation; a `<gramGrp>` in parentheses right after a
+`<foreign>`-quoted form scopes to that one form and its own citation only;
+free-standing prose commentary and untagged dialect mentions (e.g. a bare
+`<bibl><author>Cypr.</author>` with no `<gram type="dialect">` at all) are
+recognized but not attached to a specific citation. `_TRANSPARENT_GRAMMAR_TAGS`
+(`{"per", "number", "tns", "itype", "mood", "gen", "pos", "abbr", "pron",
+"subc", "pb"}`) lists the bare grammatical markup that can sit between a
+dialect `<gramGrp>` and its `<cit>` without breaking Pattern B/C adjacency
+— verified against real dump examples one tag at a time, not derived from
+the Perseus DTD (not locally available, and fetching it externally was
+judged inconsistent with this project's own security stance on untrusted
+external XML — see `_LSJXMLParser` above). A non-dialect `<gramGrp>` (e.g.
+one carrying only `type="voice"`) is likewise treated as transparent for
+adjacency rather than breaking the scope, since its own text still renders
+in place. Extending this set is real, measured work, not a guess: the
+current set was reached by scanning citation counts on the real dump after
+each addition (16,884 → 17,932 dialect-tagged citations across the two
+rounds that produced today's set).
+
+**Known, corrected planning error**: this capability's own motivating
+example (that λέγω's two homograph `<entryFree>` entries collide to one
+dict key after Beta Code conversion) was checked directly against the real
+dump and found false — λέγω's real raw keys are `le/gw1`/`le/gw2`, and
+`beta_code_to_greek()` happens to preserve the trailing digit for this
+word shape, producing two genuinely distinct keys. The real, complete
+mechanism (`_load_entries()`'s own docstring in `lsj_index.py`) is 329
+other digit-suffixed homograph pairs (e.g. raw keys `a)/atos1`/`a)/atos2`)
+where the same conversion inconsistently strips the trailing digit instead
+— an internal quirk of that library, not predictable from a word's
+spelling. Colliding entries are merged (not overwritten), with an explicit
+paragraph break inserted between them.
+
+**Caching**: `LSJPeriodMap.build()` uses two additional, gitignored,
+machine-local caches beyond the git-tracked `data/lsj-cache/` above —
+`data/lsj-tlg-map-cache.json` (a 27-file mtime-signature cache for the
+TLG author/abbreviation join) and
+`data/lsj-tlg-map-cache-frontmatter.json` (a single-file mtime cache for
+front-matter author parsing) — both rebuilt automatically on a stale or
+missing cache, never committed since their validity is tied to local file
+mtimes, not content that makes sense to share across clones.
+
 Attribution: Perseus Digital Library, CC BY-SA 4.0.

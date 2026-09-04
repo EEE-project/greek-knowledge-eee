@@ -169,7 +169,7 @@ footnote-cited back to a `sources[]` frontmatter entry. See
 | ancientrome.ru | Greek author index + Dvoretsky Greek-Russian dictionary listing (finding aid, not integrated) | [`references/sources/ancientrome-ru.md`](references/sources/ancientrome-ru.md) |
 | Digital Encyclopedia of Atticism (DEA) | Atticist lexica — prescriptive "correct Attic usage" commentary (not integrated) | [`references/sources/atticism-eu.md`](references/sources/atticism-eu.md) |
 | Grammar references (Kühner, Gildersleeve, Sobolevsky, Kozarzhevsky, Wolf, Chantraine) | Citation sources for Grammatical Rule entries (print works, not integrated) | [`references/sources/grammar-references.md`](references/sources/grammar-references.md) |
-| Diorisis Ancient Greek Corpus | 820 works, per-word lemma/POS/morphology, TLG-numbered, CC BY-SA (not yet integrated) | [`references/sources/diorisis.md`](references/sources/diorisis.md) |
+| Diorisis Ancient Greek Corpus | 820 works, per-word lemma/POS/morphology, TLG-numbered, CC BY-SA (catalog integrated for LSJ period mapping; full per-word morphology not yet integrated) | [`references/sources/diorisis.md`](references/sources/diorisis.md) |
 | Homer/Odyssey scholarship | Commentary/scholarship on Homer (Голинкевич, Гордезиани, Lord, Сахарный, Тахо-Годи; not integrated) | [`references/sources/homer-scholarship.md`](references/sources/homer-scholarship.md) |
 | Greek alphabet origins | Papers on the Greek alphabet's formation and pre-alphabetic antecedents (not integrated) | [`references/sources/greek-alphabet-origins.md`](references/sources/greek-alphabet-origins.md) |
 
