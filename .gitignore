@@ -7,4 +7,5 @@ dist/
 CLAUDE.md
 data/wiktextract/*.jsonl
 data/lsj/*.xml
+data/lsj-tlg-map-cache.json
 build/gap-filler-pilot/

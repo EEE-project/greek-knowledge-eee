@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI.2>
+   <text>
+      <front>
+         <div1 n="1" type="frontmatter" TEIform="div1">
+            <head TEIform="head">I. Authors and Works</head>
+            <p TEIform="p">
+               <list type="simple" TEIform="list">
+                  <item TEIform="item">
+                     <hi rend="bold" TEIform="hi">Herodotus</hi> Historicus [Hdt.] <date TEIform="date">v B.C.</date>
+Ed. C. Hude, Oxford (OCT).</item>
+                  <item TEIform="item">
+                     <hi rend="bold" TEIform="hi">Plato</hi> Philosophus [Pl.] <date TEIform="date">v/iv B.C.</date>
+Ed. J. Burnet, Oxford (OCT).</item>
+                  <item TEIform="item">
+                     <hi rend="bold" TEIform="hi">Aeschylus</hi> Tragicus [A.] <date TEIform="date">vi/v B.C.</date>
+Ed. D. Page, Oxford (OCT).</item>
+                  <item TEIform="item">
+                     <hi rend="bold" TEIform="hi">Simonides</hi> Lyricus [Simon.] <date TEIform="date">vi/v B.C.</date>
+Ed. D. Page, Oxford (OCT).</item>
+                  <item TEIform="item">
+                     <hi rend="bold" TEIform="hi">Homerus</hi> Epicus [Hom.]
+Ed. D. B. Monro &amp; T. W. Allen, Oxford (OCT).
+                     Il. = Ilias                     }sine auctoris nomine
+                     Od. = Odyssea                   }laudantur.</item>
+                  <item TEIform="item">
+                     <title TEIform="title">Somenamed Miscellany,</title> ed. Someone, 1900. [Misc
+                  </item>
+                  <item TEIform="item">
+                     <title TEIform="title">Cont.</title>]
+                  </item>
+               </list>
+            </p>
+         </div1>
+         <div1 n="2" type="frontmatter" TEIform="div1">
+            <head TEIform="head">II. Epigraphical Publications</head>
+            <p TEIform="p">
+               <list type="simple" TEIform="list">
+                  <item TEIform="item">[Not.An Author] <date TEIform="date">i A.D.</date> must never be picked up -- wrong list.</item>
+               </list>
+            </p>
+         </div1>
+      </front>
+   </text>
+   <text>
+      <body>
+         <div1 n="dict" type="dictionary" TEIform="div1">
+            <entryFree id="n1" key="test1" type="main" opt="n" TEIform="entryFree">
+               <orth extent="full" lang="greek" opt="n" TEIform="orth">test1</orth>, <sense id="n1.0" n="A" level="1" opt="n" TEIform="sense">
+                  <tr opt="n" TEIform="tr">a test entry</tr>, <cit TEIform="cit">
+                     <quote lang="greek" TEIform="quote">test quote</quote>
+                     <bibl n="urn:cts:greekLit:tlg0016.tlg001.perseus-grc1:1:1" default="NO" TEIform="bibl">
+                        <author TEIform="author">Hdt.</author>
+                        <biblScope TEIform="biblScope">1.1</biblScope>
+                     </bibl>
+                  </cit>, <bibl n="urn:cts:greekLit:tlg0059.tlg030.perseus-grc1:1a" default="NO" TEIform="bibl">
+                     <author TEIform="author">Pl.</author>
+                     <title TEIform="title">Ap.</title>
+                  </bibl>, <bibl n="urn:cts:greekLit:tlg0059.tlg031:2b" default="NO" TEIform="bibl">
+                     <author TEIform="author">Id.</author>
+                     <title TEIform="title">Cri.</title>
+                  </bibl>, <bibl n="urn:cts:greekLit:tlg0085.tlg001.perseus-grc1:1" default="NO" TEIform="bibl">
+                     <author TEIform="author">A.</author>
+                  </bibl>, <bibl n="urn:cts:greekLit:tlg0085.tlg003.perseus-grc1:5" default="NO" TEIform="bibl">
+                     <author TEIform="author">Aesch.</author>
+                  </bibl>, <bibl n="urn:cts:greekLit:tlg9999.tlg001:5" default="NO" TEIform="bibl">
+                     <title TEIform="title">no author child</title>
+                  </bibl>, <bibl n="Eur. Fr. 1040" default="NO" TEIform="bibl">
+                     <author TEIform="author">E.</author>
+                  </bibl>, <bibl default="NO" TEIform="bibl">
+                     <author TEIform="author">Suid.</author>
+                  </bibl>, <bibl n="urn:cts:greekLit:tlg0261.tlg001:57" default="NO" TEIform="bibl">
+                     <author TEIform="author">Simon.</author>
+                     <biblScope TEIform="biblScope">57</biblScope>
+                  </bibl>.</sense>
+            </entryFree>
+         </div1>
+      </body>
+   </text>
+</TEI.2>
