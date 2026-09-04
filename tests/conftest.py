@@ -12,6 +12,7 @@ from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
 from okfbuild.sources.llm_gap_filler import GapFillerConfig, LLMModelConfig
 from okfbuild.sources.lsj_index import CachedLSJIndex
+from okfbuild.sources.lsj_periods import LSJPeriodMap
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
 from okfbuild.sources import wikipedia_client
@@ -207,9 +208,35 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     # dump is downloaded) -- checking for one of the 27 expected files, not
     # just directory existence, matches wiktextract's is_file() check above.
     lsj_tei_xml_dir = repo_root / "data" / "lsj"
+    lsj_dump_present = (lsj_tei_xml_dir / "grc.lsj.perseus-eng1.xml").is_file()
     lsj = CachedLSJIndex(
         cache_dir=repo_root / "data" / "lsj-cache",
-        tei_xml_dir=lsj_tei_xml_dir if (lsj_tei_xml_dir / "grc.lsj.perseus-eng1.xml").is_file() else None,
+        tei_xml_dir=lsj_tei_xml_dir if lsj_dump_present else None,
+    )
+    # Same conditional-availability shape as `lsj` immediately above, not
+    # cost-gated the way real_source_bundle_with_gap_filler's separate
+    # opt-in fixture is (that one exists specifically to keep real, billed
+    # LLM calls out of the default pilot run -- LSJPeriodMap.build() is a
+    # local dump scan with its own disk cache, no such concern applies).
+    # Wired directly here, not behind a wrapper fixture: pilot_build_report
+    # (the fixture that actually regenerates this repo's real words/*.md
+    # content) constructs its pipeline.run() call from this exact
+    # SourceBundle -- a separate wrapper fixture nothing else consumes
+    # would leave real content generation never actually seeing period/
+    # dialect tags, silently defeating the whole feature's real-world
+    # purpose. Gracefully None when the dump (or the diorisis catalog,
+    # though that one's git-tracked so always present) isn't available --
+    # LSJPeriodMap is enrichment, not a hard requirement, same as lsj/
+    # wiktextract elsewhere in this fixture.
+    diorisis_catalog_path = repo_root / "data" / "diorisis" / "catalog.tsv"
+    lsj_period_map = (
+        LSJPeriodMap.build(
+            tei_xml_dir=lsj_tei_xml_dir,
+            diorisis_catalog_path=diorisis_catalog_path,
+            cache_path=repo_root / "data" / "lsj-tlg-map-cache.json",
+        )
+        if lsj_dump_present and diorisis_catalog_path.is_file()
+        else None
     )
 
     return SourceBundle(
@@ -219,6 +246,7 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
         wiktextract=wiktextract,
         lsj=lsj,
         wikipedia=wikipedia_client,
+        lsj_period_map=lsj_period_map,
     )
 
 

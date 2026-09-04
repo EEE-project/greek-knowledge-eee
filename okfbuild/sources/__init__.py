@@ -5,6 +5,7 @@ from types import ModuleType
 
 from okfbuild.sources.llm_gap_filler import GapFillerConfig
 from okfbuild.sources.lsj_index import CachedLSJIndex, LSJIndex
+from okfbuild.sources.lsj_periods import LSJPeriodMap
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex, WiktextractIndex
 
@@ -25,3 +26,4 @@ class SourceBundle:
     lsj: "LSJIndex | CachedLSJIndex"
     wikipedia: ModuleType
     llm_gap_filler: "GapFillerConfig | None" = None
+    lsj_period_map: "LSJPeriodMap | None" = None

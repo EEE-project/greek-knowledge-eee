@@ -39,6 +39,8 @@ from okfbuild.okf import ConceptFile, Source
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
 from okfbuild.sources.llm_gap_filler import GapFillCache
+from okfbuild.sources.lsj_index import LSJCitation, LSJText
+from okfbuild.sources.lsj_periods import LSJPeriodMap
 
 _ANCIENT_PERIODS = ("homeric", "attic")
 
@@ -94,6 +96,51 @@ _LLM_GAP_FILLER_SOURCE = {
     "title": "LLM-inferred (unverified)",
 }
 _LLM_MARKER_LEGEND = "† LLM-inferred (unverified) form; not independently attested or rule-derived."
+
+
+def _lsj_citation_tag(citation: LSJCitation, period_map: "LSJPeriodMap | None") -> "str | None":
+    """The inline `**[Period, Dialect]**` tag for one citation, or None
+    when neither is known (never fabricated). Order is always
+    [period, dialect] when both are present; multiple dialects join with
+    " / "."""
+    period = period_map.period_for_citation(citation) if period_map is not None else None
+    parts = []
+    if period is not None:
+        parts.append(period.label)
+    if citation.dialects:
+        parts.append(" / ".join(citation.dialects))
+    return f"**[{', '.join(parts)}]**" if parts else None
+
+
+def render_lsj_entry(segments: "list[LSJText | LSJCitation]", period_map: "LSJPeriodMap | None" = None) -> str:
+    """Turn a headword's LSJ segment list (produced by
+    okfbuild.sources.lsj_index's segment-producing extraction) into the
+    markdown string for the "## Ancient Greek meaning" section body
+    (before the trailing `[^lsj]` footnote reference, which the caller
+    still appends exactly as today). Each LSJCitation gets a leading
+    inline tag combining its resolved period and/or dialect(s) when
+    either is known -- see _lsj_citation_tag() -- with one space before
+    its own text; a citation with neither known renders with no tag at
+    all, exactly as it would have before this section's changes.
+    LSJText segments render as plain, untagged text; consecutive
+    segments concatenate directly (no separator inserted), since each
+    segment's own text already carries whatever whitespace/punctuation
+    belongs at its boundary -- this is a straight re-linearization of
+    what extraction split apart, not a reformatting pass.
+
+    `period_map=None` (the default) is a legitimate, common case, not a
+    caller error -- an LSJPeriodMap is expensive to build (a full dump
+    scan when its own cache is stale), and every citation still renders
+    correctly with dialect-only tags (or no tag) when period data isn't
+    available."""
+    parts = []
+    for segment in segments:
+        if isinstance(segment, LSJText):
+            parts.append(segment.text)
+        else:
+            tag = _lsj_citation_tag(segment, period_map)
+            parts.append(f"{tag} {segment.text}" if tag else segment.text)
+    return "".join(parts)
 
 
 def build(
@@ -248,7 +295,8 @@ def build(
     if lsj_entry:
         source_id = "lsj"
         cite(source_id, **_LSJ_SOURCE)
-        body_sections.append(f"## Ancient Greek meaning\n\n{lsj_entry}[^{source_id}]")
+        rendered_lsj_entry = render_lsj_entry(lsj_entry, sources.lsj_period_map)
+        body_sections.append(f"## Ancient Greek meaning\n\n{rendered_lsj_entry}[^{source_id}]")
         # attested_periods must reflect this too, not just body_sections --
         # pipeline.py's real candidate-acceptance gate discards any concept
         # whose extra_frontmatter["periods"] comes back empty ("no attested

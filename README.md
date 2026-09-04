@@ -130,6 +130,17 @@ To also fill morphology gaps via a real LLM, pass a `GapFillerConfig` as
 wiring, and "Development" below for the paid-test gating this same
 mechanism uses.
 
+LSJ citations also get an inline `**[5th c. BC, Doric]**`-style period/
+dialect marker when `sources.lsj_period_map` is set to an
+`okfbuild.sources.lsj_periods.LSJPeriodMap`
+(`LSJPeriodMap.build(tei_xml_dir, diorisis_catalog_path, cache_path)` —
+needs the real LSJ dump and `data/diorisis/catalog.tsv`, the latter
+already git-tracked in this repo). Optional: `None` (the default) still
+renders every citation correctly, just without period tags — see
+`tests/conftest.py`'s `real_source_bundle` fixture, which wires this the
+same conditionally-available way it wires `lsj` itself, for the
+reference wiring.
+
 
 ## Content model
 

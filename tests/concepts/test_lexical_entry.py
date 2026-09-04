@@ -15,6 +15,7 @@ from okfbuild.sources.llm_gap_filler import (
     GapFillerConfig,
     LLMModelConfig,
 )
+from okfbuild.sources.lsj_index import LSJCitation, LSJText
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import WiktextractIndex
 
@@ -144,7 +145,7 @@ def test_build_includes_lsj_meaning_section_when_entry_found(morpheus_client):
         morpheus=morpheus_client,
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(lookup=Mock(return_value="return, homecoming; a coming back.")),
+        lsj=Mock(lookup=Mock(return_value=[LSJText("return, homecoming; a coming back.")])),
         wikipedia=Mock(),
     )
 
@@ -172,10 +173,36 @@ def test_build_skips_lsj_section_when_no_entry(morpheus_client):
     assert "lsj" not in {s.id for s in concept.sources}
 
 
+def test_build_lsj_rendered_tag_does_not_collide_with_footnote_syntax(morpheus_client):
+    """A rendered tag like "**[Doric]**" has a literal "[" NOT followed
+    by "^" -- must not be picked up by okf.py's _FOOTNOTE_REF_RE
+    (r"\\[\\^([^\\]]+)\\]") or produce more than the one real [^lsj]
+    footnote definition. Dialect tags don't need a real LSJPeriodMap to
+    resolve, so this test stays fully self-contained (no
+    lsj_period_map on the SourceBundle -- defaults to None)."""
+    import okfbuild.okf as okf
+
+    sources = SourceBundle(
+        eee_engine=_eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})}),
+        morpheus=morpheus_client,
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=Mock(lookup=Mock(return_value=[LSJCitation(text="homecoming", dialects=("Doric",))])),
+        wikipedia=Mock(),
+    )
+
+    concept = build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"])
+
+    assert "**[Doric]**" in concept.body
+
+    rendered = okf.render(concept)
+    assert rendered.count("[^lsj]:") == 1
+
+
 def test_build_lsj_meaning_not_duplicated_across_both_ancient_periods(morpheus_client, wiktextract_index):
     """LSJ entries aren't period-scoped -- requesting both homeric and attic
     must still look the lemma up once and render one section, not two."""
-    lsj = Mock(lookup=Mock(return_value="return, homecoming."))
+    lsj = Mock(lookup=Mock(return_value=[LSJText("return, homecoming.")]))
     sources = SourceBundle(
         eee_engine=_eee_engine_stub(
             grc_forms_by_backend={
@@ -240,7 +267,7 @@ def test_build_lsj_meaning_independent_of_attested_forms(morpheus_client):
         morpheus=Mock(analyze=Mock(return_value=[])),
         byzantine_forms={},
         wiktextract=Mock(lookup=Mock(return_value=None)),
-        lsj=Mock(lookup=Mock(return_value="return, homecoming.")),
+        lsj=Mock(lookup=Mock(return_value=[LSJText("return, homecoming.")])),
         wikipedia=Mock(),
     )
 
