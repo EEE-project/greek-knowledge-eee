@@ -118,6 +118,27 @@ def test_render_full_entry_end_to_end_matches_expected_markdown():
     )
 
 
+def test_render_inserts_space_before_tag_when_preceding_text_has_none():
+    """Real extracted LSJText doesn't reliably end in a trailing space
+    (e.g. an abbreviation like "Ion." directly preceding a citation) --
+    the renderer must not let the tag's leading '**[' fuse onto it."""
+    period_map = _period_map_returning(Period(centuries=(8,), era="BC"))
+    segments = [LSJText("Ion."), LSJCitation(text="βαλέω Il. 8.403")]
+
+    result = render_lsj_entry(segments, period_map)
+
+    assert result == "Ion. **[8th c. BC]** βαλέω Il. 8.403"
+
+
+def test_render_does_not_double_space_before_tag_when_preceding_text_already_has_one():
+    period_map = _period_map_returning(Period(centuries=(8,), era="BC"))
+    segments = [LSJText("prefix "), LSJCitation(text="citation text")]
+
+    result = render_lsj_entry(segments, period_map)
+
+    assert result == "prefix **[8th c. BC]** citation text"
+
+
 def test_render_with_no_period_map_still_renders_dialect_only_tags():
     """period_map=None (the documented common case -- an LSJPeriodMap
     wasn't built, or wasn't passed) must not crash; dialect-only tags

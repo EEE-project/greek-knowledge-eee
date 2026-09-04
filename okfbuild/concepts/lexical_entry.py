@@ -123,10 +123,16 @@ def render_lsj_entry(segments: "list[LSJSegment]", period_map: "LSJPeriodMap | N
     its own text; a citation with neither known renders with no tag at
     all, exactly as it would have before this section's changes.
     LSJText segments render as plain, untagged text; consecutive
-    segments concatenate directly (no separator inserted), since each
-    segment's own text already carries whatever whitespace/punctuation
-    belongs at its boundary -- this is a straight re-linearization of
-    what extraction split apart, not a reformatting pass.
+    segments otherwise concatenate directly (no separator inserted),
+    since each segment's own text already carries whatever
+    whitespace/punctuation belongs at its boundary -- this is a straight
+    re-linearization of what extraction split apart, not a reformatting
+    pass. The one exception is a tag itself: real extracted LSJText
+    doesn't reliably end in a trailing space (e.g. an abbreviation like
+    "Ion." directly preceding a citation), so a single defensive space is
+    inserted before a tag whenever the text accumulated so far doesn't
+    already end in whitespace -- otherwise the tag's leading "**[" fuses
+    onto the prior word.
 
     `period_map=None` (the default) is a legitimate, common case, not a
     caller error -- an LSJPeriodMap is expensive to build (a full dump
@@ -139,7 +145,12 @@ def render_lsj_entry(segments: "list[LSJSegment]", period_map: "LSJPeriodMap | N
             parts.append(segment.text)
         else:
             tag = _lsj_citation_tag(segment, period_map)
-            parts.append(f"{tag} {segment.text}" if tag else segment.text)
+            if tag:
+                if parts and parts[-1] and not parts[-1][-1].isspace():
+                    parts.append(" ")
+                parts.append(f"{tag} {segment.text}")
+            else:
+                parts.append(segment.text)
     return "".join(parts)
 
 
