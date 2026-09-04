@@ -355,3 +355,44 @@ def test_period_map_build_rebuilds_when_a_source_file_changes(tmp_path):
         LSJPeriodMap.build(fixture_copy, fixture_copy / "diorisis_catalog.tsv", cache_path)
 
     assert spy.call_count == 2
+
+
+def test_period_map_build_caches_frontmatter_authors_across_calls(tmp_path):
+    cache_path = tmp_path / "tlg-map.json"
+    with patch(
+        "okfbuild.sources.lsj_periods.parse_lsj_frontmatter_authors",
+        wraps=parse_lsj_frontmatter_authors,
+    ) as spy:
+        LSJPeriodMap.build(FIXTURES_DIR, CATALOG_PATH, cache_path)
+        second = LSJPeriodMap.build(FIXTURES_DIR, CATALOG_PATH, cache_path)
+
+    assert spy.call_count == 1
+    # the second build must have loaded real, correctly round-tripped
+    # data from the cache file (Period reconstructed via __post_init__,
+    # not just some raw dict), not an empty/corrupt map.
+    citation = _citation(author_abbreviation="Hdt.")
+    period = second.period_for_citation(citation)
+    assert period == Period(centuries=(5,), era="BC", uncertain=False)
+
+
+def test_period_map_build_rebuilds_frontmatter_authors_when_source_file_changes(tmp_path):
+    fixture_copy = tmp_path / "lsj_periods_fixture"
+    shutil.copytree(FIXTURES_DIR, fixture_copy)
+    cache_path = tmp_path / "tlg-map.json"
+
+    with patch(
+        "okfbuild.sources.lsj_periods.parse_lsj_frontmatter_authors",
+        wraps=parse_lsj_frontmatter_authors,
+    ) as spy:
+        LSJPeriodMap.build(fixture_copy, fixture_copy / "diorisis_catalog.tsv", cache_path)
+
+        # grc.lsj.perseus-eng1.xml serves as both the TLG-map scan's
+        # source and the front-matter parse's own source -- touching it
+        # must independently invalidate this cache too.
+        xml_file = fixture_copy / "grc.lsj.perseus-eng1.xml"
+        new_time = xml_file.stat().st_mtime + 5
+        os.utime(xml_file, (new_time, new_time))
+
+        LSJPeriodMap.build(fixture_copy, fixture_copy / "diorisis_catalog.tsv", cache_path)
+
+    assert spy.call_count == 2

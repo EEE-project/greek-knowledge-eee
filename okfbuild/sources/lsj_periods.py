@@ -477,14 +477,94 @@ def _frontmatter_file(tei_xml_dir: Path) -> Path:
     return Path(tei_xml_dir) / "grc.lsj.perseus-eng1.xml"
 
 
+_FRONTMATTER_CACHE_FORMAT_VERSION = 1
+
+
+def _period_to_dict(period: Period) -> dict:
+    return {"centuries": list(period.centuries), "era": period.era, "uncertain": period.uncertain}
+
+
+def _period_from_dict(data: dict) -> Period:
+    # `label` isn't stored -- it's always deterministically derivable
+    # from the other 3 fields, so __post_init__ recomputes it fresh
+    # rather than round-tripping a 4th, redundant value.
+    return Period(centuries=tuple(data["centuries"]), era=data["era"], uncertain=data["uncertain"])
+
+
+def _frontmatter_cache_path(tlg_map_cache_path: Path) -> Path:
+    """Derived from the TLG-map cache_path (same directory, a sibling
+    filename) rather than a second constructor parameter on
+    LSJPeriodMap.build() -- keeps that already-tested public signature
+    unchanged."""
+    return tlg_map_cache_path.parent / f"{tlg_map_cache_path.stem}-frontmatter.json"
+
+
+def _read_frontmatter_cache(cache_path: Path, source_mtime: float) -> "dict[str, Period] | None":
+    """Returns the cached {abbreviation: Period} dict, or None if the
+    cache is missing, corrupt, a format_version mismatch, or the source
+    file's mtime has changed since the cache was written -- all treated
+    identically as "rebuild", never a crash or silently stale data
+    (same shape as _read_tlg_map_cache() above, for a single-file
+    staleness check instead of a 27-file signature)."""
+    if not cache_path.is_file():
+        return None
+    try:
+        data = json.loads(cache_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        logger.warning("Corrupt LSJ front-matter cache at %s -- rebuilding", cache_path)
+        return None
+    if data.get("format_version") != _FRONTMATTER_CACHE_FORMAT_VERSION or data.get("source_mtime") != source_mtime:
+        return None
+    return {abbreviation: _period_from_dict(p) for abbreviation, p in data["authors"].items()}
+
+
+def _load_or_parse_frontmatter_authors(front_matter_xml_path: Path, cache_path: Path) -> "dict[str, Period]":
+    """Caches parse_lsj_frontmatter_authors()'s output, keyed by the
+    source file's own mtime -- unlike _load_or_build_tlg_map()'s 27-file
+    signature (needed since that scan spans the whole dump), front-matter
+    parsing depends on exactly one file, so a single mtime check is
+    sufficient.
+
+    Originally left uncached deliberately (an earlier version of this
+    module's own docstring reasoned "parse_diorisis_catalog() and
+    parse_lsj_frontmatter_authors() are cheap... and are simply re-run
+    fresh on every build() call; only the TLG-abbreviation map is
+    cached") -- revisited after direct measurement showed this "cheap"
+    parse is actually a real, recurring cost on every single
+    LSJPeriodMap.build() call (~6s, confirmed via a real end-to-end
+    timing run against the live dump), not a one-time bootstrap cost
+    the way the TLG-map's own 270MB scan is."""
+    source_mtime = front_matter_xml_path.stat().st_mtime
+    cached = _read_frontmatter_cache(cache_path, source_mtime)
+    if cached is not None:
+        return cached
+
+    fresh = parse_lsj_frontmatter_authors(front_matter_xml_path)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps(
+            {
+                "format_version": _FRONTMATTER_CACHE_FORMAT_VERSION,
+                "source_mtime": source_mtime,
+                "authors": {abbreviation: _period_to_dict(period) for abbreviation, period in fresh.items()},
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return fresh
+
+
 class LSJPeriodMap:
     """Combines Diorisis (work- and author-level), LSJ's own front
     matter, and the derived TLG-author-abbreviation join table into one
-    lookup. Built once per process via build(); the derived
-    TLG-abbreviation map (the part that needs a full dump scan) is
-    persisted to its own small cached JSON artifact at cache_path so a
-    later build() call with unchanged source files skips the scan
-    entirely."""
+    lookup. Built once per process via build(); both the derived
+    TLG-abbreviation map (the part that needs a full 27-file dump scan)
+    and the front-matter authors parse (a single ~10MB file, but still a
+    real, measured cost repeated on every build() call otherwise) are
+    persisted to their own small cached JSON artifacts near cache_path
+    so a later build() call with unchanged source files skips both."""
 
     def __init__(
         self,
@@ -502,11 +582,14 @@ class LSJPeriodMap:
     def build(cls, tei_xml_dir: Path, diorisis_catalog_path: Path, cache_path: Path) -> "LSJPeriodMap":
         tei_xml_dir = Path(tei_xml_dir)
         diorisis_catalog_path = Path(diorisis_catalog_path)
+        cache_path = Path(cache_path)
         return cls(
             diorisis_work=parse_diorisis_catalog(diorisis_catalog_path),
             diorisis_author_fallback=_build_diorisis_author_fallback(diorisis_catalog_path),
-            frontmatter=parse_lsj_frontmatter_authors(_frontmatter_file(tei_xml_dir)),
-            tlg_abbreviation_map=_load_or_build_tlg_map(tei_xml_dir, Path(cache_path)),
+            frontmatter=_load_or_parse_frontmatter_authors(
+                _frontmatter_file(tei_xml_dir), _frontmatter_cache_path(cache_path)
+            ),
+            tlg_abbreviation_map=_load_or_build_tlg_map(tei_xml_dir, cache_path),
         )
 
     def period_for_citation(self, citation: "LSJCitation") -> "Period | None":
