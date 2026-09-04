@@ -19,6 +19,7 @@ import json
 import logging
 import math
 import re
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
@@ -340,44 +341,58 @@ def parse_lsj_frontmatter_authors(front_matter_xml_path: Path) -> "dict[str, Per
 _CTS_URN_AUTHOR_RE = re.compile(r"^urn:cts:greekLit:tlg(\d{4})\.")
 
 
+def collect_bibl_author_pairs_from_root(root, source_label: str = "<root>") -> "Iterator[tuple[str, str]]":
+    """Yield (tlgAuthor, abbreviation) pairs from every <bibl> in an
+    ALREADY-PARSED tree (`root`, an Element) whose n= attribute is a real
+    CTS URN, reading the abbreviation from that same <bibl>'s CHILD
+    <author> element (verified directly against the real dump -- not a
+    sibling relationship). A <bibl> with a matching URN but no (or an
+    empty) child <author> is skipped, not a crash -- logged at DEBUG, not
+    WARNING: verified directly against the real full dump that this is
+    the ordinary case for a citation continuing the same work as a
+    preceding one (e.g. a second passage-only <bibl> right after a fuller
+    one that already named the author), not an anomaly -- 72,567 real
+    occurrences across the full dump, none of them a data problem.
+
+    Takes an already-parsed root (not a file path) specifically so a
+    caller that has ALSO already parsed the same file for its own
+    purposes -- okfbuild.sources.lsj_index._load_entries(), for the
+    single-pass requirement -- can reuse that same parse instead of
+    reading and reparsing the file a second time. `source_label` is only
+    used for the debug log message (a file path when the caller has one,
+    otherwise a generic placeholder)."""
+    for bibl in root.iter():
+        if _local_name(bibl.tag) != "bibl":
+            continue
+        n_attr = bibl.get("n")
+        if not n_attr:
+            continue
+        urn_match = _CTS_URN_AUTHOR_RE.match(n_attr)
+        if not urn_match:
+            continue
+        author_el = next((child for child in bibl if _local_name(child.tag) == "author"), None)
+        author_text = "".join(author_el.itertext()).strip() if author_el is not None else ""
+        if not author_text:
+            logger.debug(
+                "bibl with CTS URN %r has no (or empty) child <author> in %s -- skipping", n_attr, source_label
+            )
+            continue
+        yield urn_match.group(1), author_text
+
+
 def build_tlg_author_abbreviation_map(tei_xml_dir: Path) -> "dict[str, set[str]]":
     """Collect {tlgAuthor (4-digit, zero-padded): {abbreviation, ...}}
-    from every <bibl> across tei_xml_dir's *.xml files whose n= attribute
-    is a real CTS URN (n="urn:cts:greekLit:tlgXXXX..."; a real,
-    confirmed minority of <bibl>s have a non-URN n= that must be
-    excluded, not mistaken for a match), reading the abbreviation from
-    that same <bibl>'s CHILD <author> element (verified directly against
-    the real dump -- not a sibling relationship). Most tlgAuthor values
-    map to exactly one abbreviation; some map to more than one (a real,
-    confirmed case: tlg0059 -> {"Pl.", "Id."}) -- never silently pick
-    one here; the caller resolving a specific citation (LSJPeriodMap)
-    decides how to disambiguate. A <bibl> with a matching URN but no (or
-    an empty) child <author> is skipped, not a crash -- logged at DEBUG,
-    not WARNING: verified directly against the real full dump that this
-    is the ordinary case for a citation continuing the same work as a
-    preceding one (e.g. a second passage-only <bibl> right after a
-    fuller one that already named the author), not an anomaly -- 72,567
-    real occurrences across the full dump, none of them a data problem."""
+    across all of tei_xml_dir's *.xml files (see
+    collect_bibl_author_pairs_from_root() for the per-file logic). Most
+    tlgAuthor values map to exactly one abbreviation; some map to more
+    than one (a real, confirmed case: tlg0059 -> {"Pl.", "Id."}) -- never
+    silently pick one here; the caller resolving a specific citation
+    (LSJPeriodMap) decides how to disambiguate."""
     result: "dict[str, set[str]]" = {}
     for xml_file in sorted(Path(tei_xml_dir).glob("*.xml")):
         root = ET.parse(xml_file, parser=_LSJXMLParser()).getroot()
-        for bibl in root.iter():
-            if _local_name(bibl.tag) != "bibl":
-                continue
-            n_attr = bibl.get("n")
-            if not n_attr:
-                continue
-            urn_match = _CTS_URN_AUTHOR_RE.match(n_attr)
-            if not urn_match:
-                continue
-            author_el = next((child for child in bibl if _local_name(child.tag) == "author"), None)
-            author_text = "".join(author_el.itertext()).strip() if author_el is not None else ""
-            if not author_text:
-                logger.debug(
-                    "bibl with CTS URN %r has no (or empty) child <author> in %s -- skipping", n_attr, xml_file
-                )
-                continue
-            result.setdefault(urn_match.group(1), set()).add(author_text)
+        for tlg_author, author_text in collect_bibl_author_pairs_from_root(root, str(xml_file)):
+            result.setdefault(tlg_author, set()).add(author_text)
     return result
 
 

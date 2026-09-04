@@ -1,15 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0">
-  <text>
-    <body>
-      <entryFree key="ἀγαθός" type="main">
-        <orth>ἀγαθός</orth>
-        <sense>good, brave, capable, of good birth.</sense>
-      </entryFree>
-      <entryFree key="ἀγορά" type="main">
-        <orth>ἀγορά</orth>
-        <sense>assembly, market-place.</sense>
-      </entryFree>
-    </body>
-  </text>
-</TEI>
+<TEI.2>
+   <text>
+      <body>
+         <div1 n="dict" type="dictionary" TEIform="div1">
+
+            <entryFree id="f1" key="a)gaqo/s" type="main" opt="n" TEIform="entryFree">
+               <orth extent="full" lang="greek" opt="n" TEIform="orth">a)gaqo/s</orth>, <sense id="f1.0" n="A" level="1" opt="n" TEIform="sense">
+                  <tr opt="n" TEIform="tr">good</tr>, of persons and things.</sense>
+            </entryFree>
+
+            <entryFree id="f2" key="qio/s" type="main" opt="n" TEIform="entryFree">
+               <orth extent="full" lang="greek" opt="n" TEIform="orth">qio/s</orth>, <gramGrp opt="n" TEIform="gramGrp">
+                  <gram type="dialect" opt="n" TEIform="gram">Boeot.</gram>
+               </gramGrp>
+               <orth extent="full" lang="greek" opt="n" TEIform="orth">sio/s</orth>, <tr opt="n" TEIform="tr">form of god,</tr> <bibl n="urn:cts:greekLit:tlg0016.tlg001.perseus-grc1:3:47" default="NO" TEIform="bibl">
+                  <author TEIform="author">Hdt.</author>
+                  <biblScope TEIform="biblScope">3.47</biblScope>
+               </bibl>, <bibl default="NO" TEIform="bibl">
+                  <biblScope TEIform="biblScope">5.1</biblScope>
+               </bibl> (continuing same work).</entryFree>
+
+            <entryFree id="f3" key="a)/atos1" type="main" opt="n" TEIform="entryFree">
+               <orth extent="full" lang="greek" opt="n" TEIform="orth">a)/atos</orth>, <sense id="f3.0" n="A" level="1" opt="n" TEIform="sense">
+                  <tr opt="n" TEIform="tr">insatiate,</tr> <cit TEIform="cit">
+                     <quote lang="greek" TEIform="quote">a)/atos pole/moio</quote>
+                     <bibl n="urn:cts:greekLit:tlg0012.tlg001.perseus-grc1:1:1" default="NO" TEIform="bibl">
+                        <author TEIform="author">Il.</author>
+                        <biblScope TEIform="biblScope">1.1</biblScope>
+                     </bibl>
+                  </cit>, <gramGrp opt="n" TEIform="gramGrp">
+                     <gram type="dialect" opt="n" TEIform="gram">Dor.</gram>
+                  </gramGrp> <cit TEIform="cit">
+                     <quote lang="greek" TEIform="quote">a)/atos</quote>
+                     <bibl n="urn:cts:greekLit:tlg0033.tlg004.perseus-grc1:2:9" default="NO" TEIform="bibl">
+                        <author TEIform="author">Pi.</author>
+                        <biblScope TEIform="biblScope">2.9</biblScope>
+                     </bibl>
+                  </cit>; cf. <bibl n="urn:cts:greekLit:tlg0059.tlg030.perseus-grc1:1a" default="NO" TEIform="bibl">
+                     <author TEIform="author">Pl.</author>
+                     <title TEIform="title">Ap.</title>
+                  </bibl>.</sense>
+            </entryFree>
+
+            <entryFree id="f3b" key="a)/atos2" type="main" opt="n" TEIform="entryFree">
+               <orth extent="full" lang="greek" opt="n" TEIform="orth">a)/atos</orth>, <sense id="f3b.0" n="B" level="1" opt="n" TEIform="sense">
+                  <tr opt="n" TEIform="tr">unwearied, insatiable in battle,</tr> <cit TEIform="cit">
+                     <quote lang="greek" TEIform="quote">a)/atos xa/rmhs</quote>
+                     <bibl n="urn:cts:greekLit:tlg0012.tlg002.perseus-grc1:2:1" default="NO" TEIform="bibl">
+                        <author TEIform="author">Od.</author>
+                        <biblScope TEIform="biblScope">2.1</biblScope>
+                     </bibl>
+                  </cit>, cf. <bibl n="urn:cts:greekLit:tlg0059.tlg031:2b" default="NO" TEIform="bibl">
+                     <author TEIform="author">Id.</author>
+                     <title TEIform="title">Cri.</title>
+                  </bibl>.</sense>
+            </entryFree>
+
+            <entryFree id="f4" key="a)/gan" type="main" opt="n" TEIform="entryFree">
+               <orth extent="full" lang="greek" opt="n" TEIform="orth">a)/gan</orth>, <pos opt="n" TEIform="pos">Adv.</pos> <sense id="f4.0" n="A" level="1" opt="n" TEIform="sense">
+                  <tr opt="n" TEIform="tr">very much,</tr> chiefly <gramGrp opt="n" TEIform="gramGrp">
+                     <gram type="dialect" opt="n" TEIform="gram">Aeol.</gram>
+                  </gramGrp> and Trag., not in <bibl default="NO" TEIform="bibl">
+                     <author TEIform="author">Hom.</author>
+                  </bibl>.</sense>
+            </entryFree>
+
+         </div1>
+      </body>
+   </text>
+</TEI.2>
