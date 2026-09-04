@@ -441,32 +441,65 @@ def _read_tlg_map_cache(cache_path: Path) -> "dict | None":
     return data
 
 
-def _load_or_build_tlg_map(tei_xml_dir: Path, cache_path: Path) -> "dict[str, set[str]]":
-    """A plain single JSON file, not KeyedJsonCache (that's shaped for
-    many independent per-key files; this is one combined artifact).
-    Staleness is a source_signature comparison (sorted (filename, mtime)
-    pairs across tei_xml_dir's *.xml files) -- any file added, removed,
-    or touched triggers a full rebuild; a match skips the 270MB scan
-    entirely."""
-    current_signature = _tlg_map_source_signature(tei_xml_dir)
+def tlg_map_cache_is_fresh(tei_xml_dir: Path, cache_path: Path) -> bool:
+    """True if _load_or_build_tlg_map() would return cached data without
+    rescanning tei_xml_dir. Exposed publicly so a caller that ALSO needs
+    to scan the same dump for another purpose -- e.g. okfbuild.sources.
+    lsj_index._load_entries()'s own headword-index scan -- can decide
+    ahead of time whether to share that one scan (via
+    LSJPeriodMap.build()'s precomputed_tlg_abbreviation_map parameter)
+    rather than triggering two independent full scans, without
+    duplicating (and risking desyncing from) this module's own
+    staleness-check logic."""
     cached = _read_tlg_map_cache(cache_path)
-    if cached is not None and cached.get("source_signature") == current_signature:
-        return {tlg_author: set(abbrevs) for tlg_author, abbrevs in cached["map"].items()}
+    return cached is not None and cached.get("source_signature") == _tlg_map_source_signature(tei_xml_dir)
 
-    fresh_map = build_tlg_author_abbreviation_map(tei_xml_dir)
+
+def _write_tlg_map_cache(cache_path: Path, source_signature: list, tlg_map: "dict[str, set[str]]") -> None:
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(
         json.dumps(
             {
                 "format_version": _TLG_MAP_CACHE_FORMAT_VERSION,
-                "source_signature": current_signature,
-                "map": {tlg_author: sorted(abbrevs) for tlg_author, abbrevs in fresh_map.items()},
+                "source_signature": source_signature,
+                "map": {tlg_author: sorted(abbrevs) for tlg_author, abbrevs in tlg_map.items()},
             },
             ensure_ascii=False,
             indent=2,
         ),
         encoding="utf-8",
     )
+
+
+def _load_or_build_tlg_map(
+    tei_xml_dir: Path, cache_path: Path, precomputed_map: "dict[str, set[str]] | None" = None
+) -> "dict[str, set[str]]":
+    """A plain single JSON file, not KeyedJsonCache (that's shaped for
+    many independent per-key files; this is one combined artifact).
+    Staleness is a source_signature comparison (sorted (filename, mtime)
+    pairs across tei_xml_dir's *.xml files) -- any file added, removed,
+    or touched triggers a full rebuild; a match skips the 270MB scan
+    entirely.
+
+    `precomputed_map`: for a caller that already knows the cache is
+    stale (via tlg_map_cache_is_fresh()) and has ALREADY scanned
+    tei_xml_dir for another purpose, sharing that one scan with
+    _load_entries() instead of this function doing its own, independent
+    second scan -- skips straight to persisting the given map. None (the
+    default) leaves the normal check-then-scan-if-needed behavior
+    completely unchanged."""
+    current_signature = _tlg_map_source_signature(tei_xml_dir)
+
+    if precomputed_map is not None:
+        _write_tlg_map_cache(cache_path, current_signature, precomputed_map)
+        return precomputed_map
+
+    cached = _read_tlg_map_cache(cache_path)
+    if cached is not None and cached.get("source_signature") == current_signature:
+        return {tlg_author: set(abbrevs) for tlg_author, abbrevs in cached["map"].items()}
+
+    fresh_map = build_tlg_author_abbreviation_map(tei_xml_dir)
+    _write_tlg_map_cache(cache_path, current_signature, fresh_map)
     return fresh_map
 
 
@@ -579,7 +612,17 @@ class LSJPeriodMap:
         self._tlg_abbreviation_map = tlg_abbreviation_map
 
     @classmethod
-    def build(cls, tei_xml_dir: Path, diorisis_catalog_path: Path, cache_path: Path) -> "LSJPeriodMap":
+    def build(
+        cls,
+        tei_xml_dir: Path,
+        diorisis_catalog_path: Path,
+        cache_path: Path,
+        precomputed_tlg_abbreviation_map: "dict[str, set[str]] | None" = None,
+    ) -> "LSJPeriodMap":
+        """`precomputed_tlg_abbreviation_map`: passed straight through to
+        _load_or_build_tlg_map() -- see its own docstring. None (the
+        default) leaves this classmethod's existing check-then-scan-if-
+        needed behavior completely unchanged."""
         tei_xml_dir = Path(tei_xml_dir)
         diorisis_catalog_path = Path(diorisis_catalog_path)
         cache_path = Path(cache_path)
@@ -589,7 +632,9 @@ class LSJPeriodMap:
             frontmatter=_load_or_parse_frontmatter_authors(
                 _frontmatter_file(tei_xml_dir), _frontmatter_cache_path(cache_path)
             ),
-            tlg_abbreviation_map=_load_or_build_tlg_map(tei_xml_dir, cache_path),
+            tlg_abbreviation_map=_load_or_build_tlg_map(
+                tei_xml_dir, cache_path, precomputed_map=precomputed_tlg_abbreviation_map
+            ),
         )
 
     def period_for_citation(self, citation: "LSJCitation") -> "Period | None":

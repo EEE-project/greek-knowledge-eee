@@ -11,8 +11,8 @@ from okfbuild.sources import SourceBundle
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
 from okfbuild.sources.llm_gap_filler import GapFillerConfig, LLMModelConfig
-from okfbuild.sources.lsj_index import CachedLSJIndex
-from okfbuild.sources.lsj_periods import LSJPeriodMap
+from okfbuild.sources.lsj_index import CachedLSJIndex, _load_entries
+from okfbuild.sources.lsj_periods import LSJPeriodMap, tlg_map_cache_is_fresh
 from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
 from okfbuild.sources import wikipedia_client
@@ -209,9 +209,37 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     # just directory existence, matches wiktextract's is_file() check above.
     lsj_tei_xml_dir = repo_root / "data" / "lsj"
     lsj_dump_present = (lsj_tei_xml_dir / "grc.lsj.perseus-eng1.xml").is_file()
+    diorisis_catalog_path = repo_root / "data" / "diorisis" / "catalog.tsv"
+    lsj_cache_dir = repo_root / "data" / "lsj-cache"
+    tlg_map_cache_path = repo_root / "data" / "lsj-tlg-map-cache.json"
+
+    # `lsj` (CachedLSJIndex, lazy -- scans only on an actual cache miss)
+    # and `lsj_period_map` (LSJPeriodMap, eager -- scans at construction
+    # unless its own TLG-map cache is warm) would otherwise each
+    # independently scan the full 27-file dump on a cold cache -- two
+    # full scans instead of one. Shared here specifically when the
+    # TLG-map cache is stale (the one condition under which
+    # LSJPeriodMap.build() is about to scan regardless): do ONE
+    # _load_entries() pass with its own tlg_abbreviation_collector
+    # parameter, hand CachedLSJIndex the resulting index directly (its
+    # own lazy-scan contract is otherwise untouched -- this only ever
+    # preloads what a real, in-flight scan already produced, never
+    # forces an eager scan that wouldn't have happened anyway) and hand
+    # LSJPeriodMap.build() the resulting collector instead of letting it
+    # rescan independently. When the cache is already fresh (the common
+    # case after the first real run in an environment), neither side
+    # scans at all -- behavior is then identical to before this sharing
+    # was added.
+    preloaded_lsj_entries = None
+    precomputed_tlg_map = None
+    if lsj_dump_present and not tlg_map_cache_is_fresh(lsj_tei_xml_dir, tlg_map_cache_path):
+        precomputed_tlg_map = {}
+        preloaded_lsj_entries = _load_entries(lsj_tei_xml_dir, tlg_abbreviation_collector=precomputed_tlg_map)
+
     lsj = CachedLSJIndex(
-        cache_dir=repo_root / "data" / "lsj-cache",
+        cache_dir=lsj_cache_dir,
         tei_xml_dir=lsj_tei_xml_dir if lsj_dump_present else None,
+        preloaded_index=preloaded_lsj_entries,
     )
     # Same conditional-availability shape as `lsj` immediately above, not
     # cost-gated the way real_source_bundle_with_gap_filler's separate
@@ -228,25 +256,12 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     # though that one's git-tracked so always present) isn't available --
     # LSJPeriodMap is enrichment, not a hard requirement, same as lsj/
     # wiktextract elsewhere in this fixture.
-    # KNOWN GAP, not fixed here: `lsj` (lazy, built above) and
-    # `lsj_period_map` (eager, built below) each independently scan the
-    # full 27-file dump on a cold cache -- `_load_entries()`'s own
-    # `tlg_abbreviation_collector` parameter exists precisely to let one
-    # caller share a single scan for both (see its docstring), but this
-    # fixture is the one real place that constructs both together and it
-    # doesn't use it, so a genuinely fresh clone/dump-download still
-    # costs two full scans, not one. Not fixed here because a real fix
-    # means resolving a design mismatch, not just adding a parameter:
-    # CachedLSJIndex only scans lazily, on the first actual cache miss
-    # (possibly never, if every needed headword is already cached) --
-    # forcing it to scan eagerly just to share this pass would change
-    # its whole "only resolve headwords actually looked up" contract.
-    diorisis_catalog_path = repo_root / "data" / "diorisis" / "catalog.tsv"
     lsj_period_map = (
         LSJPeriodMap.build(
             tei_xml_dir=lsj_tei_xml_dir,
             diorisis_catalog_path=diorisis_catalog_path,
-            cache_path=repo_root / "data" / "lsj-tlg-map-cache.json",
+            cache_path=tlg_map_cache_path,
+            precomputed_tlg_abbreviation_map=precomputed_tlg_map,
         )
         if lsj_dump_present and diorisis_catalog_path.is_file()
         else None

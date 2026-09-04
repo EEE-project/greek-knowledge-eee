@@ -356,6 +356,23 @@ def test_load_entries_collector_matches_independent_lsj_periods_build():
     assert collector == independent
 
 
+def test_cached_index_with_preloaded_index_never_scans(tmp_path):
+    """A caller that already scanned tei_xml_dir for another purpose
+    (e.g. sharing one pass with LSJPeriodMap.build() via the same
+    collector this file's other single-pass tests exercise) can hand
+    CachedLSJIndex the result directly -- lookup() must use it without
+    ever calling _load_entries() again, even for a headword that would
+    otherwise be a genuine cache miss."""
+    preloaded = _load_entries(FIXTURES_DIR / "lsj")
+    assert "ἀγαθός" in preloaded  # sanity: the fixture really has this headword
+
+    index = CachedLSJIndex(cache_dir=tmp_path / "cache", preloaded_index=preloaded)
+    with patch("okfbuild.sources.lsj_index._load_entries") as spy:
+        _assert_agathos_entry(index.lookup("ἀγαθός"))
+        assert index.lookup("headword-not-in-any-fixture") is None
+    spy.assert_not_called()
+
+
 # --- LSJIndex/CachedLSJIndex.lookup() ---
 
 

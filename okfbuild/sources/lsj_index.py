@@ -616,11 +616,23 @@ class CachedLSJIndex:
     headword's answer (found or confirmed absent) never needs the raw
     dump again."""
 
-    def __init__(self, cache_dir: Path, tei_xml_dir: "Path | None" = None):
+    def __init__(
+        self,
+        cache_dir: Path,
+        tei_xml_dir: "Path | None" = None,
+        preloaded_index: "dict[str, list[LSJSegment]] | None" = None,
+    ):
+        """`preloaded_index`: for a caller that already scanned
+        `tei_xml_dir` for another purpose (see _load_entries()'s own
+        `tlg_abbreviation_collector` parameter) and wants THIS instance
+        to reuse that result instead of doing its own, otherwise-
+        independent lazy scan on first miss. None (the default) leaves
+        the normal lazy behavior completely unchanged -- every existing
+        caller is unaffected."""
         self._cache = KeyedJsonCache(cache_dir)
         self.cache_dir = self._cache.cache_dir
         self._tei_xml_dir = tei_xml_dir
-        self._full_index: "dict[str, list[LSJSegment]] | None" = None
+        self._full_index: "dict[str, list[LSJSegment]] | None" = preloaded_index
 
     def lookup(self, headword: str) -> "list[LSJSegment] | None":
         hit, cached = self._cache.read(headword)

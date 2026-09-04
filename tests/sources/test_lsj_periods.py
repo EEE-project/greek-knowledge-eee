@@ -13,6 +13,7 @@ from okfbuild.sources.lsj_periods import (
     parse_date_text,
     parse_diorisis_catalog,
     parse_lsj_frontmatter_authors,
+    tlg_map_cache_is_fresh,
 )
 
 FIXTURES_DIR = Path(__file__).parent.parent / "fixtures" / "sources" / "lsj_periods"
@@ -355,6 +356,53 @@ def test_period_map_build_rebuilds_when_a_source_file_changes(tmp_path):
         LSJPeriodMap.build(fixture_copy, fixture_copy / "diorisis_catalog.tsv", cache_path)
 
     assert spy.call_count == 2
+
+
+def test_tlg_map_cache_is_fresh_false_when_no_cache_yet(tmp_path):
+    assert tlg_map_cache_is_fresh(FIXTURES_DIR, tmp_path / "does-not-exist.json") is False
+
+
+def test_tlg_map_cache_is_fresh_true_after_a_real_build(tmp_path):
+    cache_path = tmp_path / "tlg-map.json"
+    LSJPeriodMap.build(FIXTURES_DIR, CATALOG_PATH, cache_path)
+    assert tlg_map_cache_is_fresh(FIXTURES_DIR, cache_path) is True
+
+
+def test_tlg_map_cache_is_fresh_false_after_a_source_file_changes(tmp_path):
+    fixture_copy = tmp_path / "lsj_periods_fixture"
+    shutil.copytree(FIXTURES_DIR, fixture_copy)
+    cache_path = tmp_path / "tlg-map.json"
+    LSJPeriodMap.build(fixture_copy, fixture_copy / "diorisis_catalog.tsv", cache_path)
+
+    xml_file = fixture_copy / "grc.lsj.perseus-eng1.xml"
+    new_time = xml_file.stat().st_mtime + 5
+    os.utime(xml_file, (new_time, new_time))
+
+    assert tlg_map_cache_is_fresh(fixture_copy, cache_path) is False
+
+
+def test_period_map_build_with_precomputed_tlg_map_skips_its_own_scan(tmp_path):
+    """A caller that already scanned the dump for another purpose (e.g.
+    _load_entries()'s own collector) can hand LSJPeriodMap.build() the
+    result directly -- it must persist and use that, never call
+    build_tlg_author_abbreviation_map() itself."""
+    cache_path = tmp_path / "tlg-map.json"
+    precomputed = {"0085": {"A.", "Aesch."}}
+
+    with patch(
+        "okfbuild.sources.lsj_periods.build_tlg_author_abbreviation_map",
+        wraps=build_tlg_author_abbreviation_map,
+    ) as spy:
+        period_map = LSJPeriodMap.build(
+            FIXTURES_DIR, CATALOG_PATH, cache_path, precomputed_tlg_abbreviation_map=precomputed
+        )
+
+    spy.assert_not_called()
+    citation = _citation(tlg_author="0085", author_abbreviation="A.")
+    assert period_map.period_for_citation(citation) == Period(centuries=(6, 5), era="BC", uncertain=False)
+    # and it was genuinely persisted -- a later plain build() (no
+    # precomputed_map) must read it back from the cache, not rescan.
+    assert tlg_map_cache_is_fresh(FIXTURES_DIR, cache_path) is True
 
 
 def test_period_map_build_caches_frontmatter_authors_across_calls(tmp_path):
