@@ -10,6 +10,9 @@ from okfbuild.sources.lsj_index import (
     LSJCitation,
     LSJIndex,
     LSJText,
+    _CACHE_FORMAT_VERSION,
+    _CACHE_MISS,
+    _decode_cached_entry,
     _extract_segments,
     _extract_text,
     _load_entries,
@@ -420,6 +423,39 @@ def test_dialect_untagged_mention_out_of_structural_scope():
     assert citations[0].dialects == ()
 
 
+def test_empty_dialect_gram_is_filtered_not_treated_as_a_real_dialect():
+    """Real code gap found by review, confirmed dormant against the real
+    dump today (zero empty dialect grams currently exist), fixed
+    defensively anyway: an empty/whitespace-only <gram type="dialect">
+    used to produce dialects=("",) -- a non-empty, truthy tuple -- which
+    would propagate into a malformed rendered tag like "**[]**". A
+    <gramGrp> whose only <gram type="dialect"> is empty must be treated
+    the same as one with no dialect gram at all (falls through to the
+    non-dialect-gramGrp branch, its own text still rendering normally,
+    just not as a dialect marker)."""
+    xml = """<entryFree key="test">
+        <sense><gramGrp><gram type="dialect"></gram></gramGrp>
+        <orth lang="greek">no/stos</orth>,
+        <bibl><author>Hom.</author></bibl>.</sense>
+    </entryFree>"""
+    root = ET.fromstring(xml)
+    citations = [s for s in _extract_segments(root) if isinstance(s, LSJCitation)]
+    assert len(citations) == 1
+    assert citations[0].dialects == ()
+
+
+def test_mixed_empty_and_real_dialect_grams_only_keeps_the_real_one():
+    xml = """<entryFree key="test">
+        <sense><gramGrp><gram type="dialect"></gram><gram type="dialect">Dor.</gram></gramGrp>
+        <orth lang="greek">no/stos</orth>,
+        <bibl><author>Hom.</author></bibl>.</sense>
+    </entryFree>"""
+    root = ET.fromstring(xml)
+    citations = [s for s in _extract_segments(root) if isinstance(s, LSJCitation)]
+    assert len(citations) == 1
+    assert citations[0].dialects == ("Dor.",)
+
+
 def test_dialect_sense_boundary_resets_active_dialect():
     """A dialect set via Pattern A must not bleed across a <sense>
     boundary into unrelated citations -- constructed directly against
@@ -630,3 +666,26 @@ def test_old_format_cache_entry_treated_as_miss_not_crash(tmp_path):
     # not left as-is alongside a duplicate:
     reopened = CachedLSJIndex(cache_dir)  # no tei_xml_dir -- forces the cache path
     _assert_agathos_entry(reopened.lookup("ἀγαθός"))
+
+
+def test_decode_cached_entry_treats_malformed_same_version_dict_as_miss_not_a_crash():
+    """Real bug found by review: the old-format test above only exercises
+    a pre-this-section bare-string entry -- a SAME-format-version dict
+    missing an expected field (e.g. a hand-edited or partially-written
+    cache file) raised an uncaught KeyError instead of the _CACHE_MISS
+    this function's own docstring promises for "anything that isn't a
+    None-or-current-format-version value". The format_version stamp
+    exists specifically to make this kind of drift safe; it must cover
+    this shape too, not just an outright format mismatch."""
+    assert _decode_cached_entry({"format_version": _CACHE_FORMAT_VERSION}) is _CACHE_MISS
+    assert _decode_cached_entry({"format_version": _CACHE_FORMAT_VERSION, "segments": "not-a-list"}) is _CACHE_MISS
+    assert (
+        _decode_cached_entry({"format_version": _CACHE_FORMAT_VERSION, "segments": [{"kind": "text"}]})
+        is _CACHE_MISS
+    )
+    assert (
+        _decode_cached_entry(
+            {"format_version": _CACHE_FORMAT_VERSION, "segments": [{"kind": "citation", "text": "foo"}]}
+        )
+        is _CACHE_MISS
+    )

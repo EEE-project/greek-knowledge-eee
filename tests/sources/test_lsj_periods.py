@@ -9,6 +9,8 @@ import pytest
 from okfbuild.sources.lsj_periods import (
     LSJPeriodMap,
     Period,
+    _read_frontmatter_cache,
+    _read_tlg_map_cache,
     build_tlg_author_abbreviation_map,
     parse_date_text,
     parse_diorisis_catalog,
@@ -76,6 +78,23 @@ def test_parse_date_text_tolerates_real_punctuation_irregularity():
     # least once -- must not be treated as unparseable.
     period = parse_date_text("ii A D. (?)")
     assert period == Period(centuries=(2,), era="AD", uncertain=True)
+
+
+def test_parse_date_text_year_range_single_century():
+    # Demosthenes' real lifespan, both years landing in the same century.
+    period = parse_date_text("384-322 B.C.")
+    assert period == Period(centuries=(4,), era="BC", uncertain=False)
+
+
+def test_parse_date_text_year_range_is_case_insensitive():
+    """Real, verified bug: _YEAR_RANGE_RE was missing re.IGNORECASE,
+    unlike all 7 sibling date-regexes in this same parser -- a
+    lowercase/mixed-case year-range date fell through every pattern
+    (all require roman numerals or a c./ca. prefix) and was silently
+    logged as unrecognized, returning None, instead of parsing like
+    every other casing variant this parser tolerates."""
+    period = parse_date_text("384-322 b.c.")
+    assert period == Period(centuries=(4,), era="BC", uncertain=False)
 
 
 def test_parse_date_text_unrecognized_format_returns_none_and_warns(caplog):
@@ -338,6 +357,22 @@ def test_period_map_build_caches_tlg_map_across_calls(tmp_path):
     assert period.centuries == (6, 5)
 
 
+def test_read_tlg_map_cache_treats_invalid_utf8_as_corrupt_not_a_crash(tmp_path, caplog):
+    """Real, verified bug: this function's docstring already promised
+    "missing, corrupt, or a format_version mismatch" are all treated as
+    "no usable cache", but only caught json.JSONDecodeError -- a file
+    with invalid UTF-8 bytes (e.g. from a process killed mid-write, or a
+    full disk) raises UnicodeDecodeError instead, a ValueError sibling
+    of JSONDecodeError, not a subclass, so it was never caught and would
+    crash the caller instead of rebuilding."""
+    cache_path = tmp_path / "tlg-map.json"
+    cache_path.write_bytes(b'{"format_version": 1, "map": {\xff\xfe')
+    with caplog.at_level("WARNING"):
+        result = _read_tlg_map_cache(cache_path)
+    assert result is None
+    assert "Corrupt" in caplog.text
+
+
 def test_period_map_build_rebuilds_when_a_source_file_changes(tmp_path):
     fixture_copy = tmp_path / "lsj_periods_fixture"
     shutil.copytree(FIXTURES_DIR, fixture_copy)
@@ -421,6 +456,19 @@ def test_period_map_build_caches_frontmatter_authors_across_calls(tmp_path):
     citation = _citation(author_abbreviation="Hdt.")
     period = second.period_for_citation(citation)
     assert period == Period(centuries=(5,), era="BC", uncertain=False)
+
+
+def test_read_frontmatter_cache_treats_invalid_utf8_as_corrupt_not_a_crash(tmp_path, caplog):
+    """Same real, verified bug as _read_tlg_map_cache()'s own version of
+    this test: only json.JSONDecodeError was caught, missing
+    UnicodeDecodeError (a ValueError sibling, not a subclass) from a
+    file with invalid UTF-8 bytes."""
+    cache_path = tmp_path / "frontmatter.json"
+    cache_path.write_bytes(b'{"format_version": 1, "authors": {\xff\xfe')
+    with caplog.at_level("WARNING"):
+        result = _read_frontmatter_cache(cache_path, source_mtime=0.0)
+    assert result is None
+    assert "Corrupt" in caplog.text
 
 
 def test_period_map_build_rebuilds_frontmatter_authors_when_source_file_changes(tmp_path):

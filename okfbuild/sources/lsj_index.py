@@ -320,10 +320,21 @@ def _flatten_for_dialect_scope(el, in_greek: bool = False) -> list:
     for child in el:
         tag = _local_name(child.tag)
         if tag == "gramGrp":
+            # Filters out an empty/whitespace-only <gram type="dialect">
+            # (the walrus both computes and tests the stripped text) --
+            # matching the analogous `... or None` guard _build_citation()
+            # uses for author_abbreviation. Without this, an empty gram
+            # would produce dialects=("",) -- a non-empty, truthy tuple
+            # -- propagating into a malformed rendered tag like "**[]**".
+            # Confirmed dormant against the real dump today (zero empty
+            # dialect grams exist), kept as a defensive guard matching
+            # the codebase's established pattern for this exact shape.
             dialects = tuple(
-                "".join(gram.itertext()).strip()
+                text
                 for gram in child
-                if _local_name(gram.tag) == "gram" and gram.get("type") == "dialect"
+                if _local_name(gram.tag) == "gram"
+                and gram.get("type") == "dialect"
+                and (text := "".join(gram.itertext()).strip())
             )
             if dialects:
                 raw_text = " ".join(_extract_text(child, this_greek).split())
@@ -660,29 +671,36 @@ def _decode_cached_entry(cached: object) -> "list[LSJSegment] | None | object":
     """Inverse of _encode_cached_entry(). Returns _CACHE_MISS (a private
     sentinel, distinct from a real None) for anything that isn't a
     None-or-current-format-version value -- an old bare-string cache
-    entry (from before this section) or a future/unrecognized format --
-    so the caller treats it exactly like a genuine cache miss (fresh
-    lookup, then overwrite in the current format) instead of either
-    crashing or silently returning wrong data shaped like the old
-    format."""
+    entry (from before this section), a future/unrecognized format, or
+    a same-version dict that's missing an expected field -- so the
+    caller treats it exactly like a genuine cache miss (fresh lookup,
+    then overwrite in the current format) instead of either crashing or
+    silently returning wrong data shaped like the old format. The
+    version stamp exists specifically to make this kind of drift safe;
+    a bare `cached["segments"]`/`item["kind"]`-style reconstruction
+    would otherwise raise an uncaught KeyError on a hand-edited or
+    partially-written same-version file instead of falling back."""
     if cached is None:
         return None
     if not isinstance(cached, dict) or cached.get("format_version") != _CACHE_FORMAT_VERSION:
         return _CACHE_MISS
     segments: "list[LSJSegment]" = []
-    for item in cached["segments"]:
-        if item["kind"] == "text":
-            segments.append(LSJText(text=item["text"]))
-        else:
-            segments.append(
-                LSJCitation(
-                    text=item["text"],
-                    author_abbreviation=item["author_abbreviation"],
-                    tlg_author=item["tlg_author"],
-                    tlg_work=item["tlg_work"],
-                    dialects=tuple(item["dialects"]),
+    try:
+        for item in cached["segments"]:
+            if item["kind"] == "text":
+                segments.append(LSJText(text=item["text"]))
+            else:
+                segments.append(
+                    LSJCitation(
+                        text=item["text"],
+                        author_abbreviation=item["author_abbreviation"],
+                        tlg_author=item["tlg_author"],
+                        tlg_work=item["tlg_work"],
+                        dialects=tuple(item["dialects"]),
+                    )
                 )
-            )
+    except (KeyError, TypeError):
+        return _CACHE_MISS
     return segments
 
 

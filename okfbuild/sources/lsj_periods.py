@@ -158,7 +158,7 @@ _CENTURY_SPAN_RE = re.compile(rf"^(?P<c1>{_CENTURY})\.?\s*/\s*(?P<c2>{_CENTURY})
 # -- year-axis variants: a plain decimal year (not a roman-numeral
 # century at all), either a single circa-marked year or a year range --
 _CIRCA_YEAR_RE = re.compile(rf"^ca?\.\s*(?P<year>\d+)\s*(?P<era>{_ERA})$", re.IGNORECASE)
-_YEAR_RANGE_RE = re.compile(rf"^(?P<y1>\d+)\s*-\s*(?P<y2>\d+)\s*(?P<era>{_ERA})$")
+_YEAR_RANGE_RE = re.compile(rf"^(?P<y1>\d+)\s*-\s*(?P<y2>\d+)\s*(?P<era>{_ERA})$", re.IGNORECASE)
 
 # -- the base case: one century, one era. A single leading word/phrase
 # (e.g. the real "translated iv B.C.") is tolerated here, but nowhere
@@ -460,7 +460,15 @@ def _read_tlg_map_cache(cache_path: Path) -> "dict | None":
         return None
     try:
         data = json.loads(cache_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        # UnicodeDecodeError alongside JSONDecodeError: a process killed
+        # mid-write or a full disk can leave invalid UTF-8 at the end of
+        # the file, and .read_text(encoding="utf-8") raises that before
+        # json.loads() ever runs -- UnicodeDecodeError is a ValueError
+        # sibling of JSONDecodeError, not a subclass, so catching only
+        # the latter (as a first version of this function did) missed
+        # it, crashing instead of the "never a crash" this docstring
+        # already promised.
         logger.warning("Corrupt TLG-abbreviation-map cache at %s -- rebuilding", cache_path)
         return None
     if data.get("format_version") != _TLG_MAP_CACHE_FORMAT_VERSION:
@@ -574,7 +582,11 @@ def _read_frontmatter_cache(cache_path: Path, source_mtime: float) -> "dict[str,
         return None
     try:
         data = json.loads(cache_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        # See _read_tlg_map_cache()'s own comment on this same pattern:
+        # UnicodeDecodeError is a ValueError sibling of JSONDecodeError,
+        # not a subclass, and .read_text() can raise it before
+        # json.loads() ever runs on a file with invalid UTF-8 at the end.
         logger.warning("Corrupt LSJ front-matter cache at %s -- rebuilding", cache_path)
         return None
     if data.get("format_version") != _FRONTMATTER_CACHE_FORMAT_VERSION or data.get("source_mtime") != source_mtime:
