@@ -444,18 +444,33 @@ def _tlg_map_source_signature(tei_xml_dir: Path) -> list:
     return sorted([f.name, f.stat().st_mtime] for f in Path(tei_xml_dir).glob("*.xml"))
 
 
-def _read_tlg_map_cache(cache_path: Path) -> "dict | None":
-    """Returns the parsed cache dict, or None if it's missing, corrupt,
-    or a format_version mismatch (all three treated as "no usable cache"
-    -- the caller rebuilds from scratch either way). Deliberately NOT
-    reusing llm_gap_filler.load_versioned_json() despite the near-
-    identical validation shape: that helper is @cache-memoized per
-    (path, version, label), correct for its own read-only-after-write-
-    by-a-different-process use case, but wrong here -- _load_or_build_tlg_map()
-    can read this same path, detect staleness, rebuild, and overwrite it
-    more than once within a single process (exactly what the caching
-    tests below do), and a memoized read would keep returning the
-    pre-rebuild content on a later call in the same process."""
+def _read_json_cache_file(cache_path: Path, expected_format_version: int, label: str) -> "dict | None":
+    """Shared skeleton for this module's two small JSON cache files (the
+    TLG-abbreviation map and the front-matter authors cache): returns
+    the parsed dict if the file exists, parses as JSON, and its
+    format_version matches -- None for anything else (missing, corrupt,
+    or a format_version mismatch), all treated identically as "no usable
+    cache, caller rebuilds from scratch". Found by review: the two
+    callers below used to hand-roll this identical skeleton independently
+    (their read-side logic was near-verbatim duplicates, and a later
+    fix -- the malformed-payload KeyError guard now in each caller's own
+    payload-reconstruction step -- had to be applied twice, in near-
+    identical blocks, because there was no shared implementation).
+    Payload-level validation (the actual expected keys/shape beyond
+    format_version) stays each caller's own responsibility, deliberately
+    not attempted here -- what "valid" means differs per cache (a
+    source_signature list vs. a source_mtime float, a "map" key vs. an
+    "authors" key).
+
+    Deliberately NOT reusing llm_gap_filler.load_versioned_json()
+    despite the near-identical validation shape: that helper is
+    @cache-memoized per (path, version, label), correct for its own
+    read-only-after-write-by-a-different-process use case, but wrong
+    here -- callers of this function can read the same path, detect
+    staleness, rebuild, and overwrite it more than once within a single
+    process (exactly what this module's own caching tests do), and a
+    memoized read would keep returning the pre-rebuild content on a
+    later call in the same process."""
     if not cache_path.is_file():
         return None
     try:
@@ -466,18 +481,31 @@ def _read_tlg_map_cache(cache_path: Path) -> "dict | None":
         # the file, and .read_text(encoding="utf-8") raises that before
         # json.loads() ever runs -- UnicodeDecodeError is a ValueError
         # sibling of JSONDecodeError, not a subclass, so catching only
-        # the latter (as a first version of this function did) missed
-        # it, crashing instead of the "never a crash" this docstring
-        # already promised.
-        logger.warning("Corrupt TLG-abbreviation-map cache at %s -- rebuilding", cache_path)
+        # the latter (as an earlier version of this code did) missed it,
+        # crashing instead of gracefully rebuilding.
+        logger.warning("Corrupt %s cache at %s -- rebuilding", label, cache_path)
         return None
-    if data.get("format_version") != _TLG_MAP_CACHE_FORMAT_VERSION:
+    if data.get("format_version") != expected_format_version:
         logger.warning(
-            "TLG-abbreviation-map cache at %s has unexpected format_version %r -- rebuilding",
-            cache_path, data.get("format_version"),
+            "%s cache at %s has unexpected format_version %r -- rebuilding",
+            label, cache_path, data.get("format_version"),
         )
         return None
     return data
+
+
+def _write_json_cache_file(cache_path: Path, payload: dict) -> None:
+    """Shared write-side skeleton for this module's two small JSON cache
+    files -- see _read_json_cache_file()'s own docstring for why the two
+    callers used to hand-roll this independently (one behind a named
+    function, the other left inline -- an inconsistency on top of the
+    duplication)."""
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _read_tlg_map_cache(cache_path: Path) -> "dict | None":
+    return _read_json_cache_file(cache_path, _TLG_MAP_CACHE_FORMAT_VERSION, "TLG-abbreviation-map")
 
 
 def tlg_map_cache_is_fresh(tei_xml_dir: Path, cache_path: Path) -> bool:
@@ -495,18 +523,13 @@ def tlg_map_cache_is_fresh(tei_xml_dir: Path, cache_path: Path) -> bool:
 
 
 def _write_tlg_map_cache(cache_path: Path, source_signature: list, tlg_map: "dict[str, set[str]]") -> None:
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(
-        json.dumps(
-            {
-                "format_version": _TLG_MAP_CACHE_FORMAT_VERSION,
-                "source_signature": source_signature,
-                "map": {tlg_author: sorted(abbrevs) for tlg_author, abbrevs in tlg_map.items()},
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
-        encoding="utf-8",
+    _write_json_cache_file(
+        cache_path,
+        {
+            "format_version": _TLG_MAP_CACHE_FORMAT_VERSION,
+            "source_signature": source_signature,
+            "map": {tlg_author: sorted(abbrevs) for tlg_author, abbrevs in tlg_map.items()},
+        },
     )
 
 
@@ -586,33 +609,30 @@ def _frontmatter_cache_path(tlg_map_cache_path: Path) -> Path:
 
 def _read_frontmatter_cache(cache_path: Path, source_mtime: float) -> "dict[str, Period] | None":
     """Returns the cached {abbreviation: Period} dict, or None if the
-    cache is missing, corrupt, a format_version mismatch, or the source
-    file's mtime has changed since the cache was written -- all treated
-    identically as "rebuild", never a crash or silently stale data
-    (same shape as _read_tlg_map_cache() above, for a single-file
-    staleness check instead of a 27-file signature)."""
-    if not cache_path.is_file():
-        return None
-    try:
-        data = json.loads(cache_path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, UnicodeDecodeError):
-        # See _read_tlg_map_cache()'s own comment on this same pattern:
-        # UnicodeDecodeError is a ValueError sibling of JSONDecodeError,
-        # not a subclass, and .read_text() can raise it before
-        # json.loads() ever runs on a file with invalid UTF-8 at the end.
-        logger.warning("Corrupt LSJ front-matter cache at %s -- rebuilding", cache_path)
-        return None
-    if data.get("format_version") != _FRONTMATTER_CACHE_FORMAT_VERSION or data.get("source_mtime") != source_mtime:
+    cache is missing, corrupt, a format_version mismatch, the source
+    file's mtime has changed since the cache was written, or the payload
+    is malformed (e.g. missing "authors", or an author entry missing one
+    of _period_from_dict()'s 3 required fields) -- all treated
+    identically as "rebuild", never a crash or silently stale data."""
+    data = _read_json_cache_file(cache_path, _FRONTMATTER_CACHE_FORMAT_VERSION, "LSJ front-matter")
+    if data is None or data.get("source_mtime") != source_mtime:
         return None
     try:
         return {abbreviation: _period_from_dict(p) for abbreviation, p in data["authors"].items()}
     except (KeyError, AttributeError, TypeError):
-        # Same real bug as _load_or_build_tlg_map()'s own version of
-        # this fix: a same-version, same-mtime cache missing "authors"
-        # (or an author entry missing one of _period_from_dict()'s 3
-        # required fields) must fall back to "rebuild", not crash.
         logger.warning("Malformed LSJ front-matter cache at %s -- rebuilding", cache_path)
         return None
+
+
+def _write_frontmatter_cache(cache_path: Path, source_mtime: float, authors: "dict[str, Period]") -> None:
+    _write_json_cache_file(
+        cache_path,
+        {
+            "format_version": _FRONTMATTER_CACHE_FORMAT_VERSION,
+            "source_mtime": source_mtime,
+            "authors": {abbreviation: _period_to_dict(period) for abbreviation, period in authors.items()},
+        },
+    )
 
 
 def _load_or_parse_frontmatter_authors(front_matter_xml_path: Path, cache_path: Path) -> "dict[str, Period]":
@@ -637,19 +657,7 @@ def _load_or_parse_frontmatter_authors(front_matter_xml_path: Path, cache_path: 
         return cached
 
     fresh = parse_lsj_frontmatter_authors(front_matter_xml_path)
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(
-        json.dumps(
-            {
-                "format_version": _FRONTMATTER_CACHE_FORMAT_VERSION,
-                "source_mtime": source_mtime,
-                "authors": {abbreviation: _period_to_dict(period) for abbreviation, period in fresh.items()},
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
+    _write_frontmatter_cache(cache_path, source_mtime, fresh)
     return fresh
 
 
