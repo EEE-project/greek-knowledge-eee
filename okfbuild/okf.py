@@ -12,7 +12,7 @@ from pathlib import Path
 
 import yaml
 
-CONCEPT_TYPES = {"Lexical Entry", "Grammatical Rule", "Cultural Context"}
+CONCEPT_TYPES = {"Lexical Entry", "Grammatical Rule", "Cultural Context", "Literary Translation"}
 
 _COMMON_FIELDS = ("title", "description", "tags", "level", "sources", "generated", "status")
 
@@ -92,6 +92,10 @@ def validate_frontmatter(frontmatter: dict) -> None:
     elif concept_type == "Cultural Context":
         if "related_words" not in frontmatter or "related_lessons" not in frontmatter:
             raise ValueError("Cultural Context requires 'related_words' and 'related_lessons'")
+    elif concept_type == "Literary Translation":
+        missing = [k for k in ("work", "passage", "language", "translators") if k not in frontmatter]
+        if missing:
+            raise ValueError(f"Literary Translation requires {missing}")
 
 
 def render(concept: ConceptFile) -> str:

@@ -52,6 +52,16 @@ def _minimal_cultural_context() -> dict:
     return fm
 
 
+def _minimal_literary_translation() -> dict:
+    fm = _minimal_common_fields()
+    fm["type"] = "Literary Translation"
+    fm["work"] = "Odyssey"
+    fm["passage"] = "IX.19-38"
+    fm["language"] = "en"
+    fm["translators"] = ["Murray"]
+    return fm
+
+
 def _minimal_concept(**overrides) -> ConceptFile:
     defaults = dict(
         type="Lexical Entry",
@@ -88,6 +98,24 @@ def test_validate_rejects_list_shaped_periods_spanned():
 
 def test_validate_accepts_minimal_cultural_context():
     validate_frontmatter(_minimal_cultural_context())
+
+
+def test_validate_accepts_minimal_literary_translation():
+    validate_frontmatter(_minimal_literary_translation())
+
+
+def test_validate_rejects_literary_translation_missing_translators():
+    fm = _minimal_literary_translation()
+    del fm["translators"]
+    with pytest.raises(ValueError):
+        validate_frontmatter(fm)
+
+
+def test_validate_rejects_literary_translation_missing_work():
+    fm = _minimal_literary_translation()
+    del fm["work"]
+    with pytest.raises(ValueError):
+        validate_frontmatter(fm)
 
 
 def test_validate_rejects_missing_type():
