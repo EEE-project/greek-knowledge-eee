@@ -115,6 +115,40 @@ def _local_name(tag: str) -> str:
     return tag.rsplit("}", 1)[-1]
 
 
+_WORD_CHAR_RE = re.compile(r"\w")
+_OPENING_PUNCTUATION = "([{"
+
+
+def _needs_boundary_space(prev_text: str, next_text: str) -> bool:
+    """Whether a defensive space must be inserted between `prev_text`
+    and `next_text` to avoid two genuinely distinct pieces fusing with
+    no separator at all -- real markup boundaries (between two text
+    nodes, or between prose and a dialect marker falling back to
+    free-standing commentary) don't reliably carry an explicit
+    separating space character in the source XML. Verified directly
+    against real dump content, three independent cases: "Ion." directly
+    before a citation, "νιν" directly before a dialect marker's "Dor.",
+    "εὐρύοπα" directly before a nested "Ζῆν".
+
+    Deliberately asymmetric, not just "neither side is whitespace":
+    `next_text` must start with a genuine word character (checked via
+    _WORD_CHAR_RE, which is Unicode-aware and covers Greek) -- attached
+    punctuation starting the next piece (a comma, a closing paren) is
+    normal, correct typography and must never get a space inserted
+    before it, confirmed against real content that predates this fix
+    ("c. inf.," on `main`, diffed against a first attempt at this rule
+    that used plain non-whitespace on both sides and corrupted it into
+    "c. inf. ,"). `prev_text` ending in an opening bracket/paren is the
+    matching exception on the other side -- "(" + "word" must stay
+    "(word", not "( word"."""
+    if not prev_text or not next_text:
+        return False
+    prev_char = prev_text[-1]
+    if prev_char.isspace() or prev_char in _OPENING_PUNCTUATION:
+        return False
+    return bool(_WORD_CHAR_RE.match(next_text[0]))
+
+
 def _extract_text(el, in_greek: bool = False) -> str:
     """Concatenate `el`'s full text content, converting Beta Code to
     Unicode Greek only within an element (or a descendant of one) with
@@ -132,15 +166,33 @@ def _extract_text(el, in_greek: bool = False) -> str:
     cross-reference like "(ne/omai)") is ambiguous with Beta Code's own
     breathing-mark notation ("(" = rough breathing) and gets misconverted
     -- a real, accepted imprecision in the source format, not a bug in
-    this conversion step."""
+    this conversion step.
+
+    Real, verified bug this guards against: a nested inline element
+    (e.g. either side of a <lb/> line break inside a verse quotation)
+    doesn't always have explicit separating whitespace between its own
+    text and its parent's/sibling's -- real example, ἐρύκω's own entry:
+    "ἐρυκέμεν εὐρύοπα" (a parent's `.text`) directly followed by a
+    nested child's own extracted text "Ζῆν", joined with zero separator
+    by a bare `"".join(parts)` into "εὐρύοπαΖῆν". See
+    _needs_boundary_space() for exactly when a defensive space gets
+    inserted between two parts -- attached punctuation (e.g. "word," or
+    "(word") must never get one, only a genuine word character landing
+    directly against another with nothing between them."""
     this_greek = in_greek or el.get("lang") == "greek"
-    parts = []
+    parts: list[str] = []
+
+    def add(piece: str) -> None:
+        if parts and _needs_boundary_space(parts[-1], piece):
+            parts.append(" ")
+        parts.append(piece)
+
     if el.text:
-        parts.append(_beta_code_to_greek(el.text) if this_greek else el.text)
+        add(_beta_code_to_greek(el.text) if this_greek else el.text)
     for child in el:
-        parts.append(_extract_text(child, this_greek))
+        add(_extract_text(child, this_greek))
         if child.tail:
-            parts.append(_beta_code_to_greek(child.tail) if this_greek else child.tail)
+            add(_beta_code_to_greek(child.tail) if this_greek else child.tail)
     return "".join(parts)
 
 
@@ -306,9 +358,6 @@ def _flatten_for_dialect_scope(el, in_greek: bool = False) -> list:
     return tokens
 
 
-_WORD_CHAR_RE = re.compile(r"\w")
-
-
 def _resolve_dialect_scope(tokens: list) -> "list[LSJSegment]":
     r"""Phase 2: a single left-to-right scan over Phase 1's flat token
     list, implementing section-01's verified scope-precedence table for
@@ -379,9 +428,37 @@ def _resolve_dialect_scope(tokens: list) -> "list[LSJSegment]":
     active_dialect: "tuple[str, ...]" = ()
     pending: "list[_DialectMarker]" = []
 
+    def append_text(new_text: str) -> None:
+        # Real markup boundaries -- between two separate text nodes, or
+        # between prose and a dialect marker falling back to
+        # free-standing commentary (case 4 below) -- don't reliably
+        # carry an explicit separating space character in the source
+        # XML at all, so two genuinely distinct words can land in
+        # text_parts with nothing separating them. See
+        # _needs_boundary_space() for exactly when a defensive space
+        # gets inserted (and, just as importantly, when it must not --
+        # attached punctuation like "c. inf.," must never gain one).
+        # Every append to text_parts goes through here, not just the
+        # ones that turned out to need it, so the invariant -- adjacent
+        # pieces are never concatenated with zero separator -- holds
+        # regardless of which kind of boundary produced them.
+        if text_parts and _needs_boundary_space(text_parts[-1], new_text):
+            text_parts.append(" ")
+        text_parts.append(new_text)
+
     def flush_text() -> None:
         if text_parts:
-            combined = " ".join("".join(text_parts).split())
+            # Collapses whitespace RUNS (e.g. XML pretty-printing
+            # indentation/newlines within one text node) to a single
+            # space; append_text() above is what guarantees a separator
+            # exists AT ALL between two originally-separate pieces in
+            # the first place -- re.sub alone can't invent a space where
+            # none of the joined strings had one. A run of pure
+            # whitespace still collapses to a single space and is still
+            # flushed as its own LSJText, not skipped -- that's the only
+            # thing separating two citations with nothing else between
+            # them in the markup.
+            combined = re.sub(r"\s+", " ", "".join(text_parts))
             if combined:
                 segments.append(LSJText(combined))
             text_parts.clear()
@@ -389,7 +466,7 @@ def _resolve_dialect_scope(tokens: list) -> "list[LSJSegment]":
     def flush_pending_as_prose() -> None:
         nonlocal pending
         for marker in pending:
-            text_parts.append(marker.raw_text)
+            append_text(marker.raw_text)
             text_parts.append(" ")
         pending = []
 
@@ -418,11 +495,11 @@ def _resolve_dialect_scope(tokens: list) -> "list[LSJSegment]":
             # Bare grammatical markup (<per>/<number>/<tns>) -- its text
             # still renders normally, but it never counts as "real
             # prose" for adjacency, unlike a plain str token.
-            text_parts.append(token.text)
+            append_text(token.text)
         else:  # plain text (str)
             if pending and _WORD_CHAR_RE.search(token):
                 flush_pending_as_prose()
-            text_parts.append(token)
+            append_text(token)
 
     flush_pending_as_prose()
     flush_text()

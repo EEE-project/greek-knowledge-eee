@@ -130,6 +130,19 @@ def test_render_inserts_space_before_tag_when_preceding_text_has_none():
     assert result == "Ion. **[8th c. BC]** βαλέω Il. 8.403"
 
 
+def test_render_inserts_space_before_untagged_citation_when_preceding_text_has_none():
+    """Same real bug as test_render_inserts_space_before_tag_when_preceding_text_has_none
+    above, but for a citation with no period/dialect tag -- the branch
+    that had no defensive guard at all until this fix, and the actual
+    majority of real, shipped fusion instances (most citations don't
+    resolve a tag)."""
+    segments = [LSJText("Ion."), LSJCitation(text="βαλέω Il. 8.403")]
+
+    result = render_lsj_entry(segments)
+
+    assert result == "Ion. βαλέω Il. 8.403"
+
+
 def test_render_does_not_double_space_before_tag_when_preceding_text_already_has_one():
     period_map = _period_map_returning(Period(centuries=(8,), era="BC"))
     segments = [LSJText("prefix "), LSJCitation(text="citation text")]

@@ -127,12 +127,27 @@ def render_lsj_entry(segments: "list[LSJSegment]", period_map: "LSJPeriodMap | N
     since each segment's own text already carries whatever
     whitespace/punctuation belongs at its boundary -- this is a straight
     re-linearization of what extraction split apart, not a reformatting
-    pass. The one exception is a tag itself: real extracted LSJText
-    doesn't reliably end in a trailing space (e.g. an abbreviation like
-    "Ion." directly preceding a citation), so a single defensive space is
-    inserted before a tag whenever the text accumulated so far doesn't
-    already end in whitespace -- otherwise the tag's leading "**[" fuses
-    onto the prior word.
+    pass. lsj_index.py's _extract_text() and _resolve_dialect_scope()
+    (specifically append_text()/flush_text()) are what actually
+    guarantee an LSJText/LSJCitation segment carries a real separating
+    space wherever the source markup had one -- that's the root fix for
+    a word-fusion bug that shipped despite an earlier, narrower fix and
+    check (only the tagged-citation branch below had a defensive guard,
+    and the check that "verified" the fix only looked for fusion at a
+    tag's own "**[" boundary, missing both the far more common
+    citation-with-no-tag case and fusion entirely inside one segment's
+    own text). The defensive space-insertion below is deliberately kept
+    simpler than the word-character-aware rule those upstream functions
+    use: it only ever runs immediately before a tag's own "**[" (never a
+    genuine word) or an untagged citation's own text (which in practice
+    never starts with attached punctuation), so unconditionally
+    guaranteeing a gap whenever the preceding text isn't already
+    whitespace is safe here specifically -- it would NOT be safe to reuse
+    this same broad rule inside _extract_text()/append_text(), where
+    real content legitimately runs right up against attached punctuation
+    (e.g. "inf.,") and a broad rule was confirmed, by diffing a
+    regenerated file against main's own already-correct text, to
+    silently insert an unwanted space there.
 
     `period_map=None` (the default) is a legitimate, common case, not a
     caller error -- an LSJPeriodMap is expensive to build (a full dump
@@ -145,12 +160,10 @@ def render_lsj_entry(segments: "list[LSJSegment]", period_map: "LSJPeriodMap | N
             parts.append(segment.text)
         else:
             tag = _lsj_citation_tag(segment, period_map)
-            if tag:
-                if parts and parts[-1] and not parts[-1][-1].isspace():
-                    parts.append(" ")
-                parts.append(f"{tag} {segment.text}")
-            else:
-                parts.append(segment.text)
+            text = f"{tag} {segment.text}" if tag else segment.text
+            if parts and parts[-1] and not parts[-1][-1].isspace() and text and not text[0].isspace():
+                parts.append(" ")
+            parts.append(text)
     return "".join(parts)
 
 

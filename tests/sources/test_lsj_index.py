@@ -11,7 +11,9 @@ from okfbuild.sources.lsj_index import (
     LSJIndex,
     LSJText,
     _extract_segments,
+    _extract_text,
     _load_entries,
+    _needs_boundary_space,
 )
 
 FIXTURES_DIR = Path(__file__).parent.parent / "fixtures" / "sources"
@@ -188,6 +190,166 @@ def test_dialect_pattern_c_parenthetical_after_foreign_quote():
     assert len(citations) == 1
     assert citations[0].author_abbreviation == "Theoc."
     assert citations[0].dialects == ("Dor.",)
+
+
+def test_text_segment_preserves_trailing_space_before_citation():
+    """Real, verified bug (found reviewing this branch after an earlier,
+    narrower spacing fix and its own verification both missed it):
+    flush_text() used to collapse text via " ".join(text.split()), which
+    strips ALL leading/trailing whitespace, not just internal runs -- so
+    a real trailing space right before a citation (e.g. "Ion. " ahead of
+    its <bibl>) was silently deleted, and the citation's rendered text
+    fused directly onto the preceding word with no separator at all.
+    Checks the extraction-level segment text directly, not
+    render_lsj_entry()'s output or the _joined_text() test helper above
+    (which inserts its own separators and so cannot catch this class of
+    bug) -- this is the level flush_text() actually operates at."""
+    xml = """<entryFree key="test">
+        <sense>Ion. <bibl n="urn:cts:greekLit:tlg0012.tlg001.perseus-grc2:8:403"><author>Il.</author></bibl></sense>
+    </entryFree>"""
+    root = ET.fromstring(xml)
+    segments = _extract_segments(root)
+    text_segments = [s for s in segments if isinstance(s, LSJText)]
+    assert text_segments, "expected at least one LSJText segment before the citation"
+    assert text_segments[-1].text.endswith(" "), (
+        f"text segment before the citation must keep its trailing space, got {text_segments[-1].text!r}"
+    )
+
+
+def test_whitespace_only_span_between_two_citations_still_separates_them():
+    """The other side of the same fix: flush_text() must not skip
+    flushing a span that collapses to nothing but a single space (e.g.
+    exactly one space between two citations, nothing else) -- that space
+    is the only thing keeping the two citations apart once rendered, so
+    treating an all-whitespace span as "nothing to flush" would silently
+    reintroduce fusion for citation-to-citation boundaries specifically."""
+    xml = """<entryFree key="test">
+        <sense><bibl n="urn:cts:greekLit:tlg0012.tlg001.perseus-grc2:8:403"><author>Il.</author></bibl> <bibl n="urn:cts:greekLit:tlg0016.tlg001.perseus-grc1:4:30"><author>Hdt.</author></bibl></sense>
+    </entryFree>"""
+    root = ET.fromstring(xml)
+    segments = _extract_segments(root)
+    citations = [i for i, s in enumerate(segments) if isinstance(s, LSJCitation)]
+    assert len(citations) == 2
+    between = segments[citations[0] + 1 : citations[1]]
+    assert between == [LSJText(" ")], f"expected exactly one space segment between the two citations, got {between!r}"
+
+
+def test_prose_fallback_dialect_marker_gets_leading_space_when_preceding_text_has_none():
+    """Real, verified bug found against the actual real-dump content
+    (μιν's own entry: 'in all genders, = νινDor. (q. v.)', fused with no
+    separator at all): flush_pending_as_prose() -- case 4, a dialect
+    marker with nothing to attach to -- always appended a trailing space
+    after the marker's raw_text, but never checked whether the
+    ALREADY-accumulated text before it needed a leading one. Unlike the
+    citation-boundary bug, this one isn't at a segment boundary at all --
+    it fuses two pieces of text captured inside the SAME LSJText segment
+    -- so render_lsj_entry()'s own defensive space-insertion (which only
+    runs between segments) can never catch it; it has to be fixed at
+    the point of accumulation. Checks the segment's own text directly,
+    not the _joined_text() helper above (which inserts its own
+    separators and so cannot catch this class of bug at all)."""
+    xml = """<entryFree key="test">
+        <sense>in all genders, = νιν<gramGrp><gram type="dialect">Dor.</gram></gramGrp> (q. v.), both forms.</sense>
+    </entryFree>"""
+    root = ET.fromstring(xml)
+    segments = _extract_segments(root)
+    assert len(segments) == 1
+    assert isinstance(segments[0], LSJText)
+    assert "νιν Dor." in segments[0].text
+    assert "νινDor." not in segments[0].text
+
+
+def test_two_adjacent_plain_text_tokens_with_no_source_whitespace_still_get_separated():
+    """Defense in depth at the Phase-2/append_text() level: two
+    directly adjacent <foreign> elements (each independently producing
+    its own plain-text token via _flatten_for_dialect_scope()'s
+    "orth"/"foreign" branch, never going through _extract_text()'s own
+    recursion at all) can land back-to-back in the flat token stream
+    with nothing between them if the source markup had no explicit
+    space either. Investigating ἐρύκω's own real fused entry
+    ('ἐρυκέμεν εὐρύοπαΖῆν') originally suggested this exact shape, but
+    tracing it to the real raw XML found something different -- a
+    single, unsplit text node with the space missing in Perseus's own
+    digitization (documented as a known limitation in
+    references/sources/lsj.md, not fixable at any element boundary).
+    This test still verifies append_text()'s own guard is correct for
+    the shape it was written to check, independent of which real entry
+    (if any) currently exercises it."""
+    xml = """<entryFree key="test">
+        <sense><foreign lang="greek">εὐρύοπα</foreign><lb/><foreign lang="greek">Ζῆν</foreign> to restrain him.</sense>
+    </entryFree>"""
+    root = ET.fromstring(xml)
+    segments = _extract_segments(root)
+    assert len(segments) == 1
+    assert isinstance(segments[0], LSJText)
+    assert "εὐρύοπα Ζῆν" in segments[0].text
+    assert "εὐρύοπαΖῆν" not in segments[0].text
+
+
+def test_needs_boundary_space_word_to_word_needs_a_space():
+    """The two real, verified fusion cases this function exists to fix:
+    'νιν' + 'Dor.' and 'εὐρύοπα' + 'Ζῆν' -- both word-to-word boundaries."""
+    assert _needs_boundary_space("= νιν", "Dor.")
+    assert _needs_boundary_space("ἐρυκέμεν εὐρύοπα", "Ζῆν")
+
+
+def test_needs_boundary_space_period_ending_abbreviation_needs_a_space():
+    """A real word (not punctuation) directly after an abbreviation's
+    period still needs a space -- 'Ion.' + 'text' -> 'Ion. text', not
+    'Ion.text'."""
+    assert _needs_boundary_space("Ion.", "text")
+
+
+def test_needs_boundary_space_never_inserted_before_attached_punctuation():
+    """Real regression, caught by diffing a regenerated file against
+    main's own already-correct, pre-this-branch text: a first attempt
+    at this rule used plain non-whitespace on both sides, which inserted
+    an unwanted space before a comma directly attached to a preceding
+    word -- 'c. inf.' + ',...' must stay 'c. inf.,...', not
+    'c. inf. ,...'. Attached closing punctuation in general must never
+    gain a leading space, regardless of what precedes it."""
+    assert not _needs_boundary_space("c. inf.", ", it is good")
+    assert not _needs_boundary_space("word", ", more")
+    assert not _needs_boundary_space("word", ")")
+    assert not _needs_boundary_space("word", ".")
+
+
+def test_needs_boundary_space_not_inserted_after_opening_punctuation():
+    """'(' + 'word' must stay '(word', not '( word'."""
+    assert not _needs_boundary_space("(", "word")
+    assert not _needs_boundary_space("prefix (", "word")
+
+
+def test_needs_boundary_space_not_inserted_when_either_side_already_has_space():
+    assert not _needs_boundary_space("word ", "next")
+    assert not _needs_boundary_space("word", " next")
+    assert not _needs_boundary_space("", "word")
+    assert not _needs_boundary_space("word", "")
+
+
+def test_extract_text_inserts_space_between_parent_text_and_nested_child_word():
+    """The word-fusion-preventing direction of _extract_text()'s own
+    guard, not just the punctuation-preserving one below: a parent
+    element's own trailing text directly followed by a nested child
+    whose text starts with a real word character, with no explicit
+    space anywhere in the source markup -- must get a defensive space,
+    the same real mechanism that fused ἐρύκω's real entry (though that
+    specific real entry turned out to be one unsplit text node rather
+    than a nested-element boundary -- see the docstring above)."""
+    xml = """<foreign>parenttext<hi>childword</hi></foreign>"""
+    root = ET.fromstring(xml)
+    assert _extract_text(root) == "parenttext childword"
+
+
+def test_extract_text_preserves_attached_punctuation_across_nested_elements():
+    """The exact real shape that regressed once already (see
+    _needs_boundary_space()'s own docstring): a period-ending
+    abbreviation directly followed by attached punctuation, split across
+    a parent's text and a nested child/tail -- must stay attached, not
+    gain a space."""
+    xml = """<tr>c. inf.<hi>,</hi> it is good</tr>"""
+    root = ET.fromstring(xml)
+    assert _extract_text(root) == "c. inf., it is good"
 
 
 def test_dialect_transparent_grammar_markup_does_not_break_pattern_b():

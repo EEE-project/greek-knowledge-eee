@@ -49,7 +49,20 @@ recognizes and passes through unconverted. Not garbled, reads fine as the
 `v` scholarly convention already is in print -- not fixed, since treating
 it as real Beta Code content would require guessing where digamma
 notation starts/ends versus other legitimate uses of Latin letters in
-the same span.
+the same span. Also known (found verifying the period/dialect
+stratification fix below against real content): the raw Beta Code text
+itself occasionally lacks a separating space before its own `*`
+capitalization marker, e.g. ἐρύκω's real entry has the single, unsplit
+text node `e)ruke/men eu)ru/opa*zh=n` (confirmed directly in
+`grc.lsj.perseus-eng5.xml`) -- "εὐρύοπα" and "Ζῆν" (accusative of Ζεύς)
+render fused as "εὐρύοπαΖῆν" with no code-visible boundary to hook a fix
+onto, since there is no element/token boundary here at all, just one
+string with the space missing in Perseus's own digitization. Not fixed,
+for the same reason as the other limitations above: inserting a space
+before every Beta Code `*` would be wrong in general (e.g. "(*zeu\s)"
+correctly has no space after the parenthesis), and distinguishing this
+one genuine gap from every legitimate no-space `*` usage isn't possible
+from the text alone.
 
 Parsed by `okfbuild/sources/lsj_index.py` (added in
 section-03-source-clients), which must disable XML entity
