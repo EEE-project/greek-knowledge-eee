@@ -535,7 +535,20 @@ def _load_or_build_tlg_map(
 
     cached = _read_tlg_map_cache(cache_path)
     if cached is not None and cached.get("source_signature") == current_signature:
-        return {tlg_author: set(abbrevs) for tlg_author, abbrevs in cached["map"].items()}
+        # Real bug found by review: a same-signature cache missing its
+        # "map" key (or shaped wrong in some other way -- hand-edited,
+        # or truncated mid-write in a way that still parses as JSON)
+        # used to raise an uncaught KeyError/AttributeError/TypeError
+        # here instead of falling through to a fresh rebuild, the same
+        # class of bug already fixed for _decode_cached_entry() in
+        # lsj_index.py but never extended to this structurally
+        # identical sibling. Empirically confirmed: a cache file with
+        # correct format_version/source_signature but no "map" key
+        # crashed the whole build.
+        try:
+            return {tlg_author: set(abbrevs) for tlg_author, abbrevs in cached["map"].items()}
+        except (KeyError, AttributeError, TypeError):
+            logger.warning("Malformed TLG-abbreviation-map cache at %s -- rebuilding", cache_path)
 
     fresh_map = build_tlg_author_abbreviation_map(tei_xml_dir)
     _write_tlg_map_cache(cache_path, current_signature, fresh_map)
@@ -591,7 +604,15 @@ def _read_frontmatter_cache(cache_path: Path, source_mtime: float) -> "dict[str,
         return None
     if data.get("format_version") != _FRONTMATTER_CACHE_FORMAT_VERSION or data.get("source_mtime") != source_mtime:
         return None
-    return {abbreviation: _period_from_dict(p) for abbreviation, p in data["authors"].items()}
+    try:
+        return {abbreviation: _period_from_dict(p) for abbreviation, p in data["authors"].items()}
+    except (KeyError, AttributeError, TypeError):
+        # Same real bug as _load_or_build_tlg_map()'s own version of
+        # this fix: a same-version, same-mtime cache missing "authors"
+        # (or an author entry missing one of _period_from_dict()'s 3
+        # required fields) must fall back to "rebuild", not crash.
+        logger.warning("Malformed LSJ front-matter cache at %s -- rebuilding", cache_path)
+        return None
 
 
 def _load_or_parse_frontmatter_authors(front_matter_xml_path: Path, cache_path: Path) -> "dict[str, Period]":

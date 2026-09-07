@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 from pathlib import Path
@@ -9,8 +10,12 @@ import pytest
 from okfbuild.sources.lsj_periods import (
     LSJPeriodMap,
     Period,
+    _load_or_build_tlg_map,
+    _period_from_dict,
     _read_frontmatter_cache,
     _read_tlg_map_cache,
+    _TLG_MAP_CACHE_FORMAT_VERSION,
+    _tlg_map_source_signature,
     build_tlg_author_abbreviation_map,
     parse_date_text,
     parse_diorisis_catalog,
@@ -371,6 +376,64 @@ def test_read_tlg_map_cache_treats_invalid_utf8_as_corrupt_not_a_crash(tmp_path,
         result = _read_tlg_map_cache(cache_path)
     assert result is None
     assert "Corrupt" in caplog.text
+
+
+def test_load_or_build_tlg_map_treats_malformed_same_signature_cache_as_miss_not_a_crash(tmp_path, caplog):
+    """Real bug found by review: _decode_cached_entry()'s KeyError guard
+    (lsj_index.py) was never extended to this structurally identical
+    sibling -- a cache with the correct format_version AND a matching
+    source_signature (so it's judged fresh, not stale) but missing its
+    "map" key raised an uncaught KeyError instead of falling through to
+    a fresh rebuild. Uses a real signature computed against the actual
+    fixture dir so the freshness check genuinely passes before hitting
+    the malformed data."""
+    cache_path = tmp_path / "tlg-map.json"
+    real_signature = _tlg_map_source_signature(FIXTURES_DIR)
+    cache_path.write_text(
+        json.dumps({"format_version": _TLG_MAP_CACHE_FORMAT_VERSION, "source_signature": real_signature}),
+        encoding="utf-8",
+    )
+    with caplog.at_level("WARNING"):
+        result = _load_or_build_tlg_map(FIXTURES_DIR, cache_path)
+    assert "Malformed" in caplog.text
+    # and it genuinely fell through to a fresh build, not an empty stub:
+    assert result
+    assert any(abbrevs for abbrevs in result.values())
+
+
+def test_period_from_dict_missing_field_raises_not_silently_wrong():
+    """_period_from_dict() itself stays a plain, non-defensive helper --
+    the defensiveness belongs at _read_frontmatter_cache()'s call site
+    (see the test below), matching how _decode_cached_entry()'s own fix
+    wraps its outer loop rather than LSJText/LSJCitation's constructors.
+    This just locks in that a missing field is a loud KeyError, not a
+    silent wrong value, so a future refactor doesn't accidentally start
+    swallowing it at the wrong layer."""
+    with pytest.raises(KeyError):
+        _period_from_dict({"centuries": [5], "era": "BC"})  # missing "uncertain"
+
+
+def test_read_frontmatter_cache_treats_malformed_same_version_dict_as_miss_not_a_crash(tmp_path, caplog):
+    """Same real bug as the TLG-map version above: a same-format-version,
+    same-mtime frontmatter cache (so it's judged fresh) with an author
+    entry missing one of Period's 3 required fields raised an uncaught
+    KeyError instead of falling through to None (the caller's own
+    "rebuild" signal)."""
+    cache_path = tmp_path / "frontmatter.json"
+    cache_path.write_text(
+        json.dumps(
+            {
+                "format_version": 1,
+                "source_mtime": 12345.0,
+                "authors": {"Hdt.": {"centuries": [5], "era": "BC"}},  # missing "uncertain"
+            }
+        ),
+        encoding="utf-8",
+    )
+    with caplog.at_level("WARNING"):
+        result = _read_frontmatter_cache(cache_path, source_mtime=12345.0)
+    assert result is None
+    assert "Malformed" in caplog.text
 
 
 def test_period_map_build_rebuilds_when_a_source_file_changes(tmp_path):

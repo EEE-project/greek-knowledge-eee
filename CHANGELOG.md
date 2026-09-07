@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-07
+
+- **Extended the 2026-09-05 `_decode_cached_entry()` KeyError fix to its two structurally identical siblings in `lsj_periods.py`, found by a follow-up `/code-review` line-by-line pass after PR #14 had already merged.** `_load_or_build_tlg_map()`'s `cached["map"].items()` and `_read_frontmatter_cache()`'s `data["authors"].items()`/`_period_from_dict()` both read a same-version, same-signature (so "fresh") cache dict without guarding against a missing expected field -- a hand-edited or partially-written cache file that still parses as valid JSON crashed the whole build instead of falling through to a rebuild, the exact same class of bug the earlier fix addressed in `lsj_index.py` but never extended to this file. Verified empirically (not just by reading): a cache file with the correct `format_version`/`source_signature` but no `"map"` key, and a frontmatter cache with a correct `format_version`/`source_mtime` but an author entry missing `"era"`, both crashed with an uncaught `KeyError` before the fix. 3 new tests. Full suite: 335 passed, 7 deselected; `ruff check` clean.
+
 ## 2026-09-05
 
 - **The word-fusion bug from 2026-09-04 below was not actually fixed -- found by a `/code-review` pass against the already-pushed branch, fixed properly this time at the root, and re-verified with a broader check than the one that missed it the first time.** Two independent review angles, run against the real committed `words/*.md` content (not just unit tests), both found the same class of bug still shipping: Angle I measured 496 fused instances across 245 of 465 LSJ-bearing files; Angle B measured 439 across 230 (independently-written scripts, close but not identical -- treat as "~450-500 across ~230-245 files", not either number as exact).
