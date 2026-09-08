@@ -144,13 +144,18 @@ reference wiring.
 
 ## Content model
 
-Three OKF concept types, each one markdown file with YAML frontmatter:
+Four OKF concept types, each one markdown file with YAML frontmatter:
 **Lexical Entry** (one file per word, with a section per attested
 historical period), **Grammatical Rule** (one file per documented
-period-to-period morphological change), and **Cultural Context** (one
-file per person/theme/work). Every claim in a file's body is
-footnote-cited back to a `sources[]` frontmatter entry. See
-`okfbuild/okf.py` (added in section-02-okf-writer) for the exact schema.
+period-to-period morphological change), **Cultural Context** (one
+file per person/theme/work), and **Literary Translation** (one file
+per work/passage/language, gathering every translator's rendering of
+that passage). Every claim in a Lexical Entry/Grammatical Rule/
+Cultural Context file's body is footnote-cited back to a `sources[]`
+frontmatter entry; a Literary Translation file instead cites inline,
+via an HTML-comment description line under each translator's `##`
+heading. See `okfbuild/okf.py` (added in section-02-okf-writer) for
+the exact schema.
 
 
 ## Sources

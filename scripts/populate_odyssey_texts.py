@@ -115,6 +115,15 @@ which Zeus appointed for me as I came from Troy.
 """
 
 
+# Cited identically by all four populate_*() functions below -- the same
+# Greek source-text edition underlies every language's translations/
+# interlinear file.
+_GRC_MURRAY1919_SOURCE = Source(
+    id="grc-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
+    title="Perseus Digital Library Greek text (Murray ed.)", author="ed. A. T. Murray",
+)
+
+
 def _strip_header(section: str) -> str:
     lines = section.splitlines()
     out = []
@@ -136,8 +145,7 @@ def populate_translations_en() -> None:
                title="The Odyssey of Homer", author="Alexander Pope"),
         Source(id="tr-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
                title="The Odyssey", author="A. T. Murray"),
-        Source(id="grc-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
-               title="Perseus Digital Library Greek text (Murray ed.)", author="ed. A. T. Murray"),
+        _GRC_MURRAY1919_SOURCE,
     ]
     concept = build(
         work="Odyssey", passage="I.1-21, IX.19-38", language="en",
@@ -333,8 +341,7 @@ def populate_translations_ru() -> None:
                title="Одиссея", author="В. А. Жуковский"),
         Source(id="tr-veresaev1953", resource="http://az.lib.ru/g/gomer/text_0070.shtml",
                title="Одиссея", author="В. В. Вересаев"),
-        Source(id="grc-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
-               title="Perseus Digital Library Greek text (Murray ed.)", author="ed. A. T. Murray"),
+        _GRC_MURRAY1919_SOURCE,
     ]
     concept = build(
         work="Odyssey", passage="I.1-21, IX.19-38", language="ru",
@@ -352,7 +359,7 @@ _POLYLAS_I = """\
 ## Πολυλάς
 
 <!-- Πολυλάς Ι. Ὀδύσσεια. Ἀθήνα, 1875 · https://www.openbook.gr/omirou-odysseia-metafrasi/ -->
-<!-- **Πολυλάς, 1875** · [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
+<!-- **Πολυλάς, 1875/1877** · I.1-21 [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · IX.19-38 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
 
 ### Odyss. I.1–5
 
@@ -442,8 +449,7 @@ def populate_translations_el() -> None:
                title="Ομήρου Οδύσσεια, Τόμος Α΄", author="Ιάκωβος Πολυλάς"),
         Source(id="tr-polylas1877", resource="https://www.gutenberg.org/files/30614/30614-0.txt",
                title="Ομήρου Οδύσσεια, Τόμος Β΄", author="Ιάκωβος Πολυλάς"),
-        Source(id="grc-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
-               title="Perseus Digital Library Greek text (Murray ed.)", author="ed. A. T. Murray"),
+        _GRC_MURRAY1919_SOURCE,
     ]
     concept = build(
         work="Odyssey", passage="I.1-21, IX.19-38", language="el",
@@ -456,7 +462,9 @@ def populate_translations_el() -> None:
 #   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
 #     show translations:odyssey/2026_06_15/interlenear_en.md
 # -- entire file, verbatim (word-by-word EN gloss for IX.19-38 only;
-# there is no interlinear content for I.1-21 on the abandoned branch).
+# no *usable* interlinear content exists for I.1-21 on the abandoned
+# branch -- content by that name exists there too, but was judged unfit
+# for this corpus and deliberately not ported; see CHANGELOG.md).
 _INTERLINEAR_EN = """\
 ### Odyss. IX.19–24
 
@@ -531,7 +539,9 @@ which to-me Zeus sent from Troy departing.
 #   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
 #     show translations:odyssey/2026_06_15/interlenear_el.md
 # -- entire file, verbatim (word-by-word EL gloss for IX.19-38 only;
-# there is no interlinear content for I.1-21 on the abandoned branch).
+# no *usable* interlinear content exists for I.1-21 on the abandoned
+# branch -- content by that name exists there too, but was judged unfit
+# for this corpus and deliberately not ported; see CHANGELOG.md).
 _INTERLINEAR_EL = """\
 ### Odyss. IX.19–24
 
@@ -604,10 +614,7 @@ _INTERLINEAR_EL = """\
 
 
 def populate_interlinear() -> None:
-    sources = [
-        Source(id="grc-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
-               title="Perseus Digital Library Greek text (Murray ed.)", author="ed. A. T. Murray"),
-    ]
+    sources = [_GRC_MURRAY1919_SOURCE]
     concept_en = build(
         work="Odyssey", passage="IX.19-38", language="en",
         translators=["interlinear"], body=_INTERLINEAR_EN, sources=sources,
