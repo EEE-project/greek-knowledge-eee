@@ -452,5 +452,177 @@ def populate_translations_el() -> None:
     write(concept, _TEXTS_DIR / "translations_el.md")
 
 
+# Copied verbatim via:
+#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#     show translations:odyssey/2026_06_15/interlenear_en.md
+# -- entire file, verbatim (word-by-word EN gloss for IX.19-38 only;
+# there is no interlinear content for I.1-21 on the abandoned branch).
+_INTERLINEAR_EN = """\
+### Odyss. IX.19–24
+
+**εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν**
+I-am Odysseus Laertiades, who with-all wiles
+
+**ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει.**
+among-men am-known, and my fame heaven reaches.
+
+**ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ**
+I-dwell in Ithaca sun-bright; in it a mountain there
+
+**Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι**
+Neritos leaf-quivering, conspicuous; around it islands
+
+**πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι,**
+many dwell very close to-one-another,
+
+**Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος.**
+Doulichion and Same and wooded Zakynthos.
+
+### Odyss. IX.25–28
+
+**αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται**
+itself but low, most-remote in the sea lies
+
+**πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε,**
+toward the west; those further toward dawn and sun,
+
+**τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε**
+rugged, yet good nurse-of-youth; truly I at-least
+
+**ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι.**
+of-my-own land can sweeter other see.
+
+### Odyss. IX.29–33
+
+**ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων,**
+truly indeed me there held Kalypso, glorious of-goddesses,
+
+**ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι·**
+in caves hollow, longing husband to-be;
+
+**ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν**
+so likewise Kirke kept-back in her halls
+
+**Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι·**
+Aiaian crafty, longing husband to-be;
+
+**ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον.**
+but my heart never in my breast could-they-persuade.
+
+### Odyss. IX.34–38
+
+**ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων**
+so nothing sweeter than one's-own homeland and parents
+
+**γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον**
+is, even if someone afar a rich house
+
+**γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων.**
+in-land in foreign dwells far-from parents.
+
+**εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω,**
+but come let-me-tell you my return full-of-cares,
+
+**ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι.**
+which to-me Zeus sent from Troy departing.
+"""
+
+# Copied verbatim via:
+#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#     show translations:odyssey/2026_06_15/interlenear_el.md
+# -- entire file, verbatim (word-by-word EL gloss for IX.19-38 only;
+# there is no interlinear content for I.1-21 on the abandoned branch).
+_INTERLINEAR_EL = """\
+### Odyss. IX.19–24
+
+**εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν**
+Είμαι ο Οδυσσέας Λαερτιάδης, που με όλα τα τεχνάσματα
+
+**ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει.**
+στους ανθρώπους είμαι γνωστός, και η δόξα μου τον ουρανό φτάνει.
+
+**ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ**
+Κατοικώ στην Ιθάκη την ηλιόλουστη· σ' αυτή βουνό
+
+**Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι**
+το Νήριτο φυλλοσείστης, ξακουστό· και γύρω νησιά
+
+**πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι,**
+πολλά κατοικούν, πολύ κοντά το ένα στ' άλλο,
+
+**Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος.**
+Δουλίχι και Σάμη και η δασώδης Ζάκυνθος.
+
+### Odyss. IX.25–28
+
+**αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται**
+Αυτή δε χαμηλή, η πιο απόμακρη στη θάλασσα κείται,
+
+**πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε,**
+προς τη δύση, εκείνες δε μακριά προς αυγή και ήλιο,
+
+**τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε**
+τραχεία, μα καλή τροφός νέων· κι εγώ βέβαια
+
+**ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι.**
+της γης μου δεν μπορώ γλυκύτερο άλλο να δω.
+
+### Odyss. IX.29–33
+
+**ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων,**
+Αλήθεια εμένα εκεί κρατούσε η Καλυψώ, θεϊκή θεά,
+
+**ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι·**
+σε σπήλαια βαθιά, λαχταρώντας σύζυγος να γίνει·
+
+**ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν**
+έτσι κι η Κίρκη με κρατούσε στα μέγαρά της
+
+**Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι·**
+η Αιαία η δολερή, λαχταρώντας σύζυγος να γίνει·
+
+**ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον.**
+μα ποτέ την ψυχή μου στο στήθος δεν έπειθαν.
+
+### Odyss. IX.34–38
+
+**ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων**
+Έτσι τίποτα γλυκύτερο από την πατρίδα κι από τους γονείς
+
+**γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον**
+δεν γίνεται, έστω κι αν κάποιος μακριά πλούσιο σπίτι
+
+**γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων.**
+σε ξένη γη κατοικεί μακριά από γονείς.
+
+**εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω,**
+Αλλά άγε, θα σου πω και τον νόστο μου τον πολύπικρο,
+
+**ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι.**
+που ο Ζευς μου ετοίμασε αφού έφυγα από Τροία.
+"""
+
+
+def populate_interlinear() -> None:
+    sources = [
+        Source(id="grc-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
+               title="Perseus Digital Library Greek text (Murray ed.)", author="ed. A. T. Murray"),
+    ]
+    concept_en = build(
+        work="Odyssey", passage="IX.19-38", language="en",
+        translators=["interlinear"], body=_INTERLINEAR_EN, sources=sources,
+    )
+    write(concept_en, _TEXTS_DIR / "interlinear_en.md")
+
+    concept_el = build(
+        work="Odyssey", passage="IX.19-38", language="el",
+        translators=["interlinear"], body=_INTERLINEAR_EL, sources=sources,
+    )
+    write(concept_el, _TEXTS_DIR / "interlinear_el.md")
+
+
 if __name__ == "__main__":
     populate_translations_en()
+    populate_translations_ru()
+    populate_translations_el()
+    populate_interlinear()
