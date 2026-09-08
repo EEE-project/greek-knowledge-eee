@@ -344,5 +344,113 @@ def populate_translations_ru() -> None:
     write(concept, _TEXTS_DIR / "translations_ru.md")
 
 
+# Copied verbatim via:
+#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#     show translations:odyssey/2026_06_01/translations_el.md
+# -- the "## Πολυλάς" section only (up to, not including, "## Καζαντζάκης–Κακριδής").
+_POLYLAS_I = """\
+## Πολυλάς
+
+<!-- Πολυλάς Ι. Ὀδύσσεια. Ἀθήνα, 1875 · https://www.openbook.gr/omirou-odysseia-metafrasi/ -->
+<!-- **Πολυλάς, 1875** · [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
+
+### Odyss. I.1–5
+
+Πες μου, θεά, τ' ἀνδρὸς τὸν πολύτροπον, ὅπου πλανήθη τόσο
+ἀφότου τῆς Τροίας τὸ ἱερὸ κάστρο χάλασε·
+πολλῶν ἀνθρώπων τὰ ἄστη εἶδε κι ἔγνωσε τὸν νοῦ τους,
+πολλὰ κι ἔπαθε στὴ θάλασσα ἀλγέα μέσα στὴν ψυχή του,
+παλεύοντας γιὰ τὴ ζωή του καὶ γιὰ τὸ νόστο τῶν ἑταίρων.
+
+### Odyss. I.6–10
+
+Μὰ μήτε ὡς τόσο τοὺς ἑταίρους του ἔσωσε, ποὺ τόσο φιλοτιμήθη·
+γιατὶ χάθηκαν ἀπὸ τὴ δική τους τὴν ἀτασθαλία,
+νήπιοι, ποὺ τοῦ Ἡλίου Ὑπερίωνα τοὺς βόες ἔφαγαν·
+κι αὐτὸς τοὺς ἀφαίρεσε τὴν ἡμέρα τοῦ γυρισμοῦ.
+Ἀπ' ὁπουδήποτε, θεά, κόρη τοῦ Δία, πές μας κι ἐμᾶς.
+
+### Odyss. I.11–15
+
+Ἐκεῖ οἱ ἄλλοι ὅλοι, ὅσοι γλύτωσαν τὸν αἰπὺν ὄλεθρο,
+ἦταν στὸ σπίτι, τὸν πόλεμο καὶ τὴ θάλασσα γλυτώσαντες·
+αὐτὸν μόνον, ποὺ λαχταροῦσε νόστο καὶ γυναίκα,
+νύμφη ἡ πότνια τὸν κρατοῦσε, ἡ Καλυψώ, θεία στὶς θεές,
+στὶς κοίλες σπηλιές, ποθώντας νὰ τὴν πάρει γιὰ ἄντρα της.
+
+### Odyss. I.16–21
+
+Μὰ ὅταν πέρασαν τὰ χρόνια κι ἦρθε ἐκεῖνο τὸ ἔτος,
+ποὺ οἱ θεοὶ τοῦ ἔκλωσαν νὰ γυρίσει στὸ σπίτι του,
+στὴν Ἰθάκη, μήτε ἐκεῖ γλύτωσε τοὺς ἄθλους
+μέσα στοὺς δικούς του. Οἱ θεοὶ τὸν λυπήθηκαν ὅλοι,
+ἐκτὸς ἀπὸ τὸν Ποσειδῶνα· αὐτὸς ἀδιάκοπα ὀργιζόταν
+στὸν ἰσόθεο Ὀδυσσέα, ὣς νὰ φτάσει στὴ γῆ του.
+
+"""
+
+# Sourced 2026-09-08 from Project Gutenberg ebook #30614 (Ομήρου Οδύσσεια,
+# Τόμος Β΄, Athens: G. D. Fexis, 1877; transcr. Sophia Canoni),
+# https://www.gutenberg.org/files/30614/30614-0.txt -- cross-verified
+# word-for-word against users.sch.gr's independent transcription of the
+# same passage. Source-edition line-reference numbers stripped (not part
+# of the translated text).
+_POLYLAS_IX = """\
+## Πολυλάς
+
+<!-- Polylas I. Ομήρου Οδύσσεια, Τόμος Β΄ (Ραψωδίες Η–Μ). Athens: Georgios D. Fexis, 1877 (Project Gutenberg ebook #30614, transcr. Sophia Canoni) · https://www.gutenberg.org/files/30614/30614-0.txt -->
+<!-- **Πολυλάς, 1877** · [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · line-for-line verse rendering · cross-verified against an independent second transcription (users.sch.gr), word-for-word match -->
+
+### Odyss. IX.19–24
+
+εγώ 'μαι ο δολομήχανος Λαερτιάδης Οδυσσέας,
+και από την γη 'ς τους ουρανούς η δόξα μου έχει φθάσει.
+και κατοικώ την ηλιακήν Ιθάκη, 'π' όρος έχει
+μεγάλο κινησίφυλλο, το Νήριτο, και γύρω
+νησιά πολλά, και σύνεγγυς το 'να με τ' άλλο, υπάρχουν,
+Δουλίχιο, Σάμη, Ζάκυνθος η πολυδενδρωμένη•
+
+### Odyss. IX.25–28
+
+κείνη 'ς το πέλαο χαμηλή βαθειά την δύσι βλέπει,
+και όλαις η άλλαις χωριστά προς της αυγής τα μέρη•
+πετρώδης, αλλ' ανδρών καλή βυζάστρα• κ' εγώ άλλο
+πράγμα δεν δύναμαι να ιδώ γλυκότερο απ' την γην μου.
+
+### Odyss. IX.29–33
+
+και ιδές, μ' εκράτ' η Καλυψώ, σεπτή θεά, μεγάλη,
+'ς τα κοίλα σπήλαια, και άνδρας της επόθει να της ήμαι•
+όμοια και η Κίρκη εκράτει με, η δολερή Αιαία,
+'ς τα μέγαρά της, και άνδρας της επόθει να της ήμαι•
+αλλά ποτέ δεν έπεισαν 'ς τα στήθη την ψυχή μου.
+
+### Odyss. IX.34–38
+
+αχ! τίποτε γλυκότερο δεν έχει απ' την πατρίδα
+και απ' τους γονείς ο άνθρωπος, και σπίτι ευτυχισμένο
+εις ξένην γην αν κατοικεί μακράν απ' τους γονείς του.
+τώρ' άκουσε το θλιβερό ταξείδι, 'που εις εμένα,
+ως απ' την Τροίαν έγερνα, διώρισεν ο Δίας.
+"""
+
+
+def populate_translations_el() -> None:
+    body = _POLYLAS_I.rstrip("\n") + "\n\n" + _strip_header(_POLYLAS_IX) + "\n"
+    sources = [
+        Source(id="tr-polylas1875", resource="https://www.openbook.gr/omirou-odysseia-metafrasi/",
+               title="Ομήρου Οδύσσεια, Τόμος Α΄", author="Ιάκωβος Πολυλάς"),
+        Source(id="tr-polylas1877", resource="https://www.gutenberg.org/files/30614/30614-0.txt",
+               title="Ομήρου Οδύσσεια, Τόμος Β΄", author="Ιάκωβος Πολυλάς"),
+        Source(id="grc-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
+               title="Perseus Digital Library Greek text (Murray ed.)", author="ed. A. T. Murray"),
+    ]
+    concept = build(
+        work="Odyssey", passage="I.1-21, IX.19-38", language="el",
+        translators=["Πολυλάς"], body=body, sources=sources,
+    )
+    write(concept, _TEXTS_DIR / "translations_el.md")
+
+
 if __name__ == "__main__":
     populate_translations_en()
