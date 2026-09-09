@@ -181,27 +181,53 @@ which Zeus appointed for me as I came from Troy.
 # for Book IX -- used in place of Perseus's own page directly, since
 # Perseus loads the English translation via client-side JS the fetch
 # tooling available here can't execute. Two clear OCR artifacts corrected
-# ("Tet: me" -> "Tell me", "own felk" -> "own folk"); everything else
-# copied byte-for-byte, including hyphenated line-break rejoins
-# ("com-\\nrades" -> "comrades", "Ca-\\nlypso" -> "Calypso").
+# ("Tet: me" -> "Tell me", "own felk" -> "own folk"); wording otherwise
+# unchanged from the source. Line breaks, however, are NOT the source's
+# own (its page-width wrapping includes mid-word hyphens like "com-\\nrades",
+# "Ca-\\nlypso" -- printing artifacts, not part of the prose translation
+# itself) -- re-flowed at clause boundaries instead, matching the visual
+# rhythm _MURRAY_IX above already established (short line breaks are this
+# corpus's own presentational convention for Murray's prose, not something
+# Murray's original publication imposes either way -- a prose translation
+# has no metrically-required line length the way Pope's verse does).
+# First found as a real, visible bug: Book I's stanzas originally shipped
+# as one dense unbroken line each, next to Book IX's already-short-lined
+# stanzas -- inconsistent under the same "## Murray" header.
 _MURRAY_I = """\
 ## Murray
 
 ### Odyss. I.1–5
 
-Tell me, O Muse, of the man of many devices, who wandered full many ways after he had sacked the sacred citadel of Troy. Many were the men whose cities he saw and whose mind he learned, aye, and many the woes he suffered in his heart upon the sea, seeking to win his own life and the return of his comrades.
+Tell me, O Muse, of the man of many devices,
+who wandered full many ways after he had sacked
+the sacred citadel of Troy. Many were the men
+whose cities he saw and whose mind he learned, aye,
+and many the woes he suffered in his heart upon the sea,
+seeking to win his own life and the return of his comrades.
 
 ### Odyss. I.6–10
 
-Yet even so he saved not his comrades, though he desired it sore, for through their own blind folly they perished—fools, who devoured the kine of Helios Hyperion; but he took from them the day of their returning. Of these things, goddess, daughter of Zeus, beginning where thou wilt, tell thou even unto us.
+Yet even so he saved not his comrades, though he desired it sore,
+for through their own blind folly they perished—fools, who devoured
+the kine of Helios Hyperion; but he took from them the day of their returning.
+Of these things, goddess, daughter of Zeus, beginning where thou wilt, tell thou even unto us.
 
 ### Odyss. I.11–15
 
-Now all the rest, as many as had escaped sheer destruction, were at home, safe from both war and sea, but Odysseus alone, filled with longing for his return and for his wife, did the queenly nymph Calypso, that bright goddess, keep back in her hollow caves, yearning that he should be her husband.
+Now all the rest, as many as had escaped sheer destruction,
+were at home, safe from both war and sea, but Odysseus alone,
+filled with longing for his return and for his wife,
+did the queenly nymph Calypso, that bright goddess,
+keep back in her hollow caves, yearning that he should be her husband.
 
 ### Odyss. I.16–21
 
-But when, as the seasons revolved, the year came in which the gods had ordained that he should return home to Ithaca, not even there was he free from toils, even among his own folk. And all the gods pitied him save Poseidon; but he continued to rage unceasingly against godlike Odysseus until at length he reached his own land.
+But when, as the seasons revolved, the year came
+in which the gods had ordained that he should return home to Ithaca,
+not even there was he free from toils, even among his own folk.
+And all the gods pitied him save Poseidon;
+but he continued to rage unceasingly against godlike Odysseus
+until at length he reached his own land.
 
 """
 

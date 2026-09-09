@@ -19,7 +19,7 @@ sources:
   author: ed. A. T. Murray
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-09T05:50:24.826507+00:00'
+  at: '2026-09-09T07:40:44.512987+00:00'
 work: Odyssey
 passage: I.1-21, IX.19-38
 language: en
@@ -152,16 +152,33 @@ which Zeus appointed for me as I came from Troy.
 
 ### Odyss. I.1–5
 
-Tell me, O Muse, of the man of many devices, who wandered full many ways after he had sacked the sacred citadel of Troy. Many were the men whose cities he saw and whose mind he learned, aye, and many the woes he suffered in his heart upon the sea, seeking to win his own life and the return of his comrades.
+Tell me, O Muse, of the man of many devices,
+who wandered full many ways after he had sacked
+the sacred citadel of Troy. Many were the men
+whose cities he saw and whose mind he learned, aye,
+and many the woes he suffered in his heart upon the sea,
+seeking to win his own life and the return of his comrades.
 
 ### Odyss. I.6–10
 
-Yet even so he saved not his comrades, though he desired it sore, for through their own blind folly they perished—fools, who devoured the kine of Helios Hyperion; but he took from them the day of their returning. Of these things, goddess, daughter of Zeus, beginning where thou wilt, tell thou even unto us.
+Yet even so he saved not his comrades, though he desired it sore,
+for through their own blind folly they perished—fools, who devoured
+the kine of Helios Hyperion; but he took from them the day of their returning.
+Of these things, goddess, daughter of Zeus, beginning where thou wilt, tell thou even unto us.
 
 ### Odyss. I.11–15
 
-Now all the rest, as many as had escaped sheer destruction, were at home, safe from both war and sea, but Odysseus alone, filled with longing for his return and for his wife, did the queenly nymph Calypso, that bright goddess, keep back in her hollow caves, yearning that he should be her husband.
+Now all the rest, as many as had escaped sheer destruction,
+were at home, safe from both war and sea, but Odysseus alone,
+filled with longing for his return and for his wife,
+did the queenly nymph Calypso, that bright goddess,
+keep back in her hollow caves, yearning that he should be her husband.
 
 ### Odyss. I.16–21
 
-But when, as the seasons revolved, the year came in which the gods had ordained that he should return home to Ithaca, not even there was he free from toils, even among his own folk. And all the gods pitied him save Poseidon; but he continued to rage unceasingly against godlike Odysseus until at length he reached his own land.
+But when, as the seasons revolved, the year came
+in which the gods had ordained that he should return home to Ithaca,
+not even there was he free from toils, even among his own folk.
+And all the gods pitied him save Poseidon;
+but he continued to rage unceasingly against godlike Odysseus
+until at length he reached his own land.

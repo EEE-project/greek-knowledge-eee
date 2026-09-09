@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-09 (2)
+
+- **Fixed inconsistent line-wrapping in Murray's Book I stanzas, found by visual inspection of the live-rendered notebook.** `_MURRAY_I` (added earlier today) shipped each stanza as one dense, unbroken line, while `_MURRAY_IX` (already in the corpus) breaks at clause boundaries every ~10-15 words -- both under the same `## Murray` header, so the two books rendered with visibly different rhythm in the same dropdown option. Re-flowed Book I to match Book IX's established style. Word-for-word identical to before (verified via `eee.parse_stanza_translations()` on both versions, stanza by stanza) -- only where the line breaks fall changed, not the translation itself. (The source page's own line breaks weren't a usable reference either way -- they include mid-word print hyphenation like "com-\nrades" that's an artifact of the printed page's column width, not part of the prose.)
+- Bumped to 0.3.2 (`pyproject.toml`) -- patch, cosmetic formatting fix, no content or schema change. Full suite: 344 passed, 1 skipped, 7 deselected; `ruff check` clean.
+
 ## 2026-09-09
 
 - **Fixed a real content-completeness gap in the Odyssey translations corpus, found by a downstream consumer trying to actually wire it into course notebooks.** `translations_en.md`'s Pope and Murray sections only ever covered the one book each started with (Pope: `I.1-21` only; Murray: `IX.19-38` only) -- by design for the corpus itself, but a real gap for any consumer offering both translators as options across both lessons. `translations_ru.md`'s `подстрочник` (RU's own literal interlinear rendering) was missing entirely -- never ported when the corpus was first populated, even though it's the dropdown default in every notebook that used to serve it locally.
