@@ -98,3 +98,43 @@ def test_polylas_description_covers_both_editions():
     assert len(stanzas["Πολυλάς"]) == 8
     assert "1875" in descriptions["Πολυλάς"]
     assert "1877" in descriptions["Πολυλάς"]
+
+
+# --- Regression: every EN/RU translator must cover both books, not just the one it started with ---
+
+
+def test_pope_and_murray_each_cover_both_books():
+    """Pope originally only had Book I (from the abandoned translations
+    branch); Murray originally only had Book IX. A consuming notebook that
+    offers both as dropdown options on both lessons needs both translators
+    to actually have both books, not silently show '-' for the missing
+    half -- this is the exact gap a downstream consumer (created_with_eee's
+    host-resilience Task 3) found the hard way."""
+    en_body = (
+        script._POPE_I.rstrip("\n") + "\n\n" + script._strip_header(script._POPE_IX)
+        + "\n\n---\n\n"
+        + script._MURRAY_IX.rstrip("\n") + "\n\n" + script._strip_header(script._MURRAY_I)
+        + "\n"
+    )
+    stanzas, _ = eee.parse_stanza_translations(en_body, ref_prefix="### Odyss. ")
+
+    expected_refs = {"I.1–5", "I.6–10", "I.11–15", "I.16–21", "IX.19–24", "IX.25–28", "IX.29–33", "IX.34–38"}
+    assert len(stanzas["Pope"]) == 8
+    assert set(stanzas["Pope"]) == expected_refs
+    assert len(stanzas["Murray"]) == 8
+    assert set(stanzas["Murray"]) == expected_refs
+
+
+def test_podstrochnik_present_and_covers_both_books():
+    """подстрочник (RU's own literal interlinear rendering) was silently
+    dropped entirely when the KB corpus was first populated -- it's the
+    dropdown's *default* value in every consuming notebook, so its absence
+    is a regression (shows '-' by default), not just a missing option."""
+    body = (
+        script._PODSTROCHNIK_I.rstrip("\n") + "\n\n" + script._strip_header(script._PODSTROCHNIK_IX)
+        + "\n"
+    )
+    stanzas, descriptions = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
+
+    assert len(stanzas["подстрочник"]) == 8
+    assert descriptions.get("подстрочник", "") == ""

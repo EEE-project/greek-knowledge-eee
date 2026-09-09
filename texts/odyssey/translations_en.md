@@ -19,15 +19,15 @@ sources:
   author: ed. A. T. Murray
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-07T22:03:16.069723+00:00'
+  at: '2026-09-09T05:50:24.826507+00:00'
 work: Odyssey
 passage: I.1-21, IX.19-38
 language: en
 translators:
 - Pope
 - Murray
-status: draft
 verified: []
+status: draft
 ---
 ## Pope
 
@@ -74,6 +74,43 @@ Of ocean, who relentless still pursu'd
 With hatred fierce divine Ulysses' way,
 Till safe he landed on his native shore.
 
+### Odyss. IX.19–24
+
+"Know first the man (though now a wretch distress'd)
+Who hopes thee, monarch, for his future guest.
+Behold Ulysses! no ignoble name,
+Earth sounds my wisdom and high heaven my fame.
+
+"My native soil is Ithaca the fair,
+Where high Neritus waves his woods in air;
+Dulichium, Same and Zaccynthus crown'd
+With shady mountains spread their isles around.
+
+### Odyss. IX.25–28
+
+(These to the north and night's dark regions run,
+Those to Aurora and the rising sun).
+Low lies our isle, yet bless'd in fruitful stores;
+Strong are her sons, though rocky are her shores;
+And none, ah none no lovely to my sight,
+Of all the lands that heaven o'erspreads with light.
+
+### Odyss. IX.29–33
+
+In vain Calypso long constrained my stay,
+With sweet, reluctant, amorous delay;
+With all her charms as vainly Circe strove,
+And added magic to secure my love.
+In pomps or joys, the palace or the grot,
+My country's image never was forgot;
+My absent parents rose before my sight,
+And distant lay contentment and delight.
+
+### Odyss. IX.34–38
+
+"Hear, then, the woes which mighty Jove ordain'd
+To wait my passage from the Trojan land.
+
 ---
 
 ## Murray
@@ -112,3 +149,19 @@ even though one dwell in a rich house in a foreign land,
 far from his parents.
 But come, let me tell you of my much-troubled homeward voyage,
 which Zeus appointed for me as I came from Troy.
+
+### Odyss. I.1–5
+
+Tell me, O Muse, of the man of many devices, who wandered full many ways after he had sacked the sacred citadel of Troy. Many were the men whose cities he saw and whose mind he learned, aye, and many the woes he suffered in his heart upon the sea, seeking to win his own life and the return of his comrades.
+
+### Odyss. I.6–10
+
+Yet even so he saved not his comrades, though he desired it sore, for through their own blind folly they perished—fools, who devoured the kine of Helios Hyperion; but he took from them the day of their returning. Of these things, goddess, daughter of Zeus, beginning where thou wilt, tell thou even unto us.
+
+### Odyss. I.11–15
+
+Now all the rest, as many as had escaped sheer destruction, were at home, safe from both war and sea, but Odysseus alone, filled with longing for his return and for his wife, did the queenly nymph Calypso, that bright goddess, keep back in her hollow caves, yearning that he should be her husband.
+
+### Odyss. I.16–21
+
+But when, as the seasons revolved, the year came in which the gods had ordained that he should return home to Ithaca, not even there was he free from toils, even among his own folk. And all the gods pitied him save Poseidon; but he continued to rage unceasingly against godlike Odysseus until at length he reached his own land.

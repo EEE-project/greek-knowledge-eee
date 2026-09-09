@@ -22,7 +22,7 @@ _TEXTS_DIR = _REPO_ROOT / "texts" / "odyssey"
 #   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
 #     show translations:odyssey/2026_06_01/translations_en.md
 # -- the "## Pope" section only (up to, not including, "## Lattimore").
-_POPE_SECTION = """\
+_POPE_I = """\
 ## Pope
 
 <!-- Pope A. The Odyssey of Homer. London, 1725–1726 · https://en.wikisource.org/wiki/Odyssey_(Pope) -->
@@ -70,11 +70,69 @@ Till safe he landed on his native shore.
 
 """
 
+# NOT from the abandoned translations branch -- that branch never had a
+# Pope rendering of Book IX (confirmed: `git show translations:odyssey/
+# 2026_06_15/translations_en.md` has only Murray + Lattimore). Sourced
+# fresh from Wikisource (https://en.wikisource.org/wiki/Odyssey_(Pope)/
+# Book_IX, the same edition/page already cited above for Book I), fetched
+# directly (not via WebFetch's summarizer, which paraphrases rather than
+# quoting verbatim) and copied byte-for-byte except stripping the source's
+# own <br/> line-break markup. Stanza boundaries are sense-unit splits
+# (Pope's couplets don't line up 1:1 with the Greek either, an already-
+# accepted property of this translator -- see the design doc's "why the
+# flex-column display doesn't require line-alignment"). One reading not
+# independently re-verified against a second source: "none no lovely to
+# my sight" (stanza 2) -- almost certainly a Wikisource transcription slip
+# for "none so lovely", but per this corpus's own copy-what-the-source-
+# says convention, left exactly as the source has it rather than silently
+# "corrected".
+_POPE_IX = """\
+## Pope
+
+### Odyss. IX.19–24
+
+"Know first the man (though now a wretch distress'd)
+Who hopes thee, monarch, for his future guest.
+Behold Ulysses! no ignoble name,
+Earth sounds my wisdom and high heaven my fame.
+
+"My native soil is Ithaca the fair,
+Where high Neritus waves his woods in air;
+Dulichium, Same and Zaccynthus crown'd
+With shady mountains spread their isles around.
+
+### Odyss. IX.25–28
+
+(These to the north and night's dark regions run,
+Those to Aurora and the rising sun).
+Low lies our isle, yet bless'd in fruitful stores;
+Strong are her sons, though rocky are her shores;
+And none, ah none no lovely to my sight,
+Of all the lands that heaven o'erspreads with light.
+
+### Odyss. IX.29–33
+
+In vain Calypso long constrained my stay,
+With sweet, reluctant, amorous delay;
+With all her charms as vainly Circe strove,
+And added magic to secure my love.
+In pomps or joys, the palace or the grot,
+My country's image never was forgot;
+My absent parents rose before my sight,
+And distant lay contentment and delight.
+
+### Odyss. IX.34–38
+
+"Hear, then, the woes which mighty Jove ordain'd
+To wait my passage from the Trojan land.
+
+"""
+
 # Copied verbatim via:
 #   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
 #     show translations:odyssey/2026_06_15/translations_en.md
 # -- the "## Murray" section only (up to, not including, "## Lattimore").
-_MURRAY_SECTION = """\
+_MURRAY_IX = """\
 ## Murray
 
 <!-- Murray A. T. The Odyssey. London, Heinemann, 1919 · https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136 -->
@@ -114,6 +172,39 @@ which Zeus appointed for me as I came from Troy.
 
 """
 
+# NOT from the abandoned translations branch -- that branch never had a
+# Murray rendering of Book I (confirmed: `git show translations:odyssey/
+# 2026_06_01/translations_en.md` has only Pope + Lattimore). Sourced fresh
+# from the Internet Archive's OCR of the actual 1919 Heinemann/Harvard
+# volume (archive.org/stream/odysseymurray01homeuoft/
+# odysseymurray01homeuoft_djvu.txt), the same edition already cited above
+# for Book IX -- used in place of Perseus's own page directly, since
+# Perseus loads the English translation via client-side JS the fetch
+# tooling available here can't execute. Two clear OCR artifacts corrected
+# ("Tet: me" -> "Tell me", "own felk" -> "own folk"); everything else
+# copied byte-for-byte, including hyphenated line-break rejoins
+# ("com-\\nrades" -> "comrades", "Ca-\\nlypso" -> "Calypso").
+_MURRAY_I = """\
+## Murray
+
+### Odyss. I.1–5
+
+Tell me, O Muse, of the man of many devices, who wandered full many ways after he had sacked the sacred citadel of Troy. Many were the men whose cities he saw and whose mind he learned, aye, and many the woes he suffered in his heart upon the sea, seeking to win his own life and the return of his comrades.
+
+### Odyss. I.6–10
+
+Yet even so he saved not his comrades, though he desired it sore, for through their own blind folly they perished—fools, who devoured the kine of Helios Hyperion; but he took from them the day of their returning. Of these things, goddess, daughter of Zeus, beginning where thou wilt, tell thou even unto us.
+
+### Odyss. I.11–15
+
+Now all the rest, as many as had escaped sheer destruction, were at home, safe from both war and sea, but Odysseus alone, filled with longing for his return and for his wife, did the queenly nymph Calypso, that bright goddess, keep back in her hollow caves, yearning that he should be her husband.
+
+### Odyss. I.16–21
+
+But when, as the seasons revolved, the year came in which the gods had ordained that he should return home to Ithaca, not even there was he free from toils, even among his own folk. And all the gods pitied him save Poseidon; but he continued to rage unceasingly against godlike Odysseus until at length he reached his own land.
+
+"""
+
 
 # Cited identically by all four populate_*() functions below -- the same
 # Greek source-text edition underlies every language's translations/
@@ -139,7 +230,9 @@ def _strip_header(section: str) -> str:
 
 
 def populate_translations_en() -> None:
-    body = _POPE_SECTION.rstrip("\n") + "\n\n---\n\n" + _MURRAY_SECTION.rstrip("\n") + "\n"
+    pope = _POPE_I.rstrip("\n") + "\n\n" + _strip_header(_POPE_IX)
+    murray = _MURRAY_IX.rstrip("\n") + "\n\n" + _strip_header(_MURRAY_I)
+    body = pope + "\n\n---\n\n" + murray + "\n"
     sources = [
         Source(id="tr-pope", resource="https://en.wikisource.org/wiki/Odyssey_(Pope)",
                title="The Odyssey of Homer", author="Alexander Pope"),
@@ -332,10 +425,101 @@ _VERESAEV_IX = """\
 """
 
 
+# Copied verbatim via:
+#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#     show <pre-Task-3 commit>:ancient_greek/odyssey/2026_06_01/translations_ru.md
+# -- the "## подстрочник" section only (up to, not including, "## Жуковский").
+# No <!-- --> citation line in the source -- this is not attributed to a
+# named translator/publication the way Жуковский/Вересаев are; it's a
+# literal, word-order-preserving rendering (created_with_eee's own
+# notebook code has always described it via a hardcoded UI string, never
+# via TRANS_DESC). No `sources` entry added for it below for that reason,
+# matching how it carried no citation in its original per-lesson home.
+_PODSTROCHNIK_I = """\
+## подстрочник
+
+### Odyss. I.1–5
+
+О муже мне расскажи, муза, о многостранном, который весьма много
+скитался, когда Трои святую твердыню разрушил.
+Многих людей он видел города и ум узнал,
+много также он и на море претерпел страданий в своем духе,
+борясь и за свою душу, и за возвращение товарищей.
+
+### Odyss. I.6–10
+
+но и своих товарищей он не спас, хотя и стремился,
+от их ведь собственных нечестий они погибли,
+неразумные, которые быков Гипериона Гелиоса
+пожрали, и был у них отнят возвратный день.
+Вот об этом откуда-нибудь, богиня, дочь Зевса, расскажи и нам.
+
+### Odyss. I.11–15
+
+Когда другие все, которые избежали стремительной гибели,
+дома были, войны избежав и моря,
+его одного, возвращения лишенного и жены,
+нимфа владычица держала Калипсо, славная среди богинь,
+в пещерах глубоких, страстно желая, чтобы мужем он был.
+
+### Odyss. I.16–21
+
+но когда уже год пришел, по обращении времен,
+в который ему назначили боги домой вернуться
+на Итаку, и даже там он не избег испытаний,
+и со своими друзьями. А боги все смилостивились,
+кроме Посейдона: он беспрерывно гневался
+на богоравного Одиссея, пока он не прибыл на свою землю.
+
+"""
+
+# Copied verbatim via:
+#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#     show <pre-Task-3 commit>:ancient_greek/odyssey/2026_06_15/translations_ru.md
+# -- the "## подстрочник" section only (up to, not including, "## Жуковский").
+_PODSTROCHNIK_IX = """\
+## подстрочник
+
+### Odyss. IX.19–24
+
+Я - Одиссей Лаэртид, который всем хитростями
+людям интересен (всех людей умы занимает), и моя слава до неба идет.
+а живу я на Итаке хорошо различимой, а на ней гора
+Нерит, листвы колебатель, прекраснозаметный, а кругом острова
+многие обретаются, очень близко друг к другу,
+Дулихий и Сама, и лесистый Закинф.
+
+### Odyss. IX.25–28
+
+и она сама, невысокая, самая крайняя в море лежит
+к западу, а они вдалеке к заре и солнцу,
+скалистая, но добрая и юных питающая: нет, я точно не
+этой земли могу что-то другое слаще увидеть.
+
+### Odyss. IX.29–33
+
+поистине меня там удерживала Калипсо, божественная из богинь,
+в пещерах выдолбленных, страстно желая, чтоб был я супругом,
+так же точно Кирка удерживала в залах,
+Ээянка коварная, страстно желая, чтоб был я супругом,
+но мой никогда дух в груди не убеждали.
+
+### Odyss. IX.34–38
+
+потому что ничто не слаще собственной родины и родителей
+бывает, если даже и кто-то вдалеке богатый дом
+в земле чужой населяет, вдали от родителей.
+или ладно, давай тебе и возвращение мое многоскорбное расскажу,
+которое мне Зевс послал, когда я уходил из Трои.
+
+"""
+
+
 def populate_translations_ru() -> None:
+    podstrochnik = _PODSTROCHNIK_I.rstrip("\n") + "\n\n" + _strip_header(_PODSTROCHNIK_IX)
     zhukovsky = _ZHUKOVSKY_I.rstrip("\n") + "\n\n" + _strip_header(_ZHUKOVSKY_IX)
     veresaev = _VERESAEV_I.rstrip("\n") + "\n\n" + _strip_header(_VERESAEV_IX)
-    body = zhukovsky + "\n\n---\n\n" + veresaev + "\n"
+    body = podstrochnik + "\n\n---\n\n" + zhukovsky + "\n\n---\n\n" + veresaev + "\n"
     sources = [
         Source(id="tr-zhukovsky1849", resource="https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)",
                title="Одиссея", author="В. А. Жуковский"),
@@ -345,7 +529,7 @@ def populate_translations_ru() -> None:
     ]
     concept = build(
         work="Odyssey", passage="I.1-21, IX.19-38", language="ru",
-        translators=["Жуковский", "Вересаев"],
+        translators=["подстрочник", "Жуковский", "Вересаев"],
         body=body, sources=sources,
     )
     write(concept, _TEXTS_DIR / "translations_ru.md")
