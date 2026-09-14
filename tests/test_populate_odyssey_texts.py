@@ -13,8 +13,6 @@ _GENERATED_FILES = [
     "translations_en.md",
     "translations_ru.md",
     "translations_el.md",
-    "interlinear_en.md",
-    "interlinear_el.md",
 ]
 
 
@@ -48,7 +46,6 @@ def test_populate_all_matches_committed_content(tmp_path, monkeypatch):
     script.populate_translations_en()
     script.populate_translations_ru()
     script.populate_translations_el()
-    script.populate_interlinear()
 
     for filename in _GENERATED_FILES:
         generated_fm, generated_body = _split(tmp_path / filename)
@@ -123,6 +120,40 @@ def test_pope_and_murray_each_cover_both_books():
     assert set(stanzas["Pope"]) == expected_refs
     assert len(stanzas["Murray"]) == 8
     assert set(stanzas["Murray"]) == expected_refs
+
+
+def test_interlinear_en_and_el_each_cover_both_books():
+    """interlinear_en/interlinear_el are folded into translations_{en,el}.md
+    as ordinary ## sections (not separate files) -- parse_stanza_translations
+    handles them like any other translator; I.1-21 was the gap originally
+    (only IX.19-38 existed, authored fresh 2026-09-14 to close it), the
+    same class this test file already guards for Pope/Murray/подстрочник."""
+    expected_refs = {"I.1–5", "I.6–10", "I.11–15", "I.16–21", "IX.19–24", "IX.25–28", "IX.29–33", "IX.34–38"}
+
+    interlinear_en = script._INTERLINEAR_EN_I.rstrip("\n") + "\n\n" + script._strip_header(script._INTERLINEAR_EN_IX)
+    en_stanzas, _ = eee.parse_stanza_translations(interlinear_en, ref_prefix="### Odyss. ")
+    assert set(en_stanzas["interlinear_en"]) == expected_refs
+
+    interlinear_el = script._INTERLINEAR_EL_I.rstrip("\n") + "\n\n" + script._strip_header(script._INTERLINEAR_EL_IX)
+    el_stanzas, _ = eee.parse_stanza_translations(interlinear_el, ref_prefix="### Odyss. ")
+    assert set(el_stanzas["interlinear_el"]) == expected_refs
+
+
+def test_interlinear_grc_comment_strips_to_plain_gloss():
+    """The Greek source line an interlinear translator echoes as
+    <!-- grc: ... --> must actually strip clean via GreekUtils.
+    strip_comment_lines(), leaving only the gloss -- the whole reason the
+    marker moved from bold (**...**) to a comment: any translator's text
+    can carry one without a dedicated parser."""
+    interlinear_en = script._INTERLINEAR_EN_I.rstrip("\n") + "\n\n" + script._strip_header(script._INTERLINEAR_EN_IX)
+    en_stanzas, _ = eee.parse_stanza_translations(interlinear_en, ref_prefix="### Odyss. ")
+
+    raw = en_stanzas["interlinear_en"]["I.1–5"]
+    assert "<!-- grc:" in raw  # sanity: the raw parse still has the comment
+
+    cleaned = eee.strip_comment_lines(raw)
+    assert "<!-- grc:" not in cleaned
+    assert "man to-me tell" in cleaned
 
 
 def test_podstrochnik_present_and_covers_both_books():

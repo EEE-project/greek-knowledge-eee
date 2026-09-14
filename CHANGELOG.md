@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-09-14
+
+- **Authored I.1-21 interlinear content (EN + EL), closing the gap
+  `interlinear_{en,el}.md` always had for that book** (they only ever
+  covered `IX.19-38`; the old I.1-21 content on the abandoned branch was
+  judged unfit and never ported, see 2026-09-08 below).
+- **Folded `interlinear_en`/`interlinear_el` into `translations_en.md`/
+  `translations_el.md` as ordinary `## ` sections, and deleted
+  `interlinear_en.md`/`interlinear_el.md`.** A downstream consumer found
+  that keeping interlinear content in separate files needed its own
+  parser (`parse_stanza_interlinear`, since removed from `eee-project`)
+  and a same-key collision risk when merged into a notebook's shared
+  translations dict — the same class of bug `подстрочник` already had.
+  Each Greek source line is now echoed as an `<!-- grc: ... -->` comment
+  instead of bold markup, parsed by the existing `parse_stanza_translations()`
+  with no special-casing; a generic `eee_project.strip_comment_lines()`
+  drops the annotation afterward, for any translator, not just interlinear.
+- Bumped to 0.4.0 (`pyproject.toml`) -- minor, a real corpus-shape change
+  (fewer generated files, new section headers) even though the git-visible
+  translated content itself was already correct. Full suite (against real
+  `eee-project==1.15.0` from PyPI, not a local override): 346 passed,
+  1 skipped, 7 deselected; `ruff check` clean.
+
 ## 2026-09-09 (2)
 
 - **Fixed inconsistent line-wrapping in Murray's Book I stanzas, found by visual inspection of the live-rendered notebook.** `_MURRAY_I` (added earlier today) shipped each stanza as one dense, unbroken line, while `_MURRAY_IX` (already in the corpus) breaks at clause boundaries every ~10-15 words -- both under the same `## Murray` header, so the two books rendered with visibly different rhythm in the same dropdown option. Re-flowed Book I to match Book IX's established style. Word-for-word identical to before (verified via `eee.parse_stanza_translations()` on both versions, stanza by stanza) -- only where the line breaks fall changed, not the translation itself. (The source page's own line breaks weren't a usable reference either way -- they include mid-word print hyphenation like "com-\nrades" that's an artifact of the printed page's column width, not part of the prose.)

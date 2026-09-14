@@ -258,7 +258,8 @@ def _strip_header(section: str) -> str:
 def populate_translations_en() -> None:
     pope = _POPE_I.rstrip("\n") + "\n\n" + _strip_header(_POPE_IX)
     murray = _MURRAY_IX.rstrip("\n") + "\n\n" + _strip_header(_MURRAY_I)
-    body = pope + "\n\n---\n\n" + murray + "\n"
+    interlinear = _INTERLINEAR_EN_I.rstrip("\n") + "\n\n" + _strip_header(_INTERLINEAR_EN_IX)
+    body = pope + "\n\n---\n\n" + murray + "\n\n---\n\n" + interlinear + "\n"
     sources = [
         Source(id="tr-pope", resource="https://en.wikisource.org/wiki/Odyssey_(Pope)",
                title="The Odyssey of Homer", author="Alexander Pope"),
@@ -268,7 +269,7 @@ def populate_translations_en() -> None:
     ]
     concept = build(
         work="Odyssey", passage="I.1-21, IX.19-38", language="en",
-        translators=["Pope", "Murray"], body=body, sources=sources,
+        translators=["Pope", "Murray", "interlinear_en"], body=body, sources=sources,
     )
     write(concept, _TEXTS_DIR / "translations_en.md")
 
@@ -653,7 +654,9 @@ _POLYLAS_IX = """\
 
 
 def populate_translations_el() -> None:
-    body = _POLYLAS_I.rstrip("\n") + "\n\n" + _strip_header(_POLYLAS_IX) + "\n"
+    polylas = _POLYLAS_I.rstrip("\n") + "\n\n" + _strip_header(_POLYLAS_IX)
+    interlinear = _INTERLINEAR_EL_I.rstrip("\n") + "\n\n" + _strip_header(_INTERLINEAR_EL_IX)
+    body = polylas + "\n\n---\n\n" + interlinear + "\n"
     sources = [
         Source(id="tr-polylas1875", resource="https://www.openbook.gr/omirou-odysseia-metafrasi/",
                title="Ομήρου Οδύσσεια, Τόμος Α΄", author="Ιάκωβος Πολυλάς"),
@@ -663,183 +666,329 @@ def populate_translations_el() -> None:
     ]
     concept = build(
         work="Odyssey", passage="I.1-21, IX.19-38", language="el",
-        translators=["Πολυλάς"], body=body, sources=sources,
+        translators=["Πολυλάς", "interlinear_el"], body=body, sources=sources,
     )
     write(concept, _TEXTS_DIR / "translations_el.md")
 
 
-# Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
-#     show translations:odyssey/2026_06_15/interlenear_en.md
-# -- entire file, verbatim (word-by-word EN gloss for IX.19-38 only;
-# no *usable* interlinear content exists for I.1-21 on the abandoned
-# branch -- content by that name exists there too, but was judged unfit
-# for this corpus and deliberately not ported; see CHANGELOG.md).
-_INTERLINEAR_EN = """\
+# Authored fresh 2026-09-14 (not ported -- the abandoned branch's I.1-21
+# "interlinear" content was judged unfit, see the 2026-09-08 CHANGELOG
+# entry below and the IX.19-38 constant's own comment for why). Word-by-
+# word gloss for I.1-21, matching the established format and hyphenation
+# convention of the already-verified IX.19-38 interlinear content.
+#
+# "interlinear" is folded into translations_en.md as its own ## section
+# (like every other translator) rather than a separate file -- the only
+# per-stanza wrinkle is that each Greek source line is echoed as an
+# HTML-comment annotation (<!-- grc: ... -->, stripped by GreekUtils.
+# strip_comment_lines()) rather than appearing as visible text, so the
+# gloss line that follows it reads as the section's actual "translation".
+_INTERLINEAR_EN_I = """\
+## interlinear_en
+
+### Odyss. I.1–5
+
+<!-- grc: Ἄνδρα μοι ἔννεπε, μοῦσα, πολύτροπον, ὃς μάλα πολλὰ -->
+man to-me tell, Muse, much-wandering, who very much
+
+<!-- grc: πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν· -->
+wandered, when of-Troy sacred citadel he-sacked;
+
+<!-- grc: πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα καὶ νόον ἔγνω, -->
+of-many and of-men he-saw cities and mind he-learned,
+
+<!-- grc: πολλὰ δ' ὅ γ' ἐν πόντῳ πάθεν ἄλγεα ὃν κατὰ θυμόν, -->
+many-things and he indeed in sea he-suffered pains in his-own heart,
+
+<!-- grc: ἀρνύμενος ἥν τε ψυχὴν καὶ νόστον ἑταίρων. -->
+striving-to-win his-own life and return of-comrades.
+
+### Odyss. I.6–10
+
+<!-- grc: ἀλλ' οὐδ' ὣς ἑτάρους ἐρρύσατο, ἱέμενός περ· -->
+but not-even so comrades he-saved, eager though;
+
+<!-- grc: αὐτῶν γὰρ σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο, -->
+of-themselves for by-their-own recklessness they-perished,
+
+<!-- grc: νήπιοι, οἳ κατὰ βοῦς Ὑπερίονος Ἠελίοιο -->
+fools, who up cattle of-Hyperion Helios
+
+<!-- grc: ἤσθιον· αὐτὰρ ὁ τοῖσιν ἀφείλετο νόστιμον ἦμαρ. -->
+were-eating; but he from-them took-away the-day of-return.
+
+<!-- grc: τῶν ἁμόθεν γε, θεά, θύγατερ Διός, εἰπὲ καὶ ἡμῖν. -->
+of-these from-some-point indeed, goddess, daughter of-Zeus, tell also to-us.
+
+### Odyss. I.11–15
+
+<!-- grc: Ἔνθ' ἄλλοι μὲν πάντες, ὅσοι φύγον αἰπὺν ὄλεθρον, -->
+then others all, as-many-as escaped sheer destruction,
+
+<!-- grc: οἴκοι ἔσαν, πόλεμόν τε πεφευγότες ἠδὲ θάλασσαν· -->
+at-home were, war and having-escaped and sea;
+
+<!-- grc: τὸν δ' οἶον νόστου κεχρημένον ἠδὲ γυναικὸς -->
+him but alone of-return longing and of-wife
+
+<!-- grc: νύμφη πότνι' ἔρυκε Καλυψὼ δῖα θεάων -->
+nymph lady was-holding, Calypso, divine of-goddesses,
+
+<!-- grc: ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι. -->
+in caves hollow, longing husband to-be.
+
+### Odyss. I.16–21
+
+<!-- grc: ἀλλ' ὅτε δὴ ἔτος ἦλθε περιπλομένων ἐνιαυτῶν, -->
+but when indeed the-year came, the-seasons revolving,
+
+<!-- grc: τῷ οἱ ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι -->
+in-which for-him ordained the-gods homeward to-return,
+
+<!-- grc: εἰς Ἰθάκην, οὐδ' ἔνθα πεφυγμένος ἦεν ἀέθλων -->
+to Ithaca, not-even there escaped was he from-trials
+
+<!-- grc: καὶ μετὰ οἷσι φίλοισι. θεοὶ δ' ἐλέαιρον ἅπαντες -->
+even among his-own friends. the-gods and pitied all,
+
+<!-- grc: νόσφι Ποσειδάωνος· ὁ δ' ἀσπερχὲς μενέαινεν -->
+except Poseidon; he but ceaselessly raged
+
+<!-- grc: ἀντιθέῳ Ὀδυσῆι πάρος ἥν γαῖαν ἱκέσθαι. -->
+at-godlike Odysseus, before his-own land he-reached.
+
+"""
+
+# IX.19-38 half of the same interlinear_en section -- originally its own
+# file (interlinear_en.md, 2026-09-08/09), refit into the new <!-- grc: -->
+# marker (was bold **Greek line**) and merged here alongside I.1-21 above,
+# same _strip_header() pattern as every other translator's _I/_IX split.
+_INTERLINEAR_EN_IX = """\
+## interlinear_en
+
 ### Odyss. IX.19–24
 
-**εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν**
+<!-- grc: εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν -->
 I-am Odysseus Laertiades, who with-all wiles
 
-**ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει.**
+<!-- grc: ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει. -->
 among-men am-known, and my fame heaven reaches.
 
-**ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ**
+<!-- grc: ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ -->
 I-dwell in Ithaca sun-bright; in it a mountain there
 
-**Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι**
+<!-- grc: Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι -->
 Neritos leaf-quivering, conspicuous; around it islands
 
-**πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι,**
+<!-- grc: πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι, -->
 many dwell very close to-one-another,
 
-**Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος.**
+<!-- grc: Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος. -->
 Doulichion and Same and wooded Zakynthos.
 
 ### Odyss. IX.25–28
 
-**αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται**
+<!-- grc: αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται -->
 itself but low, most-remote in the sea lies
 
-**πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε,**
+<!-- grc: πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε, -->
 toward the west; those further toward dawn and sun,
 
-**τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε**
+<!-- grc: τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε -->
 rugged, yet good nurse-of-youth; truly I at-least
 
-**ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι.**
+<!-- grc: ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι. -->
 of-my-own land can sweeter other see.
 
 ### Odyss. IX.29–33
 
-**ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων,**
+<!-- grc: ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων, -->
 truly indeed me there held Kalypso, glorious of-goddesses,
 
-**ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι·**
+<!-- grc: ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι· -->
 in caves hollow, longing husband to-be;
 
-**ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν**
+<!-- grc: ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν -->
 so likewise Kirke kept-back in her halls
 
-**Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι·**
+<!-- grc: Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι· -->
 Aiaian crafty, longing husband to-be;
 
-**ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον.**
+<!-- grc: ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον. -->
 but my heart never in my breast could-they-persuade.
 
 ### Odyss. IX.34–38
 
-**ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων**
+<!-- grc: ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων -->
 so nothing sweeter than one's-own homeland and parents
 
-**γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον**
+<!-- grc: γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον -->
 is, even if someone afar a rich house
 
-**γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων.**
+<!-- grc: γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων. -->
 in-land in foreign dwells far-from parents.
 
-**εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω,**
+<!-- grc: εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω, -->
 but come let-me-tell you my return full-of-cares,
 
-**ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι.**
+<!-- grc: ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι. -->
 which to-me Zeus sent from Troy departing.
 """
 
-# Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
-#     show translations:odyssey/2026_06_15/interlenear_el.md
-# -- entire file, verbatim (word-by-word EL gloss for IX.19-38 only;
-# no *usable* interlinear content exists for I.1-21 on the abandoned
-# branch -- content by that name exists there too, but was judged unfit
-# for this corpus and deliberately not ported; see CHANGELOG.md).
-_INTERLINEAR_EL = """\
+# Authored fresh 2026-09-14, same rationale/convention as _INTERLINEAR_EN_I
+# above (I.1-21, not ported from the abandoned branch's unfit content).
+_INTERLINEAR_EL_I = """\
+## interlinear_el
+
+### Odyss. I.1–5
+
+<!-- grc: Ἄνδρα μοι ἔννεπε, μοῦσα, πολύτροπον, ὃς μάλα πολλὰ -->
+Τον άντρα σε μένα πες, μούσα, τον πολύτροπο, που πάρα πολύ
+
+<!-- grc: πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν· -->
+περιπλανήθηκε, αφού της Τροίας το ιερό κάστρο κατέστρεψε·
+
+<!-- grc: πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα καὶ νόον ἔγνω, -->
+πολλών και ανθρώπων είδε τις πόλεις και τον νου γνώρισε,
+
+<!-- grc: πολλὰ δ' ὅ γ' ἐν πόντῳ πάθεν ἄλγεα ὃν κατὰ θυμόν, -->
+πολλά και αυτός στη θάλασσα υπέφερε πόνους στη δική του καρδιά,
+
+<!-- grc: ἀρνύμενος ἥν τε ψυχὴν καὶ νόστον ἑταίρων. -->
+αγωνιζόμενος για τη δική του ζωή και την επιστροφή των συντρόφων.
+
+### Odyss. I.6–10
+
+<!-- grc: ἀλλ' οὐδ' ὣς ἑτάρους ἐρρύσατο, ἱέμενός περ· -->
+αλλά ούτε έτσι τους συντρόφους έσωσε, αν και το επιθυμούσε·
+
+<!-- grc: αὐτῶν γὰρ σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο, -->
+οι ίδιοι γιατί από τη δική τους αλαζονεία χάθηκαν,
+
+<!-- grc: νήπιοι, οἳ κατὰ βοῦς Ὑπερίονος Ἠελίοιο -->
+ανόητοι, που τα βόδια του Υπερίωνα Ήλιου
+
+<!-- grc: ἤσθιον· αὐτὰρ ὁ τοῖσιν ἀφείλετο νόστιμον ἦμαρ. -->
+έτρωγαν· αλλά αυτός από αυτούς αφαίρεσε την ημέρα της επιστροφής.
+
+<!-- grc: τῶν ἁμόθεν γε, θεά, θύγατερ Διός, εἰπὲ καὶ ἡμῖν. -->
+γι' αυτά από κάπου, θεά, κόρη του Δία, πες και σε εμάς.
+
+### Odyss. I.11–15
+
+<!-- grc: Ἔνθ' ἄλλοι μὲν πάντες, ὅσοι φύγον αἰπὺν ὄλεθρον, -->
+τότε οι άλλοι όλοι, όσοι απέφυγαν τον απότομο όλεθρο,
+
+<!-- grc: οἴκοι ἔσαν, πόλεμόν τε πεφευγότες ἠδὲ θάλασσαν· -->
+στο σπίτι ήταν, τον πόλεμο και έχοντας γλιτώσει και τη θάλασσα·
+
+<!-- grc: τὸν δ' οἶον νόστου κεχρημένον ἠδὲ γυναικὸς -->
+αυτόν όμως μόνο, της επιστροφής έχοντας ανάγκη και της γυναίκας,
+
+<!-- grc: νύμφη πότνι' ἔρυκε Καλυψὼ δῖα θεάων -->
+η νύμφη η κυρά τον κρατούσε, η Καλυψώ, θεϊκή ανάμεσα στις θεές,
+
+<!-- grc: ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι. -->
+σε σπηλιές βαθιές, λαχταρώντας σύζυγος να γίνει.
+
+### Odyss. I.16–21
+
+<!-- grc: ἀλλ' ὅτε δὴ ἔτος ἦλθε περιπλομένων ἐνιαυτῶν, -->
+αλλά όταν πια το έτος ήρθε, καθώς κύλησαν οι χρόνοι,
+
+<!-- grc: τῷ οἱ ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι -->
+στο οποίο σε αυτόν όρισαν οι θεοί προς το σπίτι να επιστρέψει,
+
+<!-- grc: εἰς Ἰθάκην, οὐδ' ἔνθα πεφυγμένος ἦεν ἀέθλων -->
+στην Ιθάκη, ούτε εκεί απαλλαγμένος ήταν από άθλους
+
+<!-- grc: καὶ μετὰ οἷσι φίλοισι. θεοὶ δ' ἐλέαιρον ἅπαντες -->
+ακόμη και ανάμεσα στους δικούς του φίλους. οι θεοί και λυπήθηκαν όλοι,
+
+<!-- grc: νόσφι Ποσειδάωνος· ὁ δ' ἀσπερχὲς μενέαινεν -->
+εκτός από τον Ποσειδώνα· αυτός όμως ασταμάτητα οργιζόταν
+
+<!-- grc: ἀντιθέῳ Ὀδυσῆι πάρος ἥν γαῖαν ἱκέσθαι. -->
+εναντίον του ισόθεου Οδυσσέα, πριν στη δική του γη φτάσει.
+
+"""
+
+# IX.19-38 half of the same interlinear_el section -- see
+# _INTERLINEAR_EN_IX's own comment for the format/history explanation.
+_INTERLINEAR_EL_IX = """\
+## interlinear_el
+
 ### Odyss. IX.19–24
 
-**εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν**
+<!-- grc: εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν -->
 Είμαι ο Οδυσσέας Λαερτιάδης, που με όλα τα τεχνάσματα
 
-**ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει.**
+<!-- grc: ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει. -->
 στους ανθρώπους είμαι γνωστός, και η δόξα μου τον ουρανό φτάνει.
 
-**ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ**
+<!-- grc: ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ -->
 Κατοικώ στην Ιθάκη την ηλιόλουστη· σ' αυτή βουνό
 
-**Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι**
+<!-- grc: Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι -->
 το Νήριτο φυλλοσείστης, ξακουστό· και γύρω νησιά
 
-**πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι,**
+<!-- grc: πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι, -->
 πολλά κατοικούν, πολύ κοντά το ένα στ' άλλο,
 
-**Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος.**
+<!-- grc: Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος. -->
 Δουλίχι και Σάμη και η δασώδης Ζάκυνθος.
 
 ### Odyss. IX.25–28
 
-**αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται**
+<!-- grc: αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται -->
 Αυτή δε χαμηλή, η πιο απόμακρη στη θάλασσα κείται,
 
-**πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε,**
+<!-- grc: πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε, -->
 προς τη δύση, εκείνες δε μακριά προς αυγή και ήλιο,
 
-**τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε**
+<!-- grc: τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε -->
 τραχεία, μα καλή τροφός νέων· κι εγώ βέβαια
 
-**ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι.**
+<!-- grc: ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι. -->
 της γης μου δεν μπορώ γλυκύτερο άλλο να δω.
 
 ### Odyss. IX.29–33
 
-**ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων,**
+<!-- grc: ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων, -->
 Αλήθεια εμένα εκεί κρατούσε η Καλυψώ, θεϊκή θεά,
 
-**ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι·**
+<!-- grc: ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι· -->
 σε σπήλαια βαθιά, λαχταρώντας σύζυγος να γίνει·
 
-**ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν**
+<!-- grc: ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν -->
 έτσι κι η Κίρκη με κρατούσε στα μέγαρά της
 
-**Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι·**
+<!-- grc: Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι· -->
 η Αιαία η δολερή, λαχταρώντας σύζυγος να γίνει·
 
-**ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον.**
+<!-- grc: ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον. -->
 μα ποτέ την ψυχή μου στο στήθος δεν έπειθαν.
 
 ### Odyss. IX.34–38
 
-**ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων**
+<!-- grc: ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων -->
 Έτσι τίποτα γλυκύτερο από την πατρίδα κι από τους γονείς
 
-**γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον**
+<!-- grc: γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον -->
 δεν γίνεται, έστω κι αν κάποιος μακριά πλούσιο σπίτι
 
-**γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων.**
+<!-- grc: γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων. -->
 σε ξένη γη κατοικεί μακριά από γονείς.
 
-**εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω,**
+<!-- grc: εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω, -->
 Αλλά άγε, θα σου πω και τον νόστο μου τον πολύπικρο,
 
-**ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι.**
+<!-- grc: ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι. -->
 που ο Ζευς μου ετοίμασε αφού έφυγα από Τροία.
 """
-
-
-def populate_interlinear() -> None:
-    sources = [_GRC_MURRAY1919_SOURCE]
-    concept_en = build(
-        work="Odyssey", passage="IX.19-38", language="en",
-        translators=["interlinear"], body=_INTERLINEAR_EN, sources=sources,
-    )
-    write(concept_en, _TEXTS_DIR / "interlinear_en.md")
-
-    concept_el = build(
-        work="Odyssey", passage="IX.19-38", language="el",
-        translators=["interlinear"], body=_INTERLINEAR_EL, sources=sources,
-    )
-    write(concept_el, _TEXTS_DIR / "interlinear_el.md")
 
 
 if __name__ == "__main__":
     populate_translations_en()
     populate_translations_ru()
     populate_translations_el()
-    populate_interlinear()

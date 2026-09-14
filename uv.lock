@@ -212,7 +212,7 @@ wheels = [
 
 [[package]]
 name = "eee-project"
-version = "1.6.0"
+version = "1.15.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anywidget" },
@@ -220,9 +220,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "tomlkit" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0f/fa/5a5420d5028396e37be674483013bbd6daa072d3d014e4eacb9275514fae/eee_project-1.6.0.tar.gz", hash = "sha256:fc0c9239987c5b56993f85c00603b936f677c7dad187776ec54ecc79e78889a3", size = 1754536, upload-time = "2026-08-12T14:54:18.736Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/40/69/323564f32df39b30e1a28879ca67911aacf8eb618bec4b06a64827b8ca0e/eee_project-1.15.0.tar.gz", hash = "sha256:bad642e3e35f00b7bd3b5264c325531fac01bd6257bbf25f677a7b5f09cbd10a", size = 1849452, upload-time = "2026-09-14T16:49:18.309Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d5/7e/38629bd27367a49e2328da83105cd44fe25168a7547a01f894cab2d00737/eee_project-1.6.0-py3-none-any.whl", hash = "sha256:12af1546c6851a24f39f15ee8cd0841cd89d0230720058e6e7b6d032a0358828", size = 1553556, upload-time = "2026-08-12T14:54:16.779Z" },
+    { url = "https://files.pythonhosted.org/packages/43/70/44e452ebf25843abb83c5f30d27d5c2e64d2feec86c3da773ae9d99c6c61/eee_project-1.15.0-py3-none-any.whl", hash = "sha256:cdd88371054bb8510a5c7e2b38774a792ae9a41a89630b1aa0d7c859ece1e54e", size = 1582488, upload-time = "2026-09-14T16:49:16.551Z" },
 ]
 
 [[package]]
@@ -282,7 +282,7 @@ requires-dist = [
     { name = "ancient-greek-backend-eee", specifier = ">=2.0.0" },
     { name = "beta-code", specifier = ">=1.1.1" },
     { name = "defusedxml", specifier = ">=0.7.1" },
-    { name = "eee-project", specifier = "==1.6.0" },
+    { name = "eee-project", specifier = "==1.15.0" },
     { name = "llm-backend-eee", git = "https://codeberg.org/EEE-project/llm-backend-eee?tag=v0.2.1" },
     { name = "modern-greek-backend-eee", specifier = ">=1.0.0" },
     { name = "modern-greek-inflexion-eee", specifier = ">=2.1.10" },

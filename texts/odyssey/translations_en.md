@@ -1,7 +1,7 @@
 ---
 type: Literary Translation
 title: Odyssey (I.1-21, IX.19-38) — en translations
-description: 'en translations of Odyssey I.1-21, IX.19-38: Pope, Murray.'
+description: 'en translations of Odyssey I.1-21, IX.19-38: Pope, Murray, interlinear_en.'
 tags: []
 level: []
 sources:
@@ -19,13 +19,14 @@ sources:
   author: ed. A. T. Murray
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-09T07:40:44.512987+00:00'
+  at: '2026-09-14T11:10:34.214068+00:00'
 work: Odyssey
 passage: I.1-21, IX.19-38
 language: en
 translators:
 - Pope
 - Murray
+- interlinear_en
 verified: []
 status: draft
 ---
@@ -182,3 +183,146 @@ not even there was he free from toils, even among his own folk.
 And all the gods pitied him save Poseidon;
 but he continued to rage unceasingly against godlike Odysseus
 until at length he reached his own land.
+
+---
+
+## interlinear_en
+
+### Odyss. I.1–5
+
+<!-- grc: Ἄνδρα μοι ἔννεπε, μοῦσα, πολύτροπον, ὃς μάλα πολλὰ -->
+man to-me tell, Muse, much-wandering, who very much
+
+<!-- grc: πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν· -->
+wandered, when of-Troy sacred citadel he-sacked;
+
+<!-- grc: πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα καὶ νόον ἔγνω, -->
+of-many and of-men he-saw cities and mind he-learned,
+
+<!-- grc: πολλὰ δ' ὅ γ' ἐν πόντῳ πάθεν ἄλγεα ὃν κατὰ θυμόν, -->
+many-things and he indeed in sea he-suffered pains in his-own heart,
+
+<!-- grc: ἀρνύμενος ἥν τε ψυχὴν καὶ νόστον ἑταίρων. -->
+striving-to-win his-own life and return of-comrades.
+
+### Odyss. I.6–10
+
+<!-- grc: ἀλλ' οὐδ' ὣς ἑτάρους ἐρρύσατο, ἱέμενός περ· -->
+but not-even so comrades he-saved, eager though;
+
+<!-- grc: αὐτῶν γὰρ σφετέρῃσιν ἀτασθαλίῃσιν ὄλοντο, -->
+of-themselves for by-their-own recklessness they-perished,
+
+<!-- grc: νήπιοι, οἳ κατὰ βοῦς Ὑπερίονος Ἠελίοιο -->
+fools, who up cattle of-Hyperion Helios
+
+<!-- grc: ἤσθιον· αὐτὰρ ὁ τοῖσιν ἀφείλετο νόστιμον ἦμαρ. -->
+were-eating; but he from-them took-away the-day of-return.
+
+<!-- grc: τῶν ἁμόθεν γε, θεά, θύγατερ Διός, εἰπὲ καὶ ἡμῖν. -->
+of-these from-some-point indeed, goddess, daughter of-Zeus, tell also to-us.
+
+### Odyss. I.11–15
+
+<!-- grc: Ἔνθ' ἄλλοι μὲν πάντες, ὅσοι φύγον αἰπὺν ὄλεθρον, -->
+then others all, as-many-as escaped sheer destruction,
+
+<!-- grc: οἴκοι ἔσαν, πόλεμόν τε πεφευγότες ἠδὲ θάλασσαν· -->
+at-home were, war and having-escaped and sea;
+
+<!-- grc: τὸν δ' οἶον νόστου κεχρημένον ἠδὲ γυναικὸς -->
+him but alone of-return longing and of-wife
+
+<!-- grc: νύμφη πότνι' ἔρυκε Καλυψὼ δῖα θεάων -->
+nymph lady was-holding, Calypso, divine of-goddesses,
+
+<!-- grc: ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι. -->
+in caves hollow, longing husband to-be.
+
+### Odyss. I.16–21
+
+<!-- grc: ἀλλ' ὅτε δὴ ἔτος ἦλθε περιπλομένων ἐνιαυτῶν, -->
+but when indeed the-year came, the-seasons revolving,
+
+<!-- grc: τῷ οἱ ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι -->
+in-which for-him ordained the-gods homeward to-return,
+
+<!-- grc: εἰς Ἰθάκην, οὐδ' ἔνθα πεφυγμένος ἦεν ἀέθλων -->
+to Ithaca, not-even there escaped was he from-trials
+
+<!-- grc: καὶ μετὰ οἷσι φίλοισι. θεοὶ δ' ἐλέαιρον ἅπαντες -->
+even among his-own friends. the-gods and pitied all,
+
+<!-- grc: νόσφι Ποσειδάωνος· ὁ δ' ἀσπερχὲς μενέαινεν -->
+except Poseidon; he but ceaselessly raged
+
+<!-- grc: ἀντιθέῳ Ὀδυσῆι πάρος ἥν γαῖαν ἱκέσθαι. -->
+at-godlike Odysseus, before his-own land he-reached.
+
+### Odyss. IX.19–24
+
+<!-- grc: εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν -->
+I-am Odysseus Laertiades, who with-all wiles
+
+<!-- grc: ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει. -->
+among-men am-known, and my fame heaven reaches.
+
+<!-- grc: ναιετάω δ' Ἰθάκην εὐδείελον· ἐν δ' ὄρος αὐτῇ -->
+I-dwell in Ithaca sun-bright; in it a mountain there
+
+<!-- grc: Νήριτον εἰνοσίφυλλον, ἀριπρεπές· ἀμφὶ δὲ νῆσοι -->
+Neritos leaf-quivering, conspicuous; around it islands
+
+<!-- grc: πολλαὶ ναιετάουσι μάλα σχεδὸν ἀλλήλῃσι, -->
+many dwell very close to-one-another,
+
+<!-- grc: Δουλίχιόν τε Σάμη τε καὶ ὑλήεσσα Ζάκυνθος. -->
+Doulichion and Same and wooded Zakynthos.
+
+### Odyss. IX.25–28
+
+<!-- grc: αὐτὴ δὲ χθαμαλὴ πανυπερτάτη εἰν ἁλὶ κεῖται -->
+itself but low, most-remote in the sea lies
+
+<!-- grc: πρὸς ζόφον, αἱ δέ τ' ἄνευθε πρὸς ἠῶ τ' ἠέλιόν τε, -->
+toward the west; those further toward dawn and sun,
+
+<!-- grc: τρηχεῖ', ἀλλ' ἀγαθὴ κουροτρόφος· οὔ τοι ἐγώ γε -->
+rugged, yet good nurse-of-youth; truly I at-least
+
+<!-- grc: ἧς γαίης δύναμαι γλυκερώτερον ἄλλο ἰδέσθαι. -->
+of-my-own land can sweeter other see.
+
+### Odyss. IX.29–33
+
+<!-- grc: ἦ μέν μ' αὐτόθ' ἔρυκε Καλυψώ, δῖα θεάων, -->
+truly indeed me there held Kalypso, glorious of-goddesses,
+
+<!-- grc: ἐν σπέσσι γλαφυροῖσι, λιλαιομένη πόσιν εἶναι· -->
+in caves hollow, longing husband to-be;
+
+<!-- grc: ὣς δ' αὔτως Κίρκη κατερήτυεν ἐν μεγάροισιν -->
+so likewise Kirke kept-back in her halls
+
+<!-- grc: Αἰαίη δολόεσσα, λιλαιομένη πόσιν εἶναι· -->
+Aiaian crafty, longing husband to-be;
+
+<!-- grc: ἀλλ' ἐμὸν οὔ ποτε θυμὸν ἐνὶ στήθεσσιν ἔπειθον. -->
+but my heart never in my breast could-they-persuade.
+
+### Odyss. IX.34–38
+
+<!-- grc: ὣς οὐδὲν γλύκιον ἧς πατρίδος οὐδὲ τοκήων -->
+so nothing sweeter than one's-own homeland and parents
+
+<!-- grc: γίγνεται, εἴ περ καί τις ἀπόπροθι πίονα οἶκον -->
+is, even if someone afar a rich house
+
+<!-- grc: γαίῃ ἐν ἀλλοδαπῇ ναίει ἀπάνευθε τοκήων. -->
+in-land in foreign dwells far-from parents.
+
+<!-- grc: εἰ δ' ἄγε τοι καὶ νόστον ἐμὸν πολυκηδέ' ἐνίσπω, -->
+but come let-me-tell you my return full-of-cares,
+
+<!-- grc: ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι. -->
+which to-me Zeus sent from Troy departing.
