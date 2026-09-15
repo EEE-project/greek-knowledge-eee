@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from okfbuild import okf
 from okfbuild.okf import ConceptFile, Source
 from okfbuild.query import find_concepts
@@ -136,6 +138,49 @@ def test_find_concepts_unknown_period_value_matches_nothing(tmp_path):
     results = find_concepts(tmp_path, period="not-a-real-period")
 
     assert results == []
+
+
+def test_find_concepts_level_filter_ignores_hand_edited_scalar_level(tmp_path):
+    path = _write(tmp_path, "grammar", "hand-edited-rule", level=["beginner"])
+    text = path.read_text()
+    _, yaml_text, body_text = text.split("---\n", 2)
+    frontmatter = yaml.safe_load(yaml_text)
+    frontmatter["level"] = "beginner"
+    path.write_text("---\n" + yaml.safe_dump(frontmatter, allow_unicode=True, sort_keys=False) + "---\n" + body_text)
+
+    results = find_concepts(tmp_path, level="beg")
+
+    assert results == []
+
+
+def test_find_concepts_dialect_filter_ignores_hand_edited_scalar_dialect(tmp_path):
+    _write(
+        tmp_path, "grammar", "hand-edited-dialect-rule",
+        extra_frontmatter={"periods_spanned": {"from": "attic", "to": "attic"}, "dialect": "attic"},
+    )
+
+    results = find_concepts(tmp_path, dialect="atti")
+
+    assert results == []
+
+
+def test_find_concepts_with_type_filter_only_reads_matching_directory(tmp_path, monkeypatch):
+    _write(tmp_path, "grammar", "rule-a")
+    _write(tmp_path, "culture", "topic-a", type="Cultural Context", extra_frontmatter={"related_words": [], "related_lessons": [], "dialect": []})
+
+    read_dirs = []
+    original_read = okf.read
+
+    def spy_read(path):
+        read_dirs.append(path.parent.name)
+        return original_read(path)
+
+    monkeypatch.setattr(okf, "read", spy_read)
+
+    results = find_concepts(tmp_path, type="Grammatical Rule")
+
+    assert read_dirs == ["grammar"]
+    assert [c.title for _, c in results] == ["rule-a"]
 
 
 def test_find_concepts_filters_by_dialect(tmp_path):

@@ -13,9 +13,19 @@ from okfbuild.periods import PERIOD_ORDER
 
 _CONCEPT_DIRS = ("words", "grammar", "culture", "texts")
 
+_TYPE_BY_DIR = {
+    "words": "Lexical Entry",
+    "grammar": "Grammatical Rule",
+    "culture": "Cultural Context",
+    "texts": "Literary Translation",
+}
+_DIR_BY_TYPE = {v: k for k, v in _TYPE_BY_DIR.items()}
+
 
 def _level_matches(concept: ConceptFile, level: str) -> bool:
-    return level in concept.level
+    if isinstance(concept.level, list):
+        return level in concept.level
+    return False
 
 
 def _author_matches(concept: ConceptFile, author: str) -> bool:
@@ -51,7 +61,10 @@ def _period_matches(concept: ConceptFile, period: str) -> bool:
 
 
 def _dialect_matches(concept: ConceptFile, dialect: str) -> bool:
-    return dialect in concept.extra_frontmatter.get("dialect", [])
+    dialect_list = concept.extra_frontmatter.get("dialect", [])
+    if isinstance(dialect_list, list):
+        return dialect in dialect_list
+    return False
 
 
 def find_concepts(
@@ -67,7 +80,11 @@ def find_concepts(
     culture/texts trees matching every filter given (None = no constraint
     on that dimension). Results are sorted by path."""
     matches: list[tuple[Path, ConceptFile]] = []
-    for dirname in _CONCEPT_DIRS:
+    concept_dirs = _CONCEPT_DIRS
+    if type is not None:
+        dirname = _DIR_BY_TYPE.get(type)
+        concept_dirs = (dirname,) if dirname is not None else ()
+    for dirname in concept_dirs:
         concept_dir = repo_root / dirname
         if not concept_dir.is_dir():
             continue
