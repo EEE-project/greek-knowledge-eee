@@ -90,3 +90,49 @@ def test_find_concepts_results_sorted_by_path(tmp_path):
     results = find_concepts(tmp_path)
 
     assert [path.name for path, _ in results] == ["a-rule.md", "z-rule.md"]
+
+
+def test_find_concepts_period_range_containment_on_grammatical_rule(tmp_path):
+    _write(tmp_path, "grammar", "spans-attic-to-byzantine", extra_frontmatter={"periods_spanned": {"from": "attic", "to": "byzantine"}, "dialect": []})
+    _write(tmp_path, "grammar", "modern-only", extra_frontmatter={"periods_spanned": {"from": "modern", "to": "modern"}, "dialect": []})
+
+    results = find_concepts(tmp_path, period="koine")
+
+    assert [c.title for _, c in results] == ["spans-attic-to-byzantine"]
+
+
+def test_find_concepts_period_membership_on_lexical_entry(tmp_path):
+    _write(
+        tmp_path, "words", "attested-homeric-and-modern",
+        type="Lexical Entry",
+        extra_frontmatter={"lemma": "νόστος", "periods": ["homeric", "modern"]},
+    )
+    _write(
+        tmp_path, "words", "attested-attic-only",
+        type="Lexical Entry",
+        extra_frontmatter={"lemma": "ἄνθρωπος", "periods": ["attic"]},
+    )
+
+    results = find_concepts(tmp_path, period="homeric")
+
+    assert [c.title for _, c in results] == ["attested-homeric-and-modern"]
+
+
+def test_find_concepts_period_filter_never_matches_concept_with_no_period_data(tmp_path):
+    _write(
+        tmp_path, "culture", "timeless-topic",
+        type="Cultural Context",
+        extra_frontmatter={"related_words": [], "related_lessons": [], "dialect": []},
+    )
+
+    results = find_concepts(tmp_path, period="attic")
+
+    assert results == []
+
+
+def test_find_concepts_unknown_period_value_matches_nothing(tmp_path):
+    _write(tmp_path, "grammar", "rule-a", extra_frontmatter={"periods_spanned": {"from": "attic", "to": "byzantine"}, "dialect": []})
+
+    results = find_concepts(tmp_path, period="not-a-real-period")
+
+    assert results == []
