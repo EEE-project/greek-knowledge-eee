@@ -17,7 +17,7 @@ from pathlib import Path
 
 from okfbuild.concepts import lexical_entry
 from okfbuild.lookup import lookup_word
-from okfbuild.query import find_concepts
+from okfbuild.query import find_concepts, list_values
 from okfbuild.wiring import default_source_bundle, full_source_bundle
 
 _DEFAULT_PERIODS = ["homeric", "attic", "modern"]
@@ -55,7 +55,24 @@ def _cmd_build(args: argparse.Namespace) -> None:
     print(concept.body)
 
 
+_LIST_FIELDS = ("type", "level", "period", "dialect", "author")
+
+
 def _cmd_query(args: argparse.Namespace) -> None:
+    raw = {field: getattr(args, field) for field in _LIST_FIELDS}
+    list_fields = [field for field in _LIST_FIELDS if raw[field] == "list"]
+    if list_fields:
+        scope = {
+            field: (_TYPE_SHORTHAND.get(value) if field == "type" else value)
+            for field, value in raw.items()
+            if value is not None and value != "list"
+        }
+        for field in list_fields:
+            print(f"-- {field} --")
+            for value, count in list_values(_repo_root(), field, **scope):
+                print(f"{value} ({count})")
+        return
+
     concept_type = _TYPE_SHORTHAND.get(args.type) if args.type else None
     matches = find_concepts(
         _repo_root(),
@@ -143,11 +160,11 @@ def main() -> None:
     regenerate_parser.set_defaults(func=_cmd_regenerate)
 
     query_parser = subparsers.add_parser("query", help="find committed grammar/culture/words/texts by level, period, dialect, author")
-    query_parser.add_argument("--type", choices=sorted(_TYPE_SHORTHAND), help="restrict to one concept type")
-    query_parser.add_argument("--level")
-    query_parser.add_argument("--period")
-    query_parser.add_argument("--dialect")
-    query_parser.add_argument("--author", help="case-insensitive substring match against any source's author")
+    query_parser.add_argument("--type", choices=sorted(_TYPE_SHORTHAND) + ["list"], help="restrict to one concept type; 'list' prints the values in use instead of querying")
+    query_parser.add_argument("--level", help="pass 'list' to print the values in use instead of querying")
+    query_parser.add_argument("--period", help="pass 'list' to print the values in use instead of querying")
+    query_parser.add_argument("--dialect", help="pass 'list' to print the values in use instead of querying")
+    query_parser.add_argument("--author", help="case-insensitive substring match against any source's author; pass 'list' to print the values in use instead of querying")
     query_parser.add_argument("--full", action="store_true", help="print full bodies instead of just paths+titles")
     query_parser.set_defaults(func=_cmd_query)
 

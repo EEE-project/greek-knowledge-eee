@@ -5,7 +5,7 @@ import yaml
 
 from okfbuild import okf
 from okfbuild.okf import ConceptFile, Source
-from okfbuild.query import find_concepts
+from okfbuild.query import find_concepts, list_values
 
 
 def _write(repo_root: Path, subdir: str, slug: str, **overrides: Any) -> Path:
@@ -216,3 +216,75 @@ def test_find_concepts_combines_all_filters_with_and(tmp_path):
     )
 
     assert [c.title for _, c in results] == ["matches-everything"]
+
+
+def test_list_values_counts_distinct_level_values(tmp_path):
+    _write(tmp_path, "grammar", "rule-a", level=["beginner"])
+    _write(tmp_path, "grammar", "rule-b", level=["beginner"])
+    _write(tmp_path, "grammar", "rule-c", level=["advanced"])
+
+    results = list_values(tmp_path, "level")
+
+    assert dict(results) == {"beginner": 2, "advanced": 1}
+
+
+def test_list_values_sorted_by_count_desc_then_value(tmp_path):
+    _write(tmp_path, "grammar", "rule-a", level=["beginner"])
+    _write(tmp_path, "grammar", "rule-b", level=["beginner"])
+    _write(tmp_path, "grammar", "rule-c", level=["beginner"])
+    _write(tmp_path, "grammar", "rule-d", level=["advanced"])
+    _write(tmp_path, "grammar", "rule-e", level=["b1"])
+
+    results = list_values(tmp_path, "level")
+
+    assert results == [("beginner", 3), ("advanced", 1), ("b1", 1)]
+
+
+def test_list_values_scoped_by_other_filter(tmp_path):
+    _write(tmp_path, "grammar", "grammar-beginner", level=["beginner"])
+    _write(tmp_path, "culture", "culture-advanced", type="Cultural Context", level=["advanced"], extra_frontmatter={"related_words": [], "related_lessons": [], "dialect": []})
+
+    results = list_values(tmp_path, "level", type="Grammatical Rule")
+
+    assert dict(results) == {"beginner": 1}
+
+
+def test_list_values_ignores_a_filter_matching_its_own_field(tmp_path):
+    _write(tmp_path, "grammar", "rule-a", level=["beginner"])
+    _write(tmp_path, "grammar", "rule-b", level=["advanced"])
+
+    results = list_values(tmp_path, "level", level="nonexistent-value")
+
+    assert dict(results) == {"beginner": 1, "advanced": 1}
+
+
+def test_list_values_for_period_counts_every_period_a_range_spans(tmp_path):
+    _write(tmp_path, "grammar", "wide-span", extra_frontmatter={"periods_spanned": {"from": "attic", "to": "byzantine"}, "dialect": []})
+    _write(tmp_path, "grammar", "narrow-span", extra_frontmatter={"periods_spanned": {"from": "attic", "to": "attic"}, "dialect": []})
+
+    results = list_values(tmp_path, "period")
+
+    assert dict(results) == {"attic": 2, "koine": 1, "byzantine": 1}
+
+
+def test_list_values_for_author_counts_each_source_on_multi_source_concepts(tmp_path):
+    _write(tmp_path, "grammar", "multi-source-rule", sources=[
+        Source(id="s1", resource="r1", title="t1", author="Jane Doe"),
+        Source(id="s2", resource="r2", title="t2", author="Homer"),
+    ])
+    _write(tmp_path, "grammar", "single-source-rule", sources=[Source(id="s", resource="r", title="t", author="Homer")])
+
+    results = list_values(tmp_path, "author")
+
+    assert dict(results) == {"Jane Doe": 1, "Homer": 2}
+
+
+def test_list_values_for_dialect_ignores_hand_edited_scalar_dialect(tmp_path):
+    _write(
+        tmp_path, "grammar", "hand-edited-dialect-rule",
+        extra_frontmatter={"periods_spanned": {"from": "attic", "to": "attic"}, "dialect": "attic"},
+    )
+
+    results = list_values(tmp_path, "dialect")
+
+    assert results == []

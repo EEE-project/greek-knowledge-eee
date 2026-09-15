@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-16 (1)
+
+- **Fixed two findings from an independent ultra-review of the branch.** `_level_matches`/`_dialect_matches` in `okfbuild/query.py` now guard against a hand-edited non-list `level`/`dialect` frontmatter value the same way `_period_matches` already did, instead of falling back to substring matching against something that isn't a string; `find_concepts()` now short-circuits to the one matching concept directory when `--type` narrows the search, instead of scanning all four every time.
+- **Added a `list` sentinel to every `query` filter** (`--type`, `--level`, `--period`, `--dialect`, `--author`): passing `list` instead of a value prints the distinct values actually in use, with counts, instead of running a query -- e.g. `uv run greek-knowledge query --level list` → `beginner (21)`, `B1 (1)`, `advanced (1)`. Any other filter given alongside scopes the tally (`--type grammar --dialect list` shows only dialects used on Grammatical Rule entries). New `okfbuild/query.py`'s `list_values()` is the shared implementation behind both `greek-knowledge query` and `examples/query_knowledge.py`. Directly answers the corpus-vocabulary gap the previous entry's `--level` note flagged -- now discoverable at the CLI instead of only documented in prose.
+- Full suite (`-m "not integration"`): 420 passed, 1 skipped, 7 deselected; `ruff check` clean.
+
 ## 2026-09-15 (3)
 
 - **Added a `greek-knowledge query` CLI subcommand (+ `examples/query_knowledge.py`) for filtering the knowledge base's own committed grammar/culture/words/texts content by level, period, dialect, and author.** `okfbuild/query.py`'s `find_concepts()` reads already-written concept files via `okf.read()` (no external source calls), AND-combining up to five filters; period matching supports both range-containment (`periods_spanned`) and list-membership (`periods`) depending on concept type. New `okfbuild/periods.py` provides the period-ordering vocabulary (`homeric < attic < koine < byzantine < modern`) this uses, kept deliberately separate from `pipeline.py`'s own lexical-entry period sweep (which has no notion of `koine` and must not gain one).

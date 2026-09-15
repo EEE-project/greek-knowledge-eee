@@ -67,6 +67,48 @@ def _dialect_matches(concept: ConceptFile, dialect: str) -> bool:
     return False
 
 
+def _field_values(concept: ConceptFile, field: str) -> list[str]:
+    if field == "type":
+        return [concept.type] if concept.type else []
+    if field == "level":
+        return list(concept.level) if isinstance(concept.level, list) else []
+    if field == "dialect":
+        dialect_list = concept.extra_frontmatter.get("dialect")
+        return list(dialect_list) if isinstance(dialect_list, list) else []
+    if field == "author":
+        return [source.author for source in concept.sources if source.author]
+    if field == "period":
+        return [period for period in PERIOD_ORDER if _period_matches(concept, period)]
+    raise ValueError(f"unknown field: {field!r}")
+
+
+def list_values(
+    repo_root: Path,
+    field: str,
+    *,
+    type: str | None = None,
+    level: str | None = None,
+    author: str | None = None,
+    period: str | None = None,
+    dialect: str | None = None,
+) -> list[tuple[str, int]]:
+    """Return (value, count) pairs for every distinct value `field` takes
+    across concepts matching the other filters given -- pass the other
+    four to scope the tally (e.g. type="Grammatical Rule" to see only
+    level values used on grammar rules). `field` is one of "type",
+    "level", "period", "dialect", "author"; any filter matching `field`
+    itself is ignored, since `field`'s own value is what's being
+    enumerated, not filtered on. Sorted by count descending, then value."""
+    scope = dict(type=type, level=level, author=author, period=period, dialect=dialect)
+    scope.pop(field, None)
+    matches = find_concepts(repo_root, **scope)
+    tally: dict[str, int] = {}
+    for _, concept in matches:
+        for value in _field_values(concept, field):
+            tally[value] = tally.get(value, 0) + 1
+    return sorted(tally.items(), key=lambda pair: (-pair[1], pair[0]))
+
+
 def find_concepts(
     repo_root: Path,
     *,

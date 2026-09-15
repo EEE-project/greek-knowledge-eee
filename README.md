@@ -50,6 +50,12 @@ uv run python examples/query_knowledge.py --period koine --author Sophocles
 vocabulary. Today's corpus mixes `beginner`, `advanced`, `B1`, and
 mostly-empty values; CEFR labels like `A2` used elsewhere in this
 project's docs are illustrative, not guaranteed to match anything.
+Pass `list` instead of a value to any of `query`'s five filters
+(`--type`, `--level`, `--period`, `--dialect`, `--author`) to print the
+values actually in use, with counts, instead of running a query --
+e.g. `uv run greek-knowledge query --level list`. Any other filter given
+alongside scopes the tally (`--type grammar --dialect list` shows only
+the dialects used on Grammatical Rule entries).
 
 `lookup`/`build`/the examples call `okfbuild.wiring.default_source_bundle()`,
 a simpler and less cache-optimized wiring than `tests/conftest.py`'s

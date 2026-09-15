@@ -4,12 +4,13 @@ script — see okfbuild/query.py's find_concepts() for the underlying API.
 
 Usage:
     uv run python examples/query_knowledge.py --level beginner --dialect attic
+    uv run python examples/query_knowledge.py --level list
 """
 
 import argparse
 from pathlib import Path
 
-from okfbuild.query import find_concepts
+from okfbuild.query import find_concepts, list_values
 
 _TYPE_SHORTHAND = {
     "words": "Lexical Entry",
@@ -18,17 +19,34 @@ _TYPE_SHORTHAND = {
     "texts": "Literary Translation",
 }
 
+_LIST_FIELDS = ("type", "level", "period", "dialect", "author")
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--type", choices=sorted(_TYPE_SHORTHAND))
-    parser.add_argument("--level")
-    parser.add_argument("--period")
-    parser.add_argument("--dialect")
-    parser.add_argument("--author")
+    parser.add_argument("--type", choices=sorted(_TYPE_SHORTHAND) + ["list"], help="pass 'list' to print the values in use instead of querying")
+    parser.add_argument("--level", help="pass 'list' to print the values in use instead of querying")
+    parser.add_argument("--period", help="pass 'list' to print the values in use instead of querying")
+    parser.add_argument("--dialect", help="pass 'list' to print the values in use instead of querying")
+    parser.add_argument("--author", help="pass 'list' to print the values in use instead of querying")
     args = parser.parse_args()
 
     repo_root = Path(__file__).parent.parent
+
+    raw = {field: getattr(args, field) for field in _LIST_FIELDS}
+    list_fields = [field for field in _LIST_FIELDS if raw[field] == "list"]
+    if list_fields:
+        scope = {
+            field: (_TYPE_SHORTHAND.get(value) if field == "type" else value)
+            for field, value in raw.items()
+            if value is not None and value != "list"
+        }
+        for field in list_fields:
+            print(f"-- {field} --")
+            for value, count in list_values(repo_root, field, **scope):
+                print(f"{value} ({count})")
+        return
+
     matches = find_concepts(
         repo_root,
         type=_TYPE_SHORTHAND.get(args.type) if args.type else None,
