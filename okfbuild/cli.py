@@ -17,9 +17,17 @@ from pathlib import Path
 
 from okfbuild.concepts import lexical_entry
 from okfbuild.lookup import lookup_word
+from okfbuild.query import find_concepts
 from okfbuild.wiring import default_source_bundle, full_source_bundle
 
 _DEFAULT_PERIODS = ["homeric", "attic", "modern"]
+
+_TYPE_SHORTHAND = {
+    "words": "Lexical Entry",
+    "grammar": "Grammatical Rule",
+    "culture": "Cultural Context",
+    "texts": "Literary Translation",
+}
 
 
 def _repo_root() -> Path:
@@ -45,6 +53,27 @@ def _cmd_build(args: argparse.Namespace) -> None:
         print(f"No attested data for {args.word!r} in any requested period/source.")
         return
     print(concept.body)
+
+
+def _cmd_query(args: argparse.Namespace) -> None:
+    concept_type = _TYPE_SHORTHAND.get(args.type) if args.type else None
+    matches = find_concepts(
+        _repo_root(),
+        type=concept_type,
+        level=args.level,
+        period=args.period,
+        dialect=args.dialect,
+        author=args.author,
+    )
+    if not matches:
+        print("No concepts match those filters.")
+        return
+    for path, concept in matches:
+        if args.full:
+            print(f"\n== {path.relative_to(_repo_root())} — {concept.title} ==")
+            print(concept.body)
+        else:
+            print(f"{path.relative_to(_repo_root())}  —  {concept.title}")
 
 
 def _cmd_regenerate(args: argparse.Namespace) -> None:
@@ -112,6 +141,15 @@ def main() -> None:
     )
     regenerate_parser.add_argument("--write", action="store_true", help="required -- without it, refuses and exits 1")
     regenerate_parser.set_defaults(func=_cmd_regenerate)
+
+    query_parser = subparsers.add_parser("query", help="find committed grammar/culture/words/texts by level, period, dialect, author")
+    query_parser.add_argument("--type", choices=sorted(_TYPE_SHORTHAND), help="restrict to one concept type")
+    query_parser.add_argument("--level")
+    query_parser.add_argument("--period")
+    query_parser.add_argument("--dialect")
+    query_parser.add_argument("--author", help="case-insensitive substring match against any source's author")
+    query_parser.add_argument("--full", action="store_true", help="print full bodies instead of just paths+titles")
+    query_parser.set_defaults(func=_cmd_query)
 
     args = parser.parse_args()
     args.func(args)

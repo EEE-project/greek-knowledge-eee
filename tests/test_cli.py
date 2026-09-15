@@ -113,3 +113,59 @@ def test_cli_regenerate_with_write_and_real_checkout_calls_pipeline_run(monkeypa
     assert run_mock.call_args.kwargs["sources"] == "SOURCES"
     enrich_mock.assert_called_once_with(repo_root, "SOURCES")
     assert "written=5 unchanged=2 failed=0" in capsys.readouterr().out
+
+
+def test_cli_query_dispatches_with_translated_type_and_prints_matches(monkeypatch, capsys):
+    concept = Mock(title="aorist-3pl-osan")
+    path = Mock()
+    path.relative_to.return_value = "grammar/aorist-3pl-osan.md"
+    find_mock = Mock(return_value=[(path, concept)])
+    monkeypatch.setattr(cli, "find_concepts", find_mock)
+    monkeypatch.setattr(cli, "_repo_root", Mock(return_value="REPO_ROOT"))
+    monkeypatch.setattr(
+        sys, "argv",
+        ["greek-knowledge", "query", "--type", "grammar", "--level", "advanced", "--author", "Sophocles"],
+    )
+
+    cli.main()
+
+    find_mock.assert_called_once_with(
+        "REPO_ROOT", type="Grammatical Rule", level="advanced", period=None, dialect=None, author="Sophocles",
+    )
+    out = capsys.readouterr().out
+    assert "grammar/aorist-3pl-osan.md" in out
+    assert "aorist-3pl-osan" in out
+
+
+def test_cli_query_reports_when_nothing_found(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "find_concepts", Mock(return_value=[]))
+    monkeypatch.setattr(cli, "_repo_root", Mock(return_value="REPO_ROOT"))
+    monkeypatch.setattr(sys, "argv", ["greek-knowledge", "query", "--level", "C2"])
+
+    cli.main()
+
+    assert "No concepts match" in capsys.readouterr().out
+
+
+def test_cli_query_full_flag_prints_bodies(monkeypatch, capsys):
+    concept = Mock(title="aorist-3pl-osan", body="## The rule\n\nSome text.")
+    path = Mock()
+    path.relative_to.return_value = "grammar/aorist-3pl-osan.md"
+    monkeypatch.setattr(cli, "find_concepts", Mock(return_value=[(path, concept)]))
+    monkeypatch.setattr(cli, "_repo_root", Mock(return_value="REPO_ROOT"))
+    monkeypatch.setattr(sys, "argv", ["greek-knowledge", "query", "--full"])
+
+    cli.main()
+
+    out = capsys.readouterr().out
+    assert "Some text." in out
+
+
+def test_cli_query_rejects_unknown_type_shorthand(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["greek-knowledge", "query", "--type", "not-a-real-type"])
+
+    try:
+        cli.main()
+        assert False, "expected SystemExit"
+    except SystemExit as exc:
+        assert exc.code == 2
