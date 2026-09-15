@@ -30,14 +30,38 @@ uv sync --dev
 
 ## Usage
 
-This repo's code is a Python API, not a CLI. Run it with `uv run python`
-(a script, or a REPL) from inside this directory — not a bare `python` or
-any other environment, even another EEE repo's venv. This repo has one
-dependency (`llm-backend-eee`) not on PyPI at all, pinned via a Codeberg
-git tag; only `uv`'s own project-managed `.venv/` here has it installed.
-Two entry points cover most needs, both taking a `SourceBundle` -- wire one
-first (this is the same wiring `tests/conftest.py`'s `real_source_bundle`
-fixture uses):
+This repo's code is primarily a Python API, not a CLI -- but a small
+`greek-knowledge` CLI (installed via `uv sync --dev`, see
+`[project.scripts]`) and a matching `examples/` directory cover the
+common cases without wiring anything by hand: read-only exploration of
+what this KB's sources know about one word, and the one action that
+changes this repo's own tracked corpus content:
+```bash
+uv run greek-knowledge lookup ὕδωρ            # every lemma-keyed source's raw hit
+uv run greek-knowledge build ὕδωρ             # a full Lexical Entry body, unwritten
+uv run greek-knowledge regenerate --write     # the ONLY command that writes to words/grammar/culture
+uv run python examples/lookup_word.py ὕδωρ    # same as `lookup`, as a script
+uv run python examples/build_one_concept.py ὕδωρ
+```
+`lookup`/`build`/the examples call `okfbuild.wiring.default_source_bundle()`,
+a simpler and less cache-optimized wiring than `tests/conftest.py`'s
+`real_source_bundle` fixture uses (see that function's own docstring for
+the difference). `regenerate` calls `full_source_bundle()` instead --
+same wiring, plus a real `LSJPeriodMap` so citations keep their
+period/dialect tags (see okfbuild/cli.py's `_cmd_regenerate` docstring
+for why `--write` is mandatory, never a default).
+
+For anything beyond lookup/build/regenerate -- LLM gap-filling, or any
+wiring these commands don't cover -- wire a `SourceBundle` by hand
+instead. Run this with
+`uv run python` (a script, or a REPL) from inside this directory — not a
+bare `python` or any other environment, even another EEE repo's venv.
+This repo has one dependency (`llm-backend-eee`) not on PyPI at all,
+pinned via a Codeberg git tag; only `uv`'s own project-managed `.venv/`
+here has it installed. Two entry points cover most needs, both taking a
+`SourceBundle` -- wire one first (this is the same wiring
+`okfbuild.wiring.default_source_bundle()` and `tests/conftest.py`'s
+`real_source_bundle` fixture use):
 ```python
 from pathlib import Path
 from okfbuild.sources import SourceBundle, eee_engine, wikipedia_client
@@ -45,6 +69,7 @@ from okfbuild.sources.morpheus_client import MorpheusClient
 from okfbuild.sources.wiktextract_index import CachedWiktextractIndex
 from okfbuild.sources.lsj_index import CachedLSJIndex
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
+from okfbuild.sources.iecor_client import load_iecor_cognates
 
 import eee_project as eee
 from ancient_greek_backend_eee import AncientGreekBackend
@@ -69,6 +94,7 @@ sources = SourceBundle(
     ),
     lsj=CachedLSJIndex(cache_dir=Path("data/lsj-cache"), tei_xml_dir=None),
     wikipedia=wikipedia_client,
+    iecor=load_iecor_cognates(Path("data/iecor/ancient_greek_cognates.tsv")),
 )
 ```
 
@@ -205,7 +231,19 @@ uv run --all-extras --dev python -m pytest
 `uv run pytest` with no flags also runs the pilot's real acceptance suite
 (`tests/test_pilot_acceptance.py`, marked `integration`) — it needs a
 sibling `created_with_eee` checkout and live network access (Perseids
-Morpheus, Wikipedia). A downloaded Wiktextract dump
+Morpheus, Wikipedia). It runs the real pipeline against the real course
+content, but **writes into a scratch directory, never this repo's own
+tracked `words/`/`grammar/`/`culture/`** — no `pytest` invocation, with
+or without markers, can change tracked corpus content. To actually
+regenerate it, use the CLI instead:
+```bash
+uv run greek-knowledge regenerate --write
+```
+`--write` is mandatory (bare `regenerate` refuses and exits 1) — this is
+the one command in this codebase that changes tracked corpus content,
+so it's never a side effect of anything else, including tests. Review
+the resulting `git diff` before committing, same as any other pilot
+regen. A downloaded Wiktextract dump
 (`data/wiktextract/README.md`) is only needed the first time, or when a
 course adds a lemma not already in `data/wiktextract-cache/` (git-tracked,
 covers everything the current pilot's 2 courses use) — with a warm cache,

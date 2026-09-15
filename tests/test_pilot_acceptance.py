@@ -1,8 +1,10 @@
 """Section-07 pilot acceptance tests: run the real pipeline against the
 real Odyssey/Kavafis Ithaki course content, not fixtures — see
-plans/sections/section-07-pilot.md. This IS how the pilot's deliverable
-files under words/, grammar/, culture/ get generated/refreshed; a human
-then reviews the resulting git diff before committing.
+plans/sections/section-07-pilot.md. Writes to pilot_output_dir, a scratch
+directory (see that fixture's docstring in conftest.py) -- NOT this
+repo's own words/, grammar/, culture/. To actually refresh those, use
+`greek-knowledge regenerate --write` (okfbuild/cli.py) instead, and
+review the resulting `git diff` before committing.
 
 Excluded from the default `uv run pytest` gate for the same reason
 eee-project excludes its own "integration" marker: this module needs real
@@ -21,7 +23,7 @@ pytestmark = pytest.mark.integration
 _MARKDOWN_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 
-def test_pilot_run_produces_all_three_concept_types(pilot_build_report, repo_root):
+def test_pilot_run_produces_all_three_concept_types(pilot_build_report, pilot_output_dir):
     # pipeline.run()'s own contract is per-candidate isolation, not
     # zero-failure: a handful of the 500+ auto-extracted real-course
     # candidates are expected to fail (rare/dialectal Homeric words with
@@ -39,7 +41,7 @@ def test_pilot_run_produces_all_three_concept_types(pilot_build_report, repo_roo
         ("grammar", "Grammatical Rule"),
         ("culture", "Cultural Context"),
     ):
-        for path in (repo_root / type_dir).glob("*.md"):
+        for path in (pilot_output_dir / type_dir).glob("*.md"):
             if path.name == "index.md":
                 continue
             concept = okf.read(path)
@@ -50,8 +52,8 @@ def test_pilot_run_produces_all_three_concept_types(pilot_build_report, repo_roo
     assert found_types == {"Lexical Entry", "Grammatical Rule", "Cultural Context"}
 
 
-def test_grammatical_rule_cites_newly_mined_osan_pattern(pilot_build_report, repo_root):
-    rule_path = repo_root / "grammar" / "aorist-3pl-osan.md"
+def test_grammatical_rule_cites_newly_mined_osan_pattern(pilot_build_report, pilot_output_dir):
+    rule_path = pilot_output_dir / "grammar" / "aorist-3pl-osan.md"
     assert rule_path.is_file()
 
     osan_forms = ("ἤλθοσαν", "ἐξήλθοσαν", "ἴδοσαν", "εἴδοσαν")
@@ -74,8 +76,8 @@ def test_wiktextract_lookups_are_cached_not_just_in_memory(pilot_build_report, r
     )
 
 
-def test_cross_link_resolves_to_real_file(pilot_build_report, repo_root):
-    culture_path = repo_root / "culture" / "cavafy.md"
+def test_cross_link_resolves_to_real_file(pilot_build_report, pilot_output_dir):
+    culture_path = pilot_output_dir / "culture" / "cavafy.md"
     assert culture_path.is_file()
 
     text = culture_path.read_text(encoding="utf-8")

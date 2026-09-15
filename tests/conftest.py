@@ -286,12 +286,29 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
 
 
 @pytest.fixture(scope="session")
-def pilot_build_report(repo_root, real_source_bundle, created_with_eee_root):
+def pilot_output_dir(tmp_path_factory):
+    """A scratch directory for pilot_build_report to write into -- NOT
+    repo_root. The test suite must never change this repo's own tracked
+    words/grammar/culture content as a side effect of running (that used
+    to be pilot_build_report's job, until running a bare `uv run pytest`
+    was found to silently rewrite real content, including regressing LSJ
+    period/dialect tags when sources.lsj_period_map happened not to be
+    available in a given local run -- a change nobody asked for or
+    reviewed). Deliberately regenerating real content is now
+    `okfbuild.cli`'s `regenerate` subcommand's job -- see its docstring
+    -- gated behind an explicit --write flag, never a test."""
+    return tmp_path_factory.mktemp("pilot-output")
+
+
+@pytest.fixture(scope="session")
+def pilot_build_report(pilot_output_dir, real_source_bundle, created_with_eee_root):
     """The single real pipeline.run() call every test in
     test_pilot_acceptance.py reads its result from — session-scoped so the
     expensive, network-touching real run happens once per test session.
     course_paths / grammar_rules / cultural_topics are the curated pilot
-    inputs from section-07-pilot.md's "Preparing the real inputs"."""
+    inputs from section-07-pilot.md's "Preparing the real inputs". Writes
+    to pilot_output_dir (a scratch directory), not this repo's own
+    words/grammar/culture -- see that fixture's docstring for why."""
     from okfbuild import pipeline
     from okfbuild.pilot_content import CULTURAL_TOPICS, GRAMMAR_RULES, enrich_nostos_with_beekes
 
@@ -302,7 +319,7 @@ def pilot_build_report(repo_root, real_source_bundle, created_with_eee_root):
 
     report = pipeline.run(
         course_paths,
-        out_dir=repo_root,
+        out_dir=pilot_output_dir,
         sources=real_source_bundle,
         grammar_rules=GRAMMAR_RULES,
         cultural_topics=CULTURAL_TOPICS,
@@ -311,7 +328,7 @@ def pilot_build_report(repo_root, real_source_bundle, created_with_eee_root):
     # has no way to supply (see enrich_nostos_with_beekes's own docstring).
     # Runs after the main report so a failure here doesn't hide whether the
     # bulk run itself succeeded.
-    enrich_nostos_with_beekes(repo_root, real_source_bundle)
+    enrich_nostos_with_beekes(pilot_output_dir, real_source_bundle)
     return report
 
 
