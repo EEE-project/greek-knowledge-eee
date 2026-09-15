@@ -16,12 +16,13 @@ sources:
   author: Wikipedia
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-04T18:42:36.485428+00:00'
+  at: '2026-09-15T17:08:15.044271+00:00'
 related_words:
 - νόστος
 related_lessons:
 - kavafis_ithaki/1
 - kavafis_ithaki/2
+dialect: []
 verified: []
 status: draft
 ---

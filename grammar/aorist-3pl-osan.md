@@ -16,10 +16,11 @@ sources:
   author: E. A. Sophocles
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-04T18:42:36.233263+00:00'
+  at: '2026-09-15T17:08:14.720853+00:00'
 periods_spanned:
   from: attic
   to: byzantine
+dialect: []
 verified: []
 status: draft
 ---
