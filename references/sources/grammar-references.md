@@ -14,6 +14,16 @@ type, distinct from the lexical/corpus sources above.
   from Homer to Demosthenes* — analytical grammar built from real
   syntactic contexts rather than rule-memorization, explaining *why*
   authors chose a given construction.
+- Smyth (Herbert Weir Smyth), *A Greek Grammar for Colleges* (1920; rev.
+  Gordon Messing, 1956) — the standard English-language reference
+  grammar, covering morphology and syntax in numbered, individually
+  citable sections (e.g. "Smyth §599"). Unlike its neighbors here,
+  openly hosted as full structured HTML by Perseus Digital Library
+  (`perseus.tufts.edu`, `Perseus:text:1999.04.0007`) — the same Perseus
+  ecosystem this KB already parses for LSJ, see
+  [`references/sources/lsj.md`](lsj.md). Also distributed as a PDF by
+  Textkit, see
+  [`references/sources/textkit.md`](textkit.md).
 
 **Russian academic textbooks:**
 - Sobolevsky (Сергей Иванович Соболевский), *Древнегреческий язык*
@@ -47,6 +57,9 @@ type, distinct from the lexical/corpus sources above.
   available at
   `https://www.gumer.info/bibliotek_Buks/Linguist/shantr/index.php`.
 
-**Status: not integrated.** These are print/scanned reference works,
-not structured data — documented here as citation sources for
-grammatical-rule content, not as pipeline inputs.
+**Status: not integrated.** Most of these are print/scanned reference
+works, not structured data — documented here as citation sources for
+grammatical-rule content, not as pipeline inputs. Smyth is the
+exception: openly hosted, section-citable HTML on Perseus — a stronger
+future candidate than the rest of this list if this KB ever wants
+programmatic grammar citations, though no client exists yet.

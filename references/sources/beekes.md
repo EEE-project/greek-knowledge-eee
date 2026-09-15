@@ -4,7 +4,9 @@ Robert S. P. Beekes, *Etymological Dictionary of Greek* (Brill, 2010, 2
 vols.) — the standard modern etymological reference for Ancient Greek:
 Proto-Indo-European root reconstructions, cognate word families, and
 (where Beekes judges a word non-Indo-European) Pre-Greek substrate
-etymologies.
+etymologies. Volume 10 of Brill's
+[Leiden Indo-European Etymological Dictionary Series](leiden-ie-dictionary-series.md)
+— see that doc for sibling volumes covering other IE branches.
 
 Already used, uncredited, as a hand-curated citation source in existing
 EEE lesson content (Palaestra lesson notes cite specific EDG page numbers
