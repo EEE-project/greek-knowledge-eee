@@ -15,7 +15,7 @@ from pathlib import Path
 from okfbuild import okf
 from okfbuild.concepts import cultural_context, grammatical_rule, lexical_entry
 from okfbuild.concepts.lexical_entry import GapFillRecord
-from okfbuild.okf import ConceptFile
+from okfbuild.okf import ConceptFile, Source
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.llm_gap_filler import GapFillCache, RequestBudgetExceededError
 
@@ -60,12 +60,13 @@ _LANGUAGE_SUFFIX_RE = re.compile(r"_[a-z]{2}\.tsv$")
 @dataclass
 class GrammarRuleSpec:
     rule_id: str
-    sophocles_excerpt: str
-    example_forms: list[tuple[str, str]]
+    body: str
+    sources: list[Source]
     period_from: str
     period_to: str
     level: list[str]
     tags: list[str]
+    dialect: list[str] | None = None
 
 
 @dataclass
@@ -408,12 +409,13 @@ def run(
                 try:
                     concept = grammatical_rule.build(
                         spec.rule_id,
-                        spec.sophocles_excerpt,
-                        spec.example_forms,
+                        spec.body,
+                        spec.sources,
                         spec.period_from,
                         spec.period_to,
                         level=spec.level,
                         tags=spec.tags,
+                        dialect=spec.dialect,
                     )
                     path = grammar_dir / f"{_slugify(spec.rule_id)}.md"
                     _apply_write(report, concept, path)

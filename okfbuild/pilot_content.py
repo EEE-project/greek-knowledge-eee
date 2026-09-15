@@ -14,6 +14,7 @@ from pathlib import Path
 
 from okfbuild import okf
 from okfbuild.concepts import lexical_entry
+from okfbuild.okf import Source
 from okfbuild.pipeline import CulturalTopicSpec, GrammarRuleSpec
 from okfbuild.sources import SourceBundle
 
@@ -22,7 +23,14 @@ from okfbuild.sources import SourceBundle
 # specific lemma's entry, not a general-purpose pipeline helper).
 _ALL_PERIODS = ["homeric", "attic", "byzantine", "modern"]
 
-_SOPHOCLES_EXCERPT = """\
+_SOPHOCLES_SOURCE = Source(
+    id="sophocles-1887",
+    resource="analisys/sophocles-byzantine-morphology.md",
+    title="Greek Lexicon of the Roman and Byzantine Periods (1887)",
+    author="E. A. Sophocles",
+)
+
+_OSAN_BODY = """\
 ## The -οσαν aorist/imperfect 3rd plural
 
 In post-classical (Byzantine-period) Greek, the classical 3rd-plural \
@@ -37,17 +45,19 @@ its own.
 Both of the verbs cited below are common Homeric verbs of coming/going \
 and seeing, already attested (in their classical 3rd-singular aorist \
 forms, ἦλθε/ἴδεν) in the same Odyssey passage this knowledge base draws \
-its Lexical Entry examples from."""
+its Lexical Entry examples from.
+
+ὁράω is replaced by ἴδοσαν in Byzantine Greek[^sophocles-1887]
+
+ὁράω is replaced by εἴδοσαν in Byzantine Greek[^sophocles-1887]
+
+ἔρχομαι is replaced by ἤλθοσαν in Byzantine Greek[^sophocles-1887]"""
 
 GRAMMAR_RULES: list[GrammarRuleSpec] = [
     GrammarRuleSpec(
         rule_id="aorist-3pl-osan",
-        sophocles_excerpt=_SOPHOCLES_EXCERPT,
-        example_forms=[
-            ("ὁράω", "ἴδοσαν"),
-            ("ὁράω", "εἴδοσαν"),
-            ("ἔρχομαι", "ἤλθοσαν"),
-        ],
+        body=_OSAN_BODY,
+        sources=[_SOPHOCLES_SOURCE],
         period_from="attic",
         period_to="byzantine",
         level=["advanced"],
