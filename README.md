@@ -39,9 +39,11 @@ changes this repo's own tracked corpus content:
 ```bash
 uv run greek-knowledge lookup ὕδωρ            # every lemma-keyed source's raw hit
 uv run greek-knowledge build ὕδωρ             # a full Lexical Entry body, unwritten
+uv run greek-knowledge query --type grammar --level beginner --dialect attic
 uv run greek-knowledge regenerate --write     # the ONLY command that writes to words/grammar/culture
 uv run python examples/lookup_word.py ὕδωρ    # same as `lookup`, as a script
 uv run python examples/build_one_concept.py ὕδωρ
+uv run python examples/query_knowledge.py --period koine --author Sophocles
 ```
 `lookup`/`build`/the examples call `okfbuild.wiring.default_source_bundle()`,
 a simpler and less cache-optimized wiring than `tests/conftest.py`'s
@@ -180,7 +182,11 @@ that passage). Every claim in a Lexical Entry/Grammatical Rule/
 Cultural Context file's body is footnote-cited back to a `sources[]`
 frontmatter entry; a Literary Translation file instead cites inline,
 via an HTML-comment description line under each translator's `##`
-heading. See `okfbuild/okf.py` (added in section-02-okf-writer) for
+heading. Both Grammatical Rule and Cultural Context entries may
+optionally carry a `dialect` field to annotate period-or-region-specific
+usage; Cultural Context may additionally carry an optional `periods_spanned`
+list. Lexical Entry and Literary Translation are unaffected by these
+additions. See `okfbuild/okf.py` (added in section-02-okf-writer) for
 the exact schema.
 
 
@@ -200,6 +206,8 @@ the exact schema.
 | ancientrome.ru | Greek author index + Dvoretsky Greek-Russian dictionary listing (finding aid, not integrated) | [`references/sources/ancientrome-ru.md`](references/sources/ancientrome-ru.md) |
 | Digital Encyclopedia of Atticism (DEA) | Atticist lexica — prescriptive "correct Attic usage" commentary (not integrated) | [`references/sources/atticism-eu.md`](references/sources/atticism-eu.md) |
 | Grammar references (Kühner, Gildersleeve, Sobolevsky, Kozarzhevsky, Wolf, Chantraine) | Citation sources for Grammatical Rule entries (print works, not integrated) | [`references/sources/grammar-references.md`](references/sources/grammar-references.md) |
+| CONSPECTVS GRAMMATICVS (Palaestra reference grammar) | Athenaze-referenced grammar handbook: paradigms, gender-assignment rules, and verb forms (Volumes I-III integrated) | [`references/sources/conspectus-grammaticus.md`](references/sources/conspectus-grammaticus.md) |
+| Verb tenses in Hellenistic Koine and Modern Greek (ΑΤΤΙΚΙΣΤΑ) | Paradigm comparison (λύω) across Hellenistic Koine and Modern Greek with historical divergence notes (Telegram channel, integrated) | [`references/sources/atticist-koine-tenses.md`](references/sources/atticist-koine-tenses.md) |
 | Diorisis Ancient Greek Corpus | 820 works, per-word lemma/POS/morphology, TLG-numbered, CC BY-SA (catalog integrated for LSJ period mapping; full per-word morphology not yet integrated) | [`references/sources/diorisis.md`](references/sources/diorisis.md) |
 | Homer/Odyssey scholarship | Commentary/scholarship on Homer (Голинкевич, Гордезиани, Lord, Сахарный, Тахо-Годи; not integrated) | [`references/sources/homer-scholarship.md`](references/sources/homer-scholarship.md) |
 | Greek alphabet origins | Papers on the Greek alphabet's formation and pre-alphabetic antecedents (not integrated) | [`references/sources/greek-alphabet-origins.md`](references/sources/greek-alphabet-origins.md) |
