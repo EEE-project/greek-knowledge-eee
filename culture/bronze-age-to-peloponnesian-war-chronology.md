@@ -16,13 +16,16 @@ sources:
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T17:08:15.069675+00:00'
+  at: '2026-09-15T21:43:28.738791+00:00'
 related_words: []
 related_lessons:
 - ancient_greek/palaestra/athenaze-vol1/chapter-1
 dialect: []
-status: draft
+periods_spanned:
+  from: homeric
+  to: attic
 verified: []
+status: draft
 ---
 ## A chronology of early Greek history
 

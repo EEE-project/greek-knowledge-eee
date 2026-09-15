@@ -203,11 +203,7 @@ GRAMMAR_RULES.append(
 writing by any punctuation) and before a word beginning with a vowel. \
 This appended **-ν** is called the movable ν (**ν ἐφελκυστικόν**) and \
 shows up under the same conditions on other words too — most commonly \
-the 3rd-plural ending **-ουσι(ν)**.[^athenaze-ch1] Athenaze's own text \
-supplies all three conditions directly: **Αὐτουργὸς γάρ ἐστιν.** keeps \
--ν before a full stop, **Ὁ κλῆρος μικρός ἐστιν, καί...** keeps it \
-before a following vowel, while **Χαλεπὸς δέ ἐστιν ὁ βίος.** drops it \
-before a consonant.[^athenaze-ch1]
+the 3rd-plural ending **-ουσι(ν)**.[^athenaze-ch1]
 
 **ἐστί(ν)** is also an **enclitic**: it carries no accent of its own \
 and leans on the preceding word for its accentuation, which is why it \
@@ -549,9 +545,10 @@ GRAMMAR_RULES.append(
         body="""\
 ## Future continuous: a tense with no κοινή ancestor
 
-κοινή has one synthetic future (**λύσω**). Task 19's rule already \
-covers how Modern Greek's θα-periphrasis reintroduces an aspect \
-distinction κοινή's future itself lacked — but Modern Greek names and \
+κοινή has one synthetic future (**λύσω**). [The θα-periphrasis \
+rule](future-tha-periphrasis.md) already covers how Modern \
+Greek's θα-periphrasis reintroduces an aspect distinction κοινή's \
+future itself lacked — but Modern Greek names and \
 uses this distinction as two fully separate tenses in its own right, \
 not just an incidental side effect of the periphrasis: **future \
 continuous** (**μέλλοντας εξακολουθητικός**, θα + present stem: **θα \
@@ -758,6 +755,7 @@ CULTURAL_TOPICS.append(
         related_words=[],
         related_lessons=["ancient_greek/palaestra/athenaze-vol1/chapter-1"],
         extra_sources=[_ATHENAZE_CH1_EXT],
+        periods_spanned={"from": "homeric", "to": "attic"},
     )
 )
 

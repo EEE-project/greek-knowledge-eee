@@ -45,6 +45,12 @@ uv run python examples/lookup_word.py ὕδωρ    # same as `lookup`, as a scri
 uv run python examples/build_one_concept.py ὕδωρ
 uv run python examples/query_knowledge.py --period koine --author Sophocles
 ```
+`--level` on `query` matches whatever free-text value a concept file's
+`level` frontmatter happens to contain -- it is not a validated or fixed
+vocabulary. Today's corpus mixes `beginner`, `advanced`, `B1`, and
+mostly-empty values; CEFR labels like `A2` used elsewhere in this
+project's docs are illustrative, not guaranteed to match anything.
+
 `lookup`/`build`/the examples call `okfbuild.wiring.default_source_bundle()`,
 a simpler and less cache-optimized wiring than `tests/conftest.py`'s
 `real_source_bundle` fixture uses (see that function's own docstring for
@@ -175,7 +181,8 @@ reference wiring.
 Four OKF concept types, each one markdown file with YAML frontmatter:
 **Lexical Entry** (one file per word, with a section per attested
 historical period), **Grammatical Rule** (one file per documented
-period-to-period morphological change), **Cultural Context** (one
+grammatical rule -- a synchronic paradigm/syntax rule scoped to one
+period, or a period-to-period change), **Cultural Context** (one
 file per person/theme/work), and **Literary Translation** (one file
 per work/passage/language, gathering every translator's rendering of
 that passage). Every claim in a Lexical Entry/Grammatical Rule/
@@ -185,7 +192,7 @@ via an HTML-comment description line under each translator's `##`
 heading. Both Grammatical Rule and Cultural Context entries may
 optionally carry a `dialect` field to annotate period-or-region-specific
 usage; Cultural Context may additionally carry an optional `periods_spanned`
-list. Lexical Entry and Literary Translation are unaffected by these
+`{from, to}` mapping. Lexical Entry and Literary Translation are unaffected by these
 additions. See `okfbuild/okf.py` (added in section-02-okf-writer) for
 the exact schema.
 

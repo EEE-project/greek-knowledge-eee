@@ -24,18 +24,18 @@ sources:
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T17:08:14.726479+00:00'
+  at: '2026-09-15T21:43:28.306466+00:00'
 periods_spanned:
   from: attic
   to: attic
 dialect:
 - attic
-status: draft
 verified: []
+status: draft
 ---
 ## Movable ν and enclitics
 
-**ἐστίν** replaces **ἐστί** in two situations: before a pause (marked in writing by any punctuation) and before a word beginning with a vowel. This appended **-ν** is called the movable ν (**ν ἐφελκυστικόν**) and shows up under the same conditions on other words too — most commonly the 3rd-plural ending **-ουσι(ν)**.[^athenaze-ch1] Athenaze's own text supplies all three conditions directly: **Αὐτουργὸς γάρ ἐστιν.** keeps -ν before a full stop, **Ὁ κλῆρος μικρός ἐστιν, καί...** keeps it before a following vowel, while **Χαλεπὸς δέ ἐστιν ὁ βίος.** drops it before a consonant.[^athenaze-ch1]
+**ἐστίν** replaces **ἐστί** in two situations: before a pause (marked in writing by any punctuation) and before a word beginning with a vowel. This appended **-ν** is called the movable ν (**ν ἐφελκυστικόν**) and shows up under the same conditions on other words too — most commonly the 3rd-plural ending **-ουσι(ν)**.[^athenaze-ch1]
 
 **ἐστί(ν)** is also an **enclitic**: it carries no accent of its own and leans on the preceding word for its accentuation, which is why it appears unaccented in ordinary running text — true of every disyllabic present form of εἰμί except **εἶ** "(you) are," which keeps its own accent.[^conspectus-i][^athenaze-ch2]
 
