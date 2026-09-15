@@ -27,7 +27,12 @@ etymologies — directly as curated input to a concept builder.
 accepts this curated citation as optional input, the same mechanism
 `grammatical_rule.py` uses for its curated Sophocles excerpts. When no
 curated Beekes citation is supplied for a given lemma, the Lexical Entry
-is built without an etymology section — this is never a blocking
-dependency.
+is built without an etymology section from Beekes — this is never a
+blocking dependency. The "## Etymology" section can also be populated
+automatically, independent of a curated Beekes citation, from
+[IE-CoR](iecor.md)'s ~170-word cognate-set extract when `sources.iecor`
+has an entry for the lemma — the two can appear together, each with its
+own footnote, since IE-CoR covers a fixed core vocabulary rather than
+Beekes' full headword range.
 
 Always cite by page number (e.g. `Beekes p. 128`).

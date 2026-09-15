@@ -1,8 +1,9 @@
-"""Source clients: EEE engine, Morpheus, Byzantine lexicon, Wiktextract, LSJ, Wikipedia."""
+"""Source clients: EEE engine, Morpheus, Byzantine lexicon, Wiktextract, LSJ, Wikipedia, IE-CoR."""
 
 from dataclasses import dataclass
 from types import ModuleType
 
+from okfbuild.sources.iecor_client import IECorEntry
 from okfbuild.sources.llm_gap_filler import GapFillerConfig
 from okfbuild.sources.lsj_index import CachedLSJIndex, LSJIndex
 from okfbuild.sources.lsj_periods import LSJPeriodMap
@@ -27,3 +28,4 @@ class SourceBundle:
     wikipedia: ModuleType
     llm_gap_filler: "GapFillerConfig | None" = None
     lsj_period_map: "LSJPeriodMap | None" = None
+    iecor: "dict[str, list[IECorEntry]] | None" = None

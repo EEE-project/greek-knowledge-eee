@@ -1,6 +1,6 @@
 [project]
 name = "greek-knowledge-eee"
-version = "0.4.0"
+version = "0.5.0"
 description = "A Greek language & culture knowledge base (Open Knowledge Format) for the EEE project"
 readme = "README.md"
 license = "Apache-2.0"

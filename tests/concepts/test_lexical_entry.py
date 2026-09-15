@@ -10,6 +10,7 @@ from okfbuild.okf import Source
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
+from okfbuild.sources.iecor_client import IECorEntry
 from okfbuild.sources.llm_gap_filler import (
     GapFillCache,
     GapFillerConfig,
@@ -301,6 +302,48 @@ def test_build_includes_beekes_etymology_section_when_supplied(morpheus_client):
     assert "## Etymology" in concept.body
     assert "[^beekes-edg]" in concept.body
     assert any(s.id == "beekes-edg" for s in concept.sources)
+
+
+def test_build_includes_iecor_cognate_in_etymology_section_when_sources_iecor_has_a_hit(morpheus_client):
+    sources = SourceBundle(
+        eee_engine=_eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})}),
+        morpheus=morpheus_client,
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=_no_lsj_entry(),
+        wikipedia=Mock(),
+        iecor={"νόστος": [IECorEntry(gloss="return", root_form="*nes-", root_language="Proto-Indo-European", justification="test")]},
+    )
+
+    concept = build("νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"])
+
+    assert "## Etymology" in concept.body
+    assert "[^iecor]" in concept.body
+    assert any(s.id == "iecor" for s in concept.sources)
+
+
+def test_build_combines_beekes_and_iecor_in_one_etymology_section(morpheus_client):
+    """Both may contribute to the same lemma's Etymology section — one
+    hand-curated (beekes_citation), one automatic (sources.iecor) — each
+    with its own footnote, neither replacing the other."""
+    sources = SourceBundle(
+        eee_engine=_eee_engine_stub(grc_forms_by_backend={"homeric": _rule_based({"Nom.Sing": {"νόστος"}})}),
+        morpheus=morpheus_client,
+        byzantine_forms={},
+        wiktextract=Mock(lookup=Mock(return_value=None)),
+        lsj=_no_lsj_entry(),
+        wikipedia=Mock(),
+        iecor={"νόστος": [IECorEntry(gloss="return", root_form="*nes-", root_language="Proto-Indo-European", justification="test")]},
+    )
+
+    concept = build(
+        "νόστος", "noun", ["homeric"], sources, level=["B1"], tags=["test"],
+        beekes_citation="From PIE *nes- 'return safely, come home'.",
+    )
+
+    assert concept.body.count("## Etymology") == 1
+    assert "[^beekes-edg]" in concept.body
+    assert "[^iecor]" in concept.body
 
 
 def test_build_homeric_and_attic_query_independently_scoped_backends():

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-15
+
+- **Integrated IE-CoR (Indo-European Cognate Relationships database) as an automatic Etymology-section source, alongside the existing hand-curated Beekes citation.** `okfbuild/sources/iecor_client.py`'s `load_iecor_cognates()` reads a new committed extract, `data/iecor/ancient_greek_cognates.tsv` (172 rows: IE-CoR's "Greek: Ancient" wordlist, joined through its own `cognates.csv`/`cognatesets.csv` to each headword's root and justification prose; CC BY 4.0). Wired into `SourceBundle.iecor` (optional, defaults to `None`) and `lexical_entry.py`'s new `_etymology_section()`, which combines it with `beekes_citation` in one "## Etymology" section — either, both, or neither may contribute per lemma, each with its own footnote. Checked against this KB's 634 already-built `words/*.md` files at integration time: 43 exact headword matches. Scoped to Ancient Greek only (IE-CoR's 7 other Greek varieties aren't extracted).
+- Bumped to 0.5.0 (`pyproject.toml`) -- minor, a new capability (automatic etymology citations for a real subset of headwords), not a schema-breaking change. Full suite (`-m "not integration"`): 351 passed, 1 skipped, 7 deselected; `ruff check` clean.
+
 ## 2026-09-14
 
 - **Authored I.1-21 interlinear content (EN + EL), closing the gap

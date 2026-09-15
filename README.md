@@ -181,7 +181,7 @@ the exact schema.
 | Verhasselt (2009), Pre-Greek substratum survey | Open-access literature review of Pre-Greek substrate scholarship (not integrated) | [`references/sources/verhasselt-pre-greek-substratum.md`](references/sources/verhasselt-pre-greek-substratum.md) |
 | Pre-Greek toponyms dataset (Hieber) | Pre-Greek place names ranked by certainty (view-only, not integrated) | [`references/sources/pre-greek-toponyms.md`](references/sources/pre-greek-toponyms.md) |
 | Leiden IE Etymological Dictionary Series (Brill) | ~12-volume IE-branch dictionary series incl. Beekes' Greek volume (subscription-only, not integrated beyond Beekes) | [`references/sources/leiden-ie-dictionary-series.md`](references/sources/leiden-ie-dictionary-series.md) |
-| IE-CoR | 1,600+ IE cognate sets + language trees, CC BY 4.0 CLDF data (not integrated, strong tool candidate) | [`references/sources/iecor.md`](references/sources/iecor.md) |
+| IE-CoR | Ancient Greek cognate sets + PIE roots, CC BY 4.0 CLDF data (integrated: 172-word etymology citation alongside Beekes) | [`references/sources/iecor.md`](references/sources/iecor.md) |
 | CLARIN Virtual Language Observatory | Meta-catalog of ~975k language-resource records (discovery tool, not integrated) | [`references/sources/clarin-vlo.md`](references/sources/clarin-vlo.md) |
 | European Language Grid catalogue | Meta-catalog of language resources/tools (discovery tool, not integrated) | [`references/sources/european-language-grid.md`](references/sources/european-language-grid.md) |
 | Greek For Euclid (Calvert) | 26-lesson course on mathematical Greek for reading Euclid's *Elements* (legacy SPIonic font, not integrated) | [`references/sources/greek-for-euclid.md`](references/sources/greek-for-euclid.md) |

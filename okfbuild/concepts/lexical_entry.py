@@ -38,6 +38,7 @@ from okfbuild.concepts import GENERATED_BY
 from okfbuild.okf import ConceptFile, Source
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
+from okfbuild.sources.iecor_client import IECorEntry
 from okfbuild.sources.llm_gap_filler import GapFillCache
 from okfbuild.sources.lsj_index import LSJCitation, LSJSegment, LSJText
 from okfbuild.sources.lsj_periods import LSJPeriodMap
@@ -85,6 +86,11 @@ _BEEKES_SOURCE = {
     "resource": "Beekes (2010), Etymological Dictionary of Greek",
     "title": "Etymological Dictionary of Greek",
     "author": "Robert Beekes",
+}
+_IECOR_SOURCE = {
+    "resource": "https://iecor.clld.org/",
+    "title": "IE-CoR (Indo-European Cognate Relationships)",
+    "author": "Heggarty, Anderson & Scarborough (eds.)",
 }
 _LSJ_SOURCE = {
     "resource": "https://github.com/PerseusDL/lexica/tree/master/CTS_XML_TEI/perseus/pdllex/grc/lsj",
@@ -331,10 +337,9 @@ def build(
             if ancient_period in periods and ancient_period not in attested_periods:
                 attested_periods.append(ancient_period)
 
-    if beekes_citation:
-        source_id = "beekes-edg"
-        cite(source_id, **_BEEKES_SOURCE)
-        body_sections.append(f"## Etymology\n\n{beekes_citation}[^{source_id}]")
+    etymology = _etymology_section(lemma, beekes_citation, sources.iecor, cite)
+    if etymology:
+        body_sections.append(f"## Etymology\n\n{etymology}")
 
     return ConceptFile(
         type="Lexical Entry",
@@ -433,4 +438,30 @@ def _modern_period_section(modern_forms, wiktextract_entry, cite) -> str | None:
             lines.extend(f"**Sense {i}:** {gloss}[^{source_id}]" for i, gloss in enumerate(glosses, start=1))
         elif glosses:
             lines.append(f"{glosses[0]}[^{source_id}]")
+    return "\n\n".join(lines) if lines else None
+
+
+def _etymology_section(
+    lemma: str, beekes_citation: "str | None", iecor: "dict[str, list[IECorEntry]] | None", cite
+) -> str | None:
+    """Combines the hand-curated Beekes citation (if supplied) with any
+    IE-CoR cognate-set entries for `lemma` (if sources.iecor is set and
+    has one or more hits) into the "## Etymology" section body. Either,
+    both, or neither may contribute -- IE-CoR coverage is a fixed ~170-
+    word comparative wordlist (see references/sources/iecor.md), so most
+    lemmas will have a Beekes citation, an IE-CoR entry, both, or
+    neither, not reliably one specific combination."""
+    lines = []
+    if beekes_citation:
+        source_id = "beekes-edg"
+        cite(source_id, **_BEEKES_SOURCE)
+        lines.append(f"{beekes_citation}[^{source_id}]")
+    for entry in (iecor or {}).get(lemma, []):
+        source_id = "iecor"
+        cite(source_id, **_IECOR_SOURCE)
+        # root_form already carries its own leading "*" when it's a
+        # reconstruction (e.g. "*u̯ed-"), matching beekes_citation's own
+        # plain-prose convention above -- no markdown emphasis added
+        # here, or a reconstructed root would render "**u̯ed-*".
+        lines.append(f"From {entry.root_language} {entry.root_form} ({entry.gloss}). {entry.justification}[^{source_id}]")
     return "\n\n".join(lines) if lines else None

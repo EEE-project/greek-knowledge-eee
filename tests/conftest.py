@@ -10,6 +10,7 @@ import pytest
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.byzantine_lexicon import load_byzantine_forms
 from okfbuild.sources.eee_engine import FormSourceType, SlotForms
+from okfbuild.sources.iecor_client import load_iecor_cognates
 from okfbuild.sources.llm_gap_filler import GapFillerConfig, LLMModelConfig
 from okfbuild.sources.lsj_index import CachedLSJIndex, _load_entries
 from okfbuild.sources.lsj_periods import LSJPeriodMap, tlg_map_cache_is_fresh
@@ -213,6 +214,11 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
     lsj_cache_dir = repo_root / "data" / "lsj-cache"
     tlg_map_cache_path = repo_root / "data" / "lsj-tlg-map-cache.json"
 
+    # Unlike lsj/wiktextract above, this extract is small and git-tracked
+    # (like diorisis_catalog_path), so it's always present -- no
+    # conditional-availability dance needed.
+    iecor = load_iecor_cognates(repo_root / "data" / "iecor" / "ancient_greek_cognates.tsv")
+
     # `lsj` (CachedLSJIndex, lazy -- scans only on an actual cache miss)
     # and `lsj_period_map` (LSJPeriodMap, eager -- scans at construction
     # unless its own TLG-map cache is warm) would otherwise each
@@ -275,6 +281,7 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
         lsj=lsj,
         wikipedia=wikipedia_client,
         lsj_period_map=lsj_period_map,
+        iecor=iecor,
     )
 
 
