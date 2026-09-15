@@ -1,6 +1,7 @@
 from unittest.mock import Mock
 
 from okfbuild.concepts.cultural_context import build
+from okfbuild.okf import Source
 
 
 def test_build_without_wiki_title_never_calls_wikipedia():
@@ -69,3 +70,58 @@ def test_build_with_wiki_title_but_no_matching_page_falls_back_to_prose_only():
     assert concept.sources == []
     assert "[^wikipedia]" not in concept.body
     assert "A topic with no matching Wikipedia page." in concept.body
+
+
+def test_build_extra_sources_cited_ahead_of_wikipedia():
+    wikipedia = Mock()
+    wikipedia.summary.return_value = {"title": "A Page", "extract": "An extract."}
+    sources = Mock(wikipedia=wikipedia)
+    thucydides = Source(
+        id="thucydides-2-14",
+        resource="Thucydides, History of the Peloponnesian War, II.14",
+        title="History of the Peloponnesian War",
+        author="Thucydides",
+    )
+
+    concept = build(
+        topic_id="farmer-class",
+        lesson_prose=["Farmers formed the backbone of Athenian democracy.[^thucydides-2-14]"],
+        wiki_title="Ancient_Athens",
+        sources=sources,
+        level=["beginner"],
+        tags=["history"],
+        extra_sources=[thucydides],
+    )
+
+    source_ids = {s.id for s in concept.sources}
+    assert "thucydides-2-14" in source_ids
+    assert "wikipedia" in source_ids
+    assert concept.sources[0].id == "thucydides-2-14"
+
+
+def test_build_periods_spanned_and_dialect_optional_and_passthrough():
+    sources = Mock(wikipedia=Mock())
+
+    concept_without = build(
+        topic_id="timeless-topic",
+        lesson_prose=["No period or dialect scope."],
+        wiki_title=None,
+        sources=sources,
+        level=[],
+        tags=[],
+    )
+    assert "periods_spanned" not in concept_without.extra_frontmatter
+    assert concept_without.extra_frontmatter["dialect"] == []
+
+    concept_with = build(
+        topic_id="attic-topic",
+        lesson_prose=["Scoped to Attic, 5th c. BC."],
+        wiki_title=None,
+        sources=sources,
+        level=[],
+        tags=[],
+        periods_spanned={"from": "attic", "to": "attic"},
+        dialect=["attic"],
+    )
+    assert concept_with.extra_frontmatter["periods_spanned"] == {"from": "attic", "to": "attic"}
+    assert concept_with.extra_frontmatter["dialect"] == ["attic"]

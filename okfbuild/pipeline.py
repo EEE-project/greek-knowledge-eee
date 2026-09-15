@@ -78,6 +78,9 @@ class CulturalTopicSpec:
     tags: list[str]
     related_words: list[str] | None = None
     related_lessons: list[str] | None = None
+    extra_sources: list[Source] | None = None
+    periods_spanned: dict | None = None
+    dialect: list[str] | None = None
 
 
 @dataclass
@@ -435,6 +438,9 @@ def run(
                         tags=spec.tags,
                         related_words=spec.related_words,
                         related_lessons=spec.related_lessons,
+                        extra_sources=spec.extra_sources,
+                        periods_spanned=spec.periods_spanned,
+                        dialect=spec.dialect,
                     )
                     path = culture_dir / f"{_slugify(spec.topic_id)}.md"
                     _apply_write(report, concept, path)
