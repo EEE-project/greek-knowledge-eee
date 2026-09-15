@@ -136,3 +136,38 @@ def test_find_concepts_unknown_period_value_matches_nothing(tmp_path):
     results = find_concepts(tmp_path, period="not-a-real-period")
 
     assert results == []
+
+
+def test_find_concepts_filters_by_dialect(tmp_path):
+    _write(tmp_path, "grammar", "attic-rule", extra_frontmatter={"periods_spanned": {"from": "attic", "to": "attic"}, "dialect": ["attic"]})
+    _write(tmp_path, "grammar", "koine-bridging-rule", extra_frontmatter={"periods_spanned": {"from": "koine", "to": "modern"}, "dialect": []})
+
+    results = find_concepts(tmp_path, dialect="attic")
+
+    assert [c.title for _, c in results] == ["attic-rule"]
+
+
+def test_find_concepts_combines_all_filters_with_and(tmp_path):
+    _write(
+        tmp_path, "grammar", "matches-everything",
+        level=["beginner"],
+        sources=[Source(id="s", resource="r", title="t", author="E. A. Sophocles")],
+        extra_frontmatter={"periods_spanned": {"from": "attic", "to": "byzantine"}, "dialect": ["attic"]},
+    )
+    _write(
+        tmp_path, "grammar", "wrong-level",
+        level=["advanced"],
+        sources=[Source(id="s", resource="r", title="t", author="E. A. Sophocles")],
+        extra_frontmatter={"periods_spanned": {"from": "attic", "to": "byzantine"}, "dialect": ["attic"]},
+    )
+
+    results = find_concepts(
+        tmp_path,
+        type="Grammatical Rule",
+        level="beginner",
+        period="koine",
+        dialect="attic",
+        author="Sophocles",
+    )
+
+    assert [c.title for _, c in results] == ["matches-everything"]

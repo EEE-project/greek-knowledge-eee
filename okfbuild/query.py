@@ -50,6 +50,10 @@ def _period_matches(concept: ConceptFile, period: str) -> bool:
     return False
 
 
+def _dialect_matches(concept: ConceptFile, dialect: str) -> bool:
+    return dialect in concept.extra_frontmatter.get("dialect", [])
+
+
 def find_concepts(
     repo_root: Path,
     *,
@@ -57,6 +61,7 @@ def find_concepts(
     level: str | None = None,
     author: str | None = None,
     period: str | None = None,
+    dialect: str | None = None,
 ) -> list[tuple[Path, ConceptFile]]:
     """Return every (path, ConceptFile) under repo_root's words/grammar/
     culture/texts trees matching every filter given (None = no constraint
@@ -79,6 +84,8 @@ def find_concepts(
             if author is not None and not _author_matches(concept, author):
                 continue
             if period is not None and not _period_matches(concept, period):
+                continue
+            if dialect is not None and not _dialect_matches(concept, dialect):
                 continue
             matches.append((path, concept))
     return sorted(matches, key=lambda pair: pair[0])
