@@ -1,11 +1,12 @@
 from pathlib import Path
+from typing import Any
 
 from okfbuild import okf
 from okfbuild.okf import ConceptFile, Source
 from okfbuild.query import find_concepts
 
 
-def _write(repo_root: Path, subdir: str, slug: str, **overrides) -> Path:
+def _write(repo_root: Path, subdir: str, slug: str, **overrides: Any) -> Path:
     defaults = dict(
         type="Grammatical Rule",
         title=slug,
@@ -58,6 +59,18 @@ def test_find_concepts_filters_by_author_case_insensitive_substring(tmp_path):
     results = find_concepts(tmp_path, author="sophocles")
 
     assert [c.title for _, c in results] == ["sophocles-rule"]
+
+
+def test_find_concepts_filters_by_author_matches_any_source(tmp_path):
+    _write(tmp_path, "grammar", "multi-source-rule", sources=[
+        Source(id="s1", resource="r1", title="t1", author="Jane Doe"),
+        Source(id="s2", resource="r2", title="t2", author="E. A. Sophocles"),
+    ])
+    _write(tmp_path, "grammar", "other-rule", sources=[Source(id="s", resource="r", title="t", author="Homer")])
+
+    results = find_concepts(tmp_path, author="sophocles")
+
+    assert [c.title for _, c in results] == ["multi-source-rule"]
 
 
 def test_find_concepts_skips_index_files(tmp_path):

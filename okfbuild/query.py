@@ -1,5 +1,5 @@
 """Read-only, cross-concept-type querying of this KB's own committed
-files by frontmatter — level, period, dialect, author. Reads
+files by frontmatter — type, level, author. Reads
 already-written words/grammar/culture/texts content via okf.read(); never
 calls any external source. See okfbuild/lookup.py for the equivalent
 read-only entry point for *external* sources instead.
