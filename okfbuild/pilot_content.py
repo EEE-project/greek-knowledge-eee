@@ -78,6 +78,18 @@ _ATTICIST_KOINE = Source(
     title="Verb tenses in Hellenistic Koine and Modern Greek",
     author="ΑΤΤΙΚΙΣΤΑ (t.me/atticist)",
 )
+_THUCYDIDES_2_14 = Source(
+    id="thucydides-2-14",
+    resource="Thucydides, History of the Peloponnesian War, II.14",
+    title="History of the Peloponnesian War",
+    author="Thucydides",
+)
+_PSEUDO_XENOPHON_ATH_POL = Source(
+    id="pseudo-xenophon-ath-pol-1-10",
+    resource="Pseudo-Xenophon, Constitution of the Athenians, I.10",
+    title="Constitution of the Athenians",
+    author="Pseudo-Xenophon",
+)
 
 _OSAN_BODY = """\
 ## The -οσαν aorist/imperfect 3rd plural
@@ -607,6 +619,307 @@ CULTURAL_TOPICS: list[CulturalTopicSpec] = [
         related_lessons=["kavafis_ithaki/1", "kavafis_ithaki/2"],
     )
 ]
+
+CULTURAL_TOPICS.append(
+    CulturalTopicSpec(
+        topic_id="peloponnesian-war-setting",
+        lesson_prose=[
+            (
+                "## The historical setting of Athenaze's narrative\n\n"
+                "Athenaze's fictional story of Dikaiopolis and his family is set "
+                "against a precise historical backdrop: from autumn 433 to spring "
+                "431 BC, at the height of Athenian democracy under "
+                "**Pericles**. Athens dominates the sea and holds a large empire, "
+                "but its power provokes fear and envy in Sparta and its "
+                "Peloponnesian League allies — above all Corinth. By spring 431, "
+                "Athens and the Peloponnesian League are already at war — a war "
+                "that will end, twenty-seven years later, in Athens's defeat."
+                "[^athenaze-ch1]"
+            ),
+            (
+                "The story's main plot resolves by Chapters 18-20; the second "
+                "book's opening draws the family into the Athens-Corinth "
+                "conflict that actually triggered the Peloponnesian War, and "
+                "Chapters 21-23 (set at the war's outbreak) are based directly "
+                "on Thucydides's own history of the conflict.[^athenaze-ch1]"
+            ),
+        ],
+        wiki_title=None,
+        level=["beginner"],
+        tags=["history", "peloponnesian-war", "athens", "pericles"],
+        related_words=[],
+        related_lessons=["ancient_greek/palaestra/athenaze-vol1/chapter-1", "ancient_greek/palaestra/athenaze-vol1/chapter-2"],
+        extra_sources=[_ATHENAZE_CH1],
+        periods_spanned={"from": "attic", "to": "attic"},
+        dialect=["attic"],
+    )
+)
+
+CULTURAL_TOPICS.append(
+    CulturalTopicSpec(
+        topic_id="greek-dialect-history",
+        lesson_prose=[
+            (
+                "## From Indo-European to Koine\n\n"
+                "Greek, like Latin and Sanskrit, belongs to the Indo-European "
+                "language family. Prehistoric Greek arrived in the Balkan "
+                "peninsula in waves — Achaean speakers in the early 2nd "
+                "millennium BC (whose fusion with the pre-existing Minoan "
+                "civilization on Crete produced the Mycenaean civilization "
+                "Homer would later celebrate in the *Iliad*), and Dorian "
+                "speakers around 1100 BC.[^athenaze-ch1]"
+            ),
+            (
+                "Contact with earlier local languages and later historical "
+                "events split what was originally a fairly uniform prehistoric "
+                "Greek into several dialects — Ionic, Attic, Aeolic, Doric, "
+                "among others. These literary dialects are often quite "
+                "artificial, removed from actual everyday speech: Homer's own "
+                "poems, for instance, are written in a mixed language, "
+                "fundamentally Ionic but heavily laced with Aeolic elements."
+                "[^athenaze-ch1]"
+            ),
+            (
+                "The Attic dialect of Periclean-era Athens (5th c. BC) earned "
+                "its later prestige — studied today simply as \"Ancient "
+                "Greek\" — from the literary achievements of its great prose "
+                "writers: Plato, Thucydides, Xenophon. After Alexander the "
+                "Great's conquests (he died 323 BC), a common Greek — **ἡ "
+                "κοινὴ διάλεκτος**, koine — spread across the Mediterranean as "
+                "a language of trade and culture: based on Attic, but shorn "
+                "of its most narrowly local features. Byzantine and Modern "
+                "Greek both developed, in essence, out of this koine — though "
+                "a purist literary movement, Atticism, kept returning to the "
+                "cleaner 5th-century Attic for centuries afterward."
+                "[^athenaze-ch1]"
+            ),
+        ],
+        wiki_title=None,
+        level=["beginner"],
+        tags=["history", "linguistics", "dialect", "koine"],
+        related_words=[],
+        related_lessons=["ancient_greek/palaestra/athenaze-vol1/chapter-1"],
+        extra_sources=[_ATHENAZE_CH1],
+        periods_spanned={"from": "homeric", "to": "koine"},
+    )
+)
+
+CULTURAL_TOPICS.append(
+    CulturalTopicSpec(
+        topic_id="bronze-age-to-peloponnesian-war-chronology",
+        lesson_prose=[
+            (
+                "## A chronology of early Greek history\n\n"
+                "**Bronze Age:** Minos, king of Crete; Theseus, king of "
+                "Athens. Around 1220 BC, Agamemnon of Mycenae takes Troy. A "
+                "so-called \"Dark Age\" follows, including the Ionian "
+                "migration to Asia Minor around 1050 BC.[^athenaze-ch1-ext]"
+            ),
+            (
+                "**Greek renaissance:** city-states (Sparta, Corinth, etc.) "
+                "form around 850 BC. The first Olympic Games are held in 776 "
+                "BC. Trade and colonial expansion follow, c. 750-500 BC. "
+                "Homer composes the *Iliad* and *Odyssey* around 725 BC "
+                "(Ionia); Hesiod composes *Works and Days* around 700 BC "
+                "(Boeotia). Cypselus tyrannizes Corinth c. 657-625 BC; Solon "
+                "reforms Athens soon after.[^athenaze-ch1-ext]"
+            ),
+            (
+                "**Persian invasions:** in 546 BC Croesus, king of Lydia, and "
+                "the Greeks of Asia Minor are defeated by Cyrus of Persia. In "
+                "507 BC Cleisthenes lays the foundations of Athenian "
+                "democracy. Darius's expedition against Athens and the Battle "
+                "of Marathon follow in 490 BC; Xerxes invades Greece in 480 "
+                "BC (Thermopylae and Salamis, both 480 BC; Plataea, 479 BC)."
+                "[^athenaze-ch1-ext]"
+            ),
+            (
+                "**The Athenian empire:** the Delian League, founded 478 BC, "
+                "grows into the Athenian empire. Aeschylus's *Persians* is "
+                "staged in 472 BC. Pericles dominates Athens 461-429 BC — "
+                "radical democracy and imperial expansion, and, from 446 BC, "
+                "a Thirty Years' Peace with Sparta. Herodotus writes his "
+                "*Histories* in this period.[^athenaze-ch1-ext]"
+            ),
+            (
+                "**The Peloponnesian War:** war between Athens and the "
+                "Peloponnesian League breaks out in 431 BC. Plague strikes "
+                "Athens and Pericles dies, 430-429 BC. Aristophanes stages "
+                "*Acharnians* in 426 BC. A fragile peace holds in 421 BC; the "
+                "Sicilian expedition (415 BC) fails disastrously by 413 BC, "
+                "reigniting the war outright, which ends with Athens's "
+                "surrender in 404 BC. Thucydides writes his *History of the "
+                "Peloponnesian War* covering these events.[^athenaze-ch1-ext]"
+            ),
+        ],
+        wiki_title=None,
+        level=["beginner"],
+        tags=["history", "chronology", "timeline"],
+        related_words=[],
+        related_lessons=["ancient_greek/palaestra/athenaze-vol1/chapter-1"],
+        extra_sources=[_ATHENAZE_CH1_EXT],
+    )
+)
+
+CULTURAL_TOPICS.append(
+    CulturalTopicSpec(
+        topic_id="athenian-farmer-class-system",
+        lesson_prose=[
+            (
+                "## Farmers, the backbone of Athenian democracy\n\n"
+                "Dikaiopolis lives in the Attic deme of Kollytos, about "
+                "twenty kilometers southeast of Athens. Though Athens and "
+                "its port, Piraeus, formed a substantial urban center by "
+                "ancient standards, most Athenians actually lived and worked "
+                "in the countryside. Thucydides records that when Spartan "
+                "invasion forced rural residents into the city in 431 BC, "
+                "\"this removal was a hard thing for them to bear, most of "
+                "them having always been used to a country life.\"[^thucydides-2-14]"
+            ),
+            (
+                "Farm plots like Dikaiopolis's were typically small — four "
+                "to eight hectares on average. What a farmer grew depended "
+                "on terrain: the plain around Athens suited vegetables and "
+                "wheat, but Attica is mostly hilly, and its thin soils "
+                "favored vines, olives, and grazing sheep and goats instead "
+                "(dairy cattle were rarely kept). Self-sufficiency was the "
+                "goal, though few achieved it fully — two-thirds of the "
+                "wheat Athenians ate was imported — and any surplus, oil or "
+                "wine especially, went to market in Athens.[^athenaze-ch1-ext]"
+            ),
+            (
+                "Athenian citizens were divided into four property classes. "
+                "The *pentacosiomedimnoi* — landholders whose estates "
+                "produced at least 500 medimnoi of grain a year (a medimnos "
+                "≈ 52 liters) — were the wealthiest, effectively "
+                "today's millionaires. The *hippeis* (\"horsemen\") could "
+                "afford to keep a horse and formed the cavalry. The largest "
+                "class, farmers like Dikaiopolis who owned a yoke of oxen "
+                "(*zeugos*), were called *zeugitai* and served as heavy "
+                "infantry (hoplites). The *thetes* — landless or "
+                "land-poor hired laborers — formed the fourth class."
+                "[^athenaze-ch1-ext]"
+            ),
+            (
+                "Sources present farmers as the pillar of Athenian democracy "
+                "— strong, hardworking, thrifty, plain, yet sensible people, "
+                "often contrasted in Aristophanes's comedies against "
+                "ambitious politicians, impoverished aristocrats, and "
+                "grasping merchants.[^athenaze-ch1]"
+            ),
+        ],
+        wiki_title=None,
+        level=["beginner"],
+        tags=["history", "athens", "agriculture", "social-class"],
+        related_words=[],
+        related_lessons=["ancient_greek/palaestra/athenaze-vol1/chapter-1"],
+        extra_sources=[_THUCYDIDES_2_14, _ATHENAZE_CH1_EXT, _ATHENAZE_CH1],
+        periods_spanned={"from": "attic", "to": "attic"},
+        dialect=["attic"],
+    )
+)
+
+CULTURAL_TOPICS.append(
+    CulturalTopicSpec(
+        topic_id="dikaiopolis-name-and-acharnians",
+        lesson_prose=[
+            (
+                "## Dikaiopolis's name, and Aristophanes's Acharnians\n\n"
+                "The protagonist's name, **Δικαιόπολις**, is built from "
+                "**δίκαιος** \"just\" and **πόλις** \"city, state\" — "
+                "roughly \"just citizen\" or \"one who lives in a just "
+                "city.\"[^athenaze-ch1]"
+            ),
+            (
+                "Dikaiopolis is also the protagonist of Aristophanes's "
+                "comedy *Acharnians*, first staged in 426 BC — the play "
+                "Athenaze's own course draws its final readings from, where "
+                "Dikaiopolis appears as a peacemaker.[^athenaze-ch1]"
+            ),
+        ],
+        wiki_title=None,
+        level=["beginner"],
+        tags=["history", "aristophanes", "athens", "etymology"],
+        related_words=[],
+        related_lessons=["ancient_greek/palaestra/athenaze-vol1/chapter-1"],
+        extra_sources=[_ATHENAZE_CH1],
+        periods_spanned={"from": "attic", "to": "attic"},
+        dialect=["attic"],
+    )
+)
+
+CULTURAL_TOPICS.append(
+    CulturalTopicSpec(
+        topic_id="slavery-in-ancient-athens",
+        lesson_prose=[
+            (
+                "## Slavery in ancient Athens\n\n"
+                "The adult male population of Athens in 431 BC has been "
+                "estimated at roughly 50,000 citizens, 25,000 metics "
+                "(free resident foreigners with no political rights, who "
+                "could not own land in Attica or marry Athenian citizens, "
+                "but had court protection, served in the military, took "
+                "part in religious festivals, and were prominent in trade "
+                "and manufacture), and about 100,000 slaves.[^athenaze-ch2-ext]"
+            ),
+            (
+                "Slaves had no legal rights and were the property of the "
+                "state or of private individuals. Aristotle, in the "
+                "*Politics*, describes a slave as \"animate property\" "
+                "(**κτῆμα ἔμψυχον**) and a tool of his master. Most were "
+                "born into slavery or enslaved through war or piracy — a "
+                "415 BC document records the sale of fourteen slaves: five "
+                "from Thrace, two from Syria, three from Caria, two from "
+                "Illyria, one from Scythia, one from Colchis. Enslaving "
+                "fellow Greeks was considered immoral and was very rare."
+                "[^athenaze-ch2-ext]"
+            ),
+            (
+                "The ancient economy, with little machinery, depended "
+                "heavily on slave labor. Some slaves worked for the state, "
+                "e.g. in the silver mines; some worked in workshops (the "
+                "largest known, a shield factory, employed 120 slaves); "
+                "individual citizens often owned one or more slaves "
+                "according to their means. As Aristotle observes, for a "
+                "poor farmer \"an ox takes the place of a "
+                "slave.\"[^athenaze-ch2-ext]"
+            ),
+            (
+                "Not all slaves were treated inhumanely. A 5th-century "
+                "writer (Pseudo-Xenophon) remarks with some irritation: "
+                "\"In Athens, slaves and metics live with the greatest "
+                "license; one is not permitted to strike them, nor will a "
+                "slave step aside for you in the street — the reason being "
+                "that if the law allowed a free man to strike a slave, a "
+                "metic, or a freedman, he would often strike a citizen by "
+                "mistake, since in dress the common people of Athens are no "
+                "different from slaves and metics.\"[^pseudo-xenophon-ath-pol-1-10] "
+                "Slaves and citizens sometimes worked side by side for "
+                "equal pay on public building projects, per surviving "
+                "inscriptions; some slaves saved enough to buy their "
+                "freedom, though this was less common in Athens than in "
+                "Rome. Rural slave-farmers typically lived and ate "
+                "alongside their masters, and Aristophanes's comic slaves "
+                "are lively, bold characters, not figures of tyrannical "
+                "control.[^athenaze-ch2-ext]"
+            ),
+            (
+                "The slave in Athenaze's own story, **Ξανθίας** (Xanthias), "
+                "takes his name from **ξανθός** \"fair-haired, blond\" — a "
+                "typical name for a slave of Thracian or northern origin."
+                "[^athenaze-ch2]"
+            ),
+        ],
+        wiki_title=None,
+        level=["beginner"],
+        tags=["history", "athens", "slavery", "social-class"],
+        related_words=[],
+        related_lessons=["ancient_greek/palaestra/athenaze-vol1/chapter-2"],
+        extra_sources=[_ATHENAZE_CH2_EXT, _PSEUDO_XENOPHON_ATH_POL, _ATHENAZE_CH2],
+        periods_spanned={"from": "attic", "to": "attic"},
+        dialect=["attic"],
+    )
+)
 
 # Per section-07-pilot.md's post-section-01 amendment: νόστος is this
 # pilot's headline word and should exercise the beekes_citation mechanism
