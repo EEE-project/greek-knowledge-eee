@@ -125,10 +125,10 @@ def make_source_bundle():
 
 @pytest.fixture(scope="session")
 def repo_root() -> Path:
-    """This checkout's own root. out_dir for the pilot run IS this repo —
-    the pipeline writes real words/grammar/culture files here, and running
-    the acceptance test is how those files get generated; a human reviews
-    the resulting git diff before committing."""
+    """This checkout's own root -- NOT the pilot run's out_dir (see
+    pilot_output_dir below for why). Used directly by tests that check
+    real, already-committed repo state: data/wiktextract-cache/, and
+    okfbuild.check's validation of grammar/culture/texts."""
     return Path(__file__).parent.parent
 
 
@@ -289,9 +289,9 @@ def real_source_bundle(repo_root: Path) -> SourceBundle:
 def pilot_output_dir(tmp_path_factory):
     """A scratch directory for pilot_build_report to write into -- NOT
     repo_root. The test suite must never change this repo's own tracked
-    words/grammar/culture content as a side effect of running (that used
-    to be pilot_build_report's job, until running a bare `uv run pytest`
-    was found to silently rewrite real content, including regressing LSJ
+    words/ content as a side effect of running (that used to be
+    pilot_build_report's job, until running a bare `uv run pytest` was
+    found to silently rewrite real content, including regressing LSJ
     period/dialect tags when sources.lsj_period_map happened not to be
     available in a given local run -- a change nobody asked for or
     reviewed). Deliberately regenerating real content is now
@@ -305,25 +305,19 @@ def pilot_build_report(pilot_output_dir, real_source_bundle, created_with_eee_ro
     """The single real pipeline.run() call every test in
     test_pilot_acceptance.py reads its result from — session-scoped so the
     expensive, network-touching real run happens once per test session.
-    course_paths / grammar_rules / cultural_topics are the curated pilot
-    inputs from section-07-pilot.md's "Preparing the real inputs". Writes
-    to pilot_output_dir (a scratch directory), not this repo's own
-    words/grammar/culture -- see that fixture's docstring for why."""
+    course_paths are the curated pilot inputs from section-07-pilot.md's
+    "Preparing the real inputs". Writes to pilot_output_dir (a scratch
+    directory), not this repo's own words/ -- see that fixture's
+    docstring for why."""
     from okfbuild import pipeline
-    from okfbuild.pilot_content import CULTURAL_TOPICS, GRAMMAR_RULES, enrich_nostos_with_beekes
+    from okfbuild.pilot_content import enrich_nostos_with_beekes
 
     course_paths = [
         created_with_eee_root / "ancient_greek" / "odyssey",
         created_with_eee_root / "modern_greek" / "b1greeklanguageandculture" / "kavafis_ithaki",
     ]
 
-    report = pipeline.run(
-        course_paths,
-        out_dir=pilot_output_dir,
-        sources=real_source_bundle,
-        grammar_rules=GRAMMAR_RULES,
-        cultural_topics=CULTURAL_TOPICS,
-    )
+    report = pipeline.run(course_paths, out_dir=pilot_output_dir, sources=real_source_bundle)
     # Adds the Etymology section pipeline.run()'s own auto-extraction loop
     # has no way to supply (see enrich_nostos_with_beekes's own docstring).
     # Runs after the main report so a failure here doesn't hide whether the

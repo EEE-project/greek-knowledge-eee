@@ -7,8 +7,8 @@ import pytest
 import yaml
 
 from okfbuild.concepts import GENERATED_BY
-from okfbuild.okf import ConceptFile, Source
-from okfbuild.pipeline import run, GrammarRuleSpec
+from okfbuild.okf import ConceptFile
+from okfbuild.pipeline import run
 from okfbuild.sources.llm_gap_filler import (
     GapFillCache,
     GapFillerConfig,
@@ -367,29 +367,3 @@ def test_run_budget_exhaustion_skips_pruning(tmp_path, make_source_bundle):
         run([course_dir], out_dir, gap_filler_sources, gap_fill_cache_dir=tmp_path / "cache-dir")
 
     assert _read_frontmatter(existing_path)["status"] == "draft"  # untouched, not "deprecated"
-
-
-def test_run_writes_grammar_rule_from_spec(tmp_path, make_source_bundle):
-    out_dir = tmp_path / "out"
-    sources = make_source_bundle(attested_lemmas=set())
-    spec = GrammarRuleSpec(
-        rule_id="test-rule",
-        body="## A test rule\n\nSome claim.[^src]",
-        sources=[Source(id="src", resource="somewhere", title="A Source", author="Someone")],
-        period_from="attic",
-        period_to="attic",
-        level=["beginner"],
-        tags=["test"],
-        dialect=["attic"],
-    )
-
-    report = run([], out_dir, sources, grammar_rules=[spec])
-
-    concept_path = out_dir / "grammar" / "test-rule.md"
-    assert concept_path.exists()
-    frontmatter = _read_frontmatter(concept_path)
-    assert frontmatter["type"] == "Grammatical Rule"
-    assert frontmatter["dialect"] == ["attic"]
-    assert frontmatter["periods_spanned"] == {"from": "attic", "to": "attic"}
-    assert report.written == 1
-    assert report.failed == 0

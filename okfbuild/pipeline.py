@@ -1,7 +1,8 @@
-"""Pipeline orchestrator: wires section-03 source clients + section-04
-concept builders + section-02's OKF writer into one run() that builds and
-prunes the Lexical Entry / Grammatical Rule / Cultural Context concept
-files under out_dir/{words,grammar,culture}.
+"""Pipeline orchestrator: wires section-03 source clients + section-04's
+lexical_entry builder + section-02's OKF writer into one run() that builds
+and prunes the Lexical Entry concept files under out_dir/words. Grammatical
+Rule and Cultural Context entries are hand-authored directly (see
+templates/) and checked, not generated -- see okfbuild/check.py.
 """
 
 import csv
@@ -13,9 +14,9 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 from okfbuild import okf
-from okfbuild.concepts import cultural_context, grammatical_rule, lexical_entry
+from okfbuild.concepts import lexical_entry
 from okfbuild.concepts.lexical_entry import GapFillRecord
-from okfbuild.okf import ConceptFile, Source
+from okfbuild.okf import ConceptFile
 from okfbuild.sources import SourceBundle
 from okfbuild.sources.llm_gap_filler import GapFillCache, RequestBudgetExceededError
 
@@ -55,32 +56,6 @@ _SINGULAR_ARTICLES = {"ο", "η", "το", "ὁ", "ἡ", "τό", "τὸ"}
 _PLURAL_ARTICLES = {"οι", "τα", "τις"}
 
 _LANGUAGE_SUFFIX_RE = re.compile(r"_[a-z]{2}\.tsv$")
-
-
-@dataclass
-class GrammarRuleSpec:
-    rule_id: str
-    body: str
-    sources: list[Source]
-    period_from: str
-    period_to: str
-    level: list[str]
-    tags: list[str]
-    dialect: list[str] | None = None
-
-
-@dataclass
-class CulturalTopicSpec:
-    topic_id: str
-    lesson_prose: list[str]
-    wiki_title: str | None
-    level: list[str]
-    tags: list[str]
-    related_words: list[str] | None = None
-    related_lessons: list[str] | None = None
-    extra_sources: list[Source] | None = None
-    periods_spanned: dict | None = None
-    dialect: list[str] | None = None
 
 
 @dataclass
@@ -288,24 +263,23 @@ def run(
     course_paths: list[Path],
     out_dir: Path,
     sources: SourceBundle,
-    grammar_rules: list[GrammarRuleSpec] | None = None,
-    cultural_topics: list[CulturalTopicSpec] | None = None,
     gap_fill_cache_dir: Path | None = None,
     on_llm_inferred: "Callable[[GapFillRecord], None] | None" = None,
 ) -> BuildReport:
     """For each course in course_paths: extract candidate lemmas from its
     vocabulary TSVs, build a Lexical Entry per lemma (always querying all
     four periods — a word can be genuinely attested beyond the one course
-    that surfaced it). grammar_rules/cultural_topics are supplied
-    explicitly by the caller (not derived from course_paths). Every concept
-    is isolated end-to-end (build through write): one bad concept is
-    logged to BuildReport.errors and skipped, never fatal to the run.
+    that surfaced it). Every concept is isolated end-to-end (build through
+    write): one bad concept is logged to BuildReport.errors and skipped,
+    never fatal to the run.
 
-    Pruning: after building, any existing words/grammar/culture concept
-    file not touched this run is stale relative to current source
-    material — its frontmatter `status` is flipped to "deprecated" (via
-    okf.write(), so a human's `verified:` entry survives) rather than
-    deleting the file; a human decides whether to actually remove it.
+    Pruning: after building, any existing words/ concept file not touched
+    this run is stale relative to current source material — its frontmatter
+    `status` is flipped to "deprecated" (via okf.write(), so a human's
+    `verified:` entry survives) rather than deleting the file; a human
+    decides whether to actually remove it. grammar/ and culture/ are
+    hand-authored (see templates/) and out of scope for both building and
+    pruning here — okfbuild/check.py validates them instead.
 
     gap_fill_cache_dir: when sources.llm_gap_filler is set, run() shares
     exactly one GapFillCache across every lexical candidate it processes.
@@ -322,10 +296,10 @@ def run(
     Exhausting config.max_requests_per_run (llm_gap_filler.RequestBudgetExceededError)
     stops the run early rather than letting every remaining candidate fail
     the same way one-by-one, and does NOT count as "completed normally"
-    for cache-cleanup purposes — the cache is preserved (grammar_rules/
-    cultural_topics/pruning are also skipped, since the run never reached
-    the rest of the course) so a later run with a higher budget resumes
-    instead of re-paying for every already-resolved gap.
+    for cache-cleanup purposes — the cache is preserved (pruning is also
+    skipped, since the run never reached the rest of the course) so a
+    later run with a higher budget resumes instead of re-paying for every
+    already-resolved gap.
 
     on_llm_inferred, if given, is forwarded unchanged to every
     lexical_entry.build() call in the lexical-candidate loop — see that
@@ -335,8 +309,6 @@ def run(
     report = BuildReport()
     touched: set[Path] = set()
     words_dir = out_dir / "words"
-    grammar_dir = out_dir / "grammar"
-    culture_dir = out_dir / "culture"
 
     gap_fill_cache: GapFillCache | None = None
     gap_fill_cache_path: Path | None = None
@@ -371,11 +343,11 @@ def run(
                     # exact same way (cache.request_count already exceeds
                     # the budget) -- stop now rather than burning through
                     # the rest one-by-one, each producing its own
-                    # uninformative "exceeded budget" entry. grammar_rules/
-                    # cultural_topics/_prune() are skipped below too: this
-                    # run never reached the rest of the course, so pruning
-                    # would wrongly mark still-current, not-yet-attempted
-                    # concepts as deprecated.
+                    # uninformative "exceeded budget" entry. _prune() is
+                    # skipped below too: this run never reached the rest of
+                    # the course, so pruning would wrongly mark
+                    # still-current, not-yet-attempted concepts as
+                    # deprecated.
                     logger.warning(
                         "gap-filler: max_requests_per_run exhausted at lemma=%r -- "
                         "stopping this run early instead of re-attempting (and "
@@ -408,47 +380,6 @@ def run(
                 last_checkpoint_len = len(gap_fill_cache)
 
         if not budget_exhausted:
-            for spec in grammar_rules or []:
-                try:
-                    concept = grammatical_rule.build(
-                        spec.rule_id,
-                        spec.body,
-                        spec.sources,
-                        spec.period_from,
-                        spec.period_to,
-                        level=spec.level,
-                        tags=spec.tags,
-                        dialect=spec.dialect,
-                    )
-                    path = grammar_dir / f"{_slugify(spec.rule_id)}.md"
-                    _apply_write(report, concept, path)
-                    touched.add(path)
-                except Exception as exc:
-                    report.failed += 1
-                    report.errors.append(f"grammatical_rule {spec.rule_id!r}: {exc}")
-
-            for spec in cultural_topics or []:
-                try:
-                    concept = cultural_context.build(
-                        spec.topic_id,
-                        spec.lesson_prose,
-                        spec.wiki_title,
-                        sources,
-                        level=spec.level,
-                        tags=spec.tags,
-                        related_words=spec.related_words,
-                        related_lessons=spec.related_lessons,
-                        extra_sources=spec.extra_sources,
-                        periods_spanned=spec.periods_spanned,
-                        dialect=spec.dialect,
-                    )
-                    path = culture_dir / f"{_slugify(spec.topic_id)}.md"
-                    _apply_write(report, concept, path)
-                    touched.add(path)
-                except Exception as exc:
-                    report.failed += 1
-                    report.errors.append(f"cultural_context {spec.topic_id!r}: {exc}")
-
             _prune(out_dir, touched, report)
     except BaseException:
         # Protects against ordinary exception unwinding (an unexpected bug
@@ -489,20 +420,19 @@ def run(
 
 
 def _prune(out_dir: Path, touched: set[Path], report: BuildReport) -> None:
-    for type_dir in (out_dir / "words", out_dir / "grammar", out_dir / "culture"):
-        for path in sorted(type_dir.glob("*.md")):
-            if path.name == "index.md" or path in touched:
-                continue
+    for path in sorted((out_dir / "words").glob("*.md")):
+        if path.name == "index.md" or path in touched:
+            continue
 
-            concept = okf.read(path)
-            if concept is None:
-                report.failed += 1
-                report.errors.append(f"prune {path}: could not parse existing frontmatter")
-                continue
+        concept = okf.read(path)
+        if concept is None:
+            report.failed += 1
+            report.errors.append(f"prune {path}: could not parse existing frontmatter")
+            continue
 
-            deprecated = replace(concept, extra_frontmatter={**concept.extra_frontmatter, "status": "deprecated"})
-            try:
-                _apply_write(report, deprecated, path)
-            except Exception as exc:
-                report.failed += 1
-                report.errors.append(f"prune {path}: {exc}")
+        deprecated = replace(concept, extra_frontmatter={**concept.extra_frontmatter, "status": "deprecated"})
+        try:
+            _apply_write(report, deprecated, path)
+        except Exception as exc:
+            report.failed += 1
+            report.errors.append(f"prune {path}: {exc}")

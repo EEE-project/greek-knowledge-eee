@@ -1,9 +1,11 @@
 """Command-line entry point (`greek-knowledge`, see pyproject.toml's
 [project.scripts]) for this KB's sources -- lookup and build are
-read-only exploration; regenerate is the ONE subcommand that writes to
-this repo's tracked words/grammar/culture content, and only with an
-explicit --write flag (see _cmd_regenerate's docstring for why that
-matters). No other command in this codebase writes there -- in
+read-only exploration. regenerate is the one subcommand that writes to
+this repo's tracked words/ content, and only with an explicit --write
+flag (see _cmd_regenerate's docstring for why that matters); check
+validates any committed concept file (words/, grammar/, culture/, texts/)
+instead of generating it, and only writes with an explicit --fix flag
+(see okfbuild/check.py). No other command in this codebase writes there -- in
 particular, the test suite doesn't: tests/test_pilot_acceptance.py
 validates a real pipeline.run() against a scratch directory, never the
 real repo root, so `uv run pytest` (with or without -m flags) can never
@@ -78,28 +80,54 @@ def _cmd_query(args: argparse.Namespace) -> None:
             print(f"{path.relative_to(_repo_root())}  —  {concept.title}")
 
 
+def _cmd_check(args: argparse.Namespace) -> None:
+    """Validates committed concept files (words/, grammar/, culture/,
+    texts/ -- see okfbuild/check.py's module docstring) -- ruff-style: prints one line
+    per problem and exits 1 if any are found, silently exits 0 if clean.
+    With no path arguments, checks everything; given one or more file or
+    directory arguments, scopes to just those. --fix mechanically
+    re-renders each checked file that needs it (frontmatter shape,
+    footnote-definitions block) and reports what's left afterward -- an
+    unresolvable citation or a frontmatter schema violation still needs a
+    human fix, never auto-applied."""
+    from okfbuild import check
+
+    repo_root = _repo_root()
+    paths = check.resolve_targets(repo_root, args.paths)
+    if args.fix:
+        for path in paths:
+            check.fix_file(path)
+
+    issues = [issue for path in paths for issue in check.check_file(path)]
+    for issue in issues:
+        print(f"{issue.path.relative_to(repo_root)}: {issue.message}")
+    if issues:
+        raise SystemExit(1)
+
+
 def _cmd_regenerate(args: argparse.Namespace) -> None:
     """Runs the real pipeline against the real Odyssey/Kavafis Ithaki
-    course content, writing into this repo's own words/grammar/culture
-    in place -- the same run tests/test_pilot_acceptance.py's
-    pilot_output_dir fixture exercises against a scratch directory
-    instead. --write is mandatory, not a default-on flag with an opt-out:
-    this is the one command in this codebase that can change tracked
-    corpus content, so triggering it must always be a deliberate,
-    explicit choice, never a default or a side effect of anything else
-    (see the module docstring). Review the resulting `git diff` before
-    committing, same as any other pilot regen."""
+    course content, writing into this repo's own words/ in place -- the
+    same run tests/test_pilot_acceptance.py's pilot_output_dir fixture
+    exercises against a scratch directory instead. grammar/ and culture/
+    are hand-authored, not touched here -- see `greek-knowledge check`.
+    --write is mandatory, not a default-on flag with an opt-out: this is
+    the one command in this codebase that can change tracked corpus
+    content, so triggering it must always be a deliberate, explicit
+    choice, never a default or a side effect of anything else (see the
+    module docstring). Review the resulting `git diff` before committing,
+    same as any other pilot regen."""
     if not args.write:
         print(
             "Refusing to regenerate without --write: this rewrites the real "
-            "words/, grammar/, culture/ content in this repo in place. "
+            "words/ content in this repo in place. "
             "Re-run with --write once you mean that.",
             file=sys.stderr,
         )
         raise SystemExit(1)
 
     from okfbuild import pipeline
-    from okfbuild.pilot_content import CULTURAL_TOPICS, GRAMMAR_RULES, enrich_nostos_with_beekes
+    from okfbuild.pilot_content import enrich_nostos_with_beekes
 
     repo_root = _repo_root()
     env_path = os.environ.get("CREATED_WITH_EEE_PATH")
@@ -113,9 +141,7 @@ def _cmd_regenerate(args: argparse.Namespace) -> None:
         created_with_eee_root / "modern_greek" / "b1greeklanguageandculture" / "kavafis_ithaki",
     ]
     sources = full_source_bundle(repo_root)
-    report = pipeline.run(
-        course_paths, out_dir=repo_root, sources=sources, grammar_rules=GRAMMAR_RULES, cultural_topics=CULTURAL_TOPICS
-    )
+    report = pipeline.run(course_paths, out_dir=repo_root, sources=sources)
     enrich_nostos_with_beekes(repo_root, sources)
 
     print(f"written={report.written} unchanged={report.unchanged} failed={report.failed}")
@@ -139,10 +165,17 @@ def main() -> None:
     build_parser.set_defaults(func=_cmd_build)
 
     regenerate_parser = subparsers.add_parser(
-        "regenerate", help="regenerate words/grammar/culture from the real pilot courses (writes to this repo; needs --write)"
+        "regenerate", help="regenerate words/ from the real pilot courses (writes to this repo; needs --write)"
     )
     regenerate_parser.add_argument("--write", action="store_true", help="required -- without it, refuses and exits 1")
     regenerate_parser.set_defaults(func=_cmd_regenerate)
+
+    check_parser = subparsers.add_parser(
+        "check", help="validate words/grammar/culture/texts content (exits 1 if any problems are found)"
+    )
+    check_parser.add_argument("paths", nargs="*", help="files or directories to check (default: everything)")
+    check_parser.add_argument("--fix", action="store_true", help="mechanically re-render files that need it before reporting")
+    check_parser.set_defaults(func=_cmd_check)
 
     query_parser = subparsers.add_parser("query", help="find committed grammar/culture/words/texts by level, period, dialect, author")
     query_parser.add_argument("--type", choices=sorted(TYPE_BY_DIR) + ["list"], help="restrict to one concept type; 'list' prints the values in use instead of querying")

@@ -1,11 +1,12 @@
 """Assembles a Literary Translation ConceptFile from already-known,
-hand-sourced text -- unlike lexical_entry/grammatical_rule/cultural_context,
-there is no live source to query: the human-translated text itself is the
-source. Callers pass in the exact body (already in
-eee.parse_stanza_translations()-compatible format -- see
-okfbuild/okf.py's render() docstring on why the body format is untouched
-here) and the Source list for both the translators and the Greek edition(s)
-referenced.
+hand-sourced text -- unlike lexical_entry, there is no live source to
+query: the human-translated text itself is the source. Still used by
+scripts/populate_odyssey_texts.py; a newly-added work is hand-authored
+directly instead (see templates/literary-translation.md). Callers pass in
+the exact body (already in eee.parse_stanza_translations()-compatible
+format -- see okfbuild/okf.py's render() docstring on why the body format
+is untouched here) and the Source list for both the translators and the
+Greek edition(s) referenced.
 """
 
 from okfbuild.concepts import GENERATED_BY

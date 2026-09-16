@@ -34,13 +34,16 @@ This repo's code is primarily a Python API, not a CLI -- but a small
 `greek-knowledge` CLI (installed via `uv sync --dev`, see
 `[project.scripts]`) and a matching `examples/` directory cover the
 common cases without wiring anything by hand: read-only exploration of
-what this KB's sources know about one word, and the one action that
-changes this repo's own tracked corpus content:
+what this KB's sources know about one word, the one action that changes
+this repo's own tracked words/ content, and validation of any committed
+concept file:
 ```bash
 uv run greek-knowledge lookup ὕδωρ            # every lemma-keyed source's raw hit
 uv run greek-knowledge build ὕδωρ             # a full Lexical Entry body, unwritten
 uv run greek-knowledge query --type grammar --level beginner --dialect attic
-uv run greek-knowledge regenerate --write     # the ONLY command that writes to words/grammar/culture
+uv run greek-knowledge regenerate --write     # the ONLY command that writes to words/
+uv run greek-knowledge check                  # validate words/grammar/culture/texts (--fix to auto-repair)
+uv run greek-knowledge check culture/cavafy.md  # or scope it to one file/directory
 uv run python examples/lookup_word.py ὕδωρ    # same as `lookup`, as a script
 uv run python examples/build_one_concept.py ὕδωρ
 uv run python examples/query_knowledge.py --period koine --author Sophocles
@@ -131,19 +134,18 @@ never raises for a normal build. `concept` itself is a `ConceptFile`, not
 yet written to disk until `write()` is called.
 
 **Or run the full pipeline over one or more courses** (extracts vocabulary
-from each course's TSVs, builds every concept, prunes stale files no longer
-touched) -- an alternative to the single-concept example above, not a
-continuation of it, but it still needs the same `sources` from the wiring
-step. Unlike that example, `out_dir` here is not a safe default to point at
-this repo's own root: anything under `out_dir/{words,grammar,culture}` not
-touched by *this specific call* gets pruned (`status` flipped to
-`deprecated`) -- including this repo's own real `grammar/`/`culture/`
-content, since this example doesn't pass `grammar_rules=`/
-`cultural_topics=` (see `okfbuild/pilot_content.py`'s `GRAMMAR_RULES`/
-`CULTURAL_TOPICS`, and `tests/conftest.py`'s `pilot_build_report` fixture
-for how the real pilot run passes those correctly). Use a scratch
-directory, as below, unless you mean to regenerate this repo's own tracked
-content and are passing everything the real pilot run does:
+from each course's TSVs, builds one Lexical Entry per lemma, prunes stale
+`words/` files no longer touched) -- an alternative to the single-concept
+example above, not a continuation of it, but it still needs the same
+`sources` from the wiring step. `grammar/`, `culture/`, and `texts/` are
+hand-authored, not built here -- see `templates/` and `uv run
+greek-knowledge check`. Unlike the single-concept example, `out_dir` here
+is not a safe default to point at this repo's own root: anything under
+`out_dir/words` not touched by *this specific call* gets pruned (`status`
+flipped to `deprecated`), including this repo's own real `words/`
+content. Use a scratch directory, as below, unless you mean to regenerate
+this repo's own tracked `words/` content and are passing every course the
+real pilot run does:
 ```python
 from okfbuild import pipeline
 
@@ -257,15 +259,18 @@ uv run --all-extras --dev python -m pytest
 sibling `created_with_eee` checkout and live network access (Perseids
 Morpheus, Wikipedia). It runs the real pipeline against the real course
 content, but **writes into a scratch directory, never this repo's own
-tracked `words/`/`grammar/`/`culture/`** — no `pytest` invocation, with
-or without markers, can change tracked corpus content. To actually
-regenerate it, use the CLI instead:
+tracked `words/`** — no `pytest` invocation, with or without markers, can
+change tracked corpus content. To actually regenerate it, use the CLI
+instead:
 ```bash
 uv run greek-knowledge regenerate --write
 ```
 `--write` is mandatory (bare `regenerate` refuses and exits 1) — this is
-the one command in this codebase that changes tracked corpus content,
-so it's never a side effect of anything else, including tests. Review
+the one command in this codebase that changes tracked `words/` content,
+so it's never a side effect of anything else, including tests (`grammar/`,
+`culture/`, and `texts/` are hand-authored and only ever change when a
+human/Claude edits them directly, or `uv run greek-knowledge check --fix`
+mechanically normalizes one — see `templates/README.md`). Review
 the resulting `git diff` before committing, same as any other pilot
 regen. A downloaded Wiktextract dump
 (`data/wiktextract/README.md`) is only needed the first time, or when a

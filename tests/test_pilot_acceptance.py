@@ -12,18 +12,14 @@ network access, a real sibling-repo checkout, and real multi-hundred-MB
 local data. Run explicitly: `uv run pytest -m integration`.
 """
 
-import re
-
 import pytest
 
 from okfbuild import okf
 
 pytestmark = pytest.mark.integration
 
-_MARKDOWN_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
-
-def test_pilot_run_produces_all_three_concept_types(pilot_build_report, pilot_output_dir):
+def test_pilot_run_produces_lexical_entries(pilot_build_report, pilot_output_dir):
     # pipeline.run()'s own contract is per-candidate isolation, not
     # zero-failure: a handful of the 500+ auto-extracted real-course
     # candidates are expected to fail (rare/dialectal Homeric words with
@@ -35,33 +31,16 @@ def test_pilot_run_produces_all_three_concept_types(pilot_build_report, pilot_ou
     total = pilot_build_report.written + pilot_build_report.unchanged + pilot_build_report.failed
     assert pilot_build_report.failed < total * 0.1, pilot_build_report.errors
 
-    found_types = set()
-    for type_dir, expected_type in (
-        ("words", "Lexical Entry"),
-        ("grammar", "Grammatical Rule"),
-        ("culture", "Cultural Context"),
-    ):
-        for path in (pilot_output_dir / type_dir).glob("*.md"):
-            if path.name == "index.md":
-                continue
-            concept = okf.read(path)
-            if concept is not None and concept.type == expected_type:
-                found_types.add(expected_type)
-                break
+    found = False
+    for path in (pilot_output_dir / "words").glob("*.md"):
+        if path.name == "index.md":
+            continue
+        concept = okf.read(path)
+        if concept is not None and concept.type == "Lexical Entry":
+            found = True
+            break
 
-    assert found_types == {"Lexical Entry", "Grammatical Rule", "Cultural Context"}
-
-
-def test_grammatical_rule_cites_newly_mined_osan_pattern(pilot_build_report, pilot_output_dir):
-    rule_path = pilot_output_dir / "grammar" / "aorist-3pl-osan.md"
-    assert rule_path.is_file()
-
-    osan_forms = ("ἤλθοσαν", "ἐξήλθοσαν", "ἴδοσαν", "εἴδοσαν")
-    # Each citation is one line ("{lemma} is replaced by {form} in ... Greek[^id]"),
-    # not the form immediately adjacent to "[^" — check per-line, not a bare substring,
-    # so this actually proves the citation is FOR that form, not merely present somewhere.
-    lines = rule_path.read_text(encoding="utf-8").splitlines()
-    assert any(form in line and "[^" in line for form in osan_forms for line in lines), lines
+    assert found
 
 
 def test_wiktextract_lookups_are_cached_not_just_in_memory(pilot_build_report, repo_root):
@@ -74,15 +53,3 @@ def test_wiktextract_lookups_are_cached_not_just_in_memory(pilot_build_report, r
         "expected data/wiktextract-cache/ to hold at least one resolved lemma "
         "after a real pilot run"
     )
-
-
-def test_cross_link_resolves_to_real_file(pilot_build_report, pilot_output_dir):
-    culture_path = pilot_output_dir / "culture" / "cavafy.md"
-    assert culture_path.is_file()
-
-    text = culture_path.read_text(encoding="utf-8")
-    links = _MARKDOWN_LINK_RE.findall(text)
-    assert links, "expected at least one markdown link in culture/cavafy.md's body"
-
-    resolved = [(culture_path.parent / target).resolve() for _label, target in links]
-    assert any(path.is_file() for path in resolved), (links, resolved)

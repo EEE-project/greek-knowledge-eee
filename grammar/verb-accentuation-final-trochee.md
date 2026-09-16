@@ -13,11 +13,6 @@ sources:
   resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt2.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 2'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
-- id: athenaze-ch2-ext
-  resource: lectures/Palaestra/ancient_greek.2026.summer/1. Athenaze. Vol. 1. Chpt.
-    2.md
-  title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 2 (extended transcription)'
-  author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
   at: '2026-09-15T17:08:14.729331+00:00'

@@ -18,22 +18,25 @@ _COMMON_FIELDS = ("title", "description", "tags", "level", "sources", "generated
 
 # Every concept builder's own module docstring documents the same
 # contract: body strings contain ONLY inline [^id] references, never
-# [^id]: definition lines (render(), below, generates those). That
-# contract is asserted in prose, not enforced here -- _FOOTNOTE_REF_RE
-# pattern-matches the WHOLE body for anything [^...]-shaped, with no way
-# to tell a reference a builder actually inserted from an incidental
-# [^...]-shaped substring sitting in raw, un-escaped source prose (e.g. a
-# dictionary source's own editorial bracket notation around a caret).
-# Currently harmless when it happens -- render()'s definition loop below
-# only emits a definition for an id matching a real concept.sources
-# entry, so a stray match just becomes an unresolved reference, never a
-# duplicated/corrupted one -- but any future source embedding raw,
-# uncurated text is one coincidental match away from the same silent
-# contract violation. Not fixed here: a real fix would mean only
-# recognizing [^id] as a genuine reference when id matches a real source,
-# or escaping raw source text before it reaches body.
-_FOOTNOTE_REF_RE = re.compile(r"\[\^([^\]]+)\]")
+# [^id]: definition lines (render(), below, generates those). Every real
+# id in this project is a lowercase kebab-case slug (verified against
+# every id: actually used across words/grammar/culture/texts), so the
+# pattern is deliberately restricted to that shape -- not "anything
+# [^...]-shaped" -- specifically so an incidental [^...]-shaped substring
+# sitting in raw, un-escaped source prose (e.g. a dictionary source's own
+# editorial bracket-and-caret notation, which is never slug-shaped) can't
+# be mistaken for a genuine citation the same way a real, if typo'd, id
+# still would be.
+_FOOTNOTE_REF_RE = re.compile(r"\[\^([a-z][a-z0-9-]*)\]")
 _FOOTNOTE_DEF_LINE_RE = re.compile(r"^\[\^[^\]]+\]:.*\n?", re.MULTILINE)
+
+
+def referenced_footnote_ids(body: str) -> set[str]:
+    """IDs genuinely cited via [^id] somewhere in `body`, ignoring any
+    [^id]: ... definition lines (their own leading [^id] would otherwise
+    also match). Shared by render() below and okfbuild/check.py, which
+    both need this exact "real inline citation" notion."""
+    return set(_FOOTNOTE_REF_RE.findall(_FOOTNOTE_DEF_LINE_RE.sub("", body)))
 
 
 @dataclass
@@ -131,9 +134,9 @@ def render(concept: ConceptFile) -> str:
     # appended on top of the first. Stripping any such lines before
     # recomputing keeps this idempotent regardless of where `body` came
     # from, and self-heals a file already corrupted by this bug's absence.
+    referenced_ids = referenced_footnote_ids(concept.body)
     body = _FOOTNOTE_DEF_LINE_RE.sub("", concept.body).rstrip("\n")
 
-    referenced_ids = set(_FOOTNOTE_REF_RE.findall(body))
     footnote_lines = [
         f"[^{source.id}]: {source.title}, {source.author} ({source.resource})"
         for source in concept.sources

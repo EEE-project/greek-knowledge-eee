@@ -24,8 +24,9 @@ transcribes a page-cited quote — word family, IE root, competing
 etymologies — directly as curated input to a concept builder.
 
 `okfbuild/concepts/lexical_entry.py` (added in section-04-concept-builders)
-accepts this curated citation as optional input, the same mechanism
-`grammatical_rule.py` uses for its curated Sophocles excerpts. When no
+accepts this curated citation as optional input -- the Lexical Entry
+equivalent of how `grammar/aorist-3pl-osan.md` cites its own curated
+Sophocles excerpt directly, hand-authored rather than built. When no
 curated Beekes citation is supplied for a given lemma, the Lexical Entry
 is built without an etymology section from Beekes — this is never a
 blocking dependency. The "## Etymology" section can also be populated

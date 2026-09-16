@@ -61,7 +61,7 @@ def full_source_bundle(repo_root: Path) -> SourceBundle:
     get period/dialect tags (e.g. "**[7th c. BC, Boeot.]**") instead of
     dialect-only ones. This is what okfbuild.cli's `regenerate` subcommand
     uses -- the one real write path that touches this repo's tracked
-    words/grammar/culture content -- so a regeneration never silently
+    words/ content -- so a regeneration never silently
     degrades citation quality the way an incomplete wiring would.
 
     Skips tests/conftest.py's real_source_bundle fixture's scan-sharing
