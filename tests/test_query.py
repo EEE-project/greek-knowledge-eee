@@ -5,7 +5,9 @@ import yaml
 
 from okfbuild import okf
 from okfbuild.okf import ConceptFile, Source
-from okfbuild.query import find_concepts, list_values
+from okfbuild.query import TYPE_BY_DIR, find_concepts, list_mode_report, list_values
+
+_CULTURE_DEFAULTS = {"related_words": [], "related_lessons": [], "dialect": []}
 
 
 def _write(repo_root: Path, subdir: str, slug: str, **overrides: Any) -> Path:
@@ -29,7 +31,7 @@ def _write(repo_root: Path, subdir: str, slug: str, **overrides: Any) -> Path:
 
 def test_find_concepts_with_no_filters_returns_everything(tmp_path):
     _write(tmp_path, "grammar", "rule-a")
-    _write(tmp_path, "culture", "topic-a", type="Cultural Context", extra_frontmatter={"related_words": [], "related_lessons": [], "dialect": []})
+    _write(tmp_path, "culture", "topic-a", type="Cultural Context", extra_frontmatter=_CULTURE_DEFAULTS)
 
     results = find_concepts(tmp_path)
 
@@ -38,7 +40,7 @@ def test_find_concepts_with_no_filters_returns_everything(tmp_path):
 
 def test_find_concepts_filters_by_type(tmp_path):
     _write(tmp_path, "grammar", "rule-a")
-    _write(tmp_path, "culture", "topic-a", type="Cultural Context", extra_frontmatter={"related_words": [], "related_lessons": [], "dialect": []})
+    _write(tmp_path, "culture", "topic-a", type="Cultural Context", extra_frontmatter=_CULTURE_DEFAULTS)
 
     results = find_concepts(tmp_path, type="Grammatical Rule")
 
@@ -124,7 +126,7 @@ def test_find_concepts_period_filter_never_matches_concept_with_no_period_data(t
     _write(
         tmp_path, "culture", "timeless-topic",
         type="Cultural Context",
-        extra_frontmatter={"related_words": [], "related_lessons": [], "dialect": []},
+        extra_frontmatter=_CULTURE_DEFAULTS,
     )
 
     results = find_concepts(tmp_path, period="attic")
@@ -166,7 +168,7 @@ def test_find_concepts_dialect_filter_ignores_hand_edited_scalar_dialect(tmp_pat
 
 def test_find_concepts_with_type_filter_only_reads_matching_directory(tmp_path, monkeypatch):
     _write(tmp_path, "grammar", "rule-a")
-    _write(tmp_path, "culture", "topic-a", type="Cultural Context", extra_frontmatter={"related_words": [], "related_lessons": [], "dialect": []})
+    _write(tmp_path, "culture", "topic-a", type="Cultural Context", extra_frontmatter=_CULTURE_DEFAULTS)
 
     read_dirs = []
     original_read = okf.read
@@ -242,7 +244,7 @@ def test_list_values_sorted_by_count_desc_then_value(tmp_path):
 
 def test_list_values_scoped_by_other_filter(tmp_path):
     _write(tmp_path, "grammar", "grammar-beginner", level=["beginner"])
-    _write(tmp_path, "culture", "culture-advanced", type="Cultural Context", level=["advanced"], extra_frontmatter={"related_words": [], "related_lessons": [], "dialect": []})
+    _write(tmp_path, "culture", "culture-advanced", type="Cultural Context", level=["advanced"], extra_frontmatter=_CULTURE_DEFAULTS)
 
     results = list_values(tmp_path, "level", type="Grammatical Rule")
 
@@ -288,3 +290,47 @@ def test_list_values_for_dialect_ignores_hand_edited_scalar_dialect(tmp_path):
     results = list_values(tmp_path, "dialect")
 
     assert results == []
+
+
+def test_list_mode_report_returns_none_when_no_field_is_list(tmp_path):
+    _write(tmp_path, "grammar", "rule-a")
+
+    assert list_mode_report(tmp_path, {"type": None, "level": "beginner", "period": None, "dialect": None, "author": None}) is None
+
+
+def test_list_mode_report_type_values_are_short_form_round_trippable(tmp_path):
+    _write(tmp_path, "grammar", "rule-a")
+    _write(tmp_path, "culture", "topic-a", type="Cultural Context", extra_frontmatter=_CULTURE_DEFAULTS)
+
+    report = list_mode_report(tmp_path, {"type": "list", "level": None, "period": None, "dialect": None, "author": None})
+
+    values = dict(report["type"])
+    assert values == {"grammar": 1, "culture": 1}
+    # every returned value must be valid --type input, i.e. a TYPE_BY_DIR key -- not the
+    # ConceptFile.type long form ("Grammatical Rule") argparse's --type choices reject.
+    assert set(values) <= set(TYPE_BY_DIR)
+
+
+def test_list_mode_report_scopes_multiple_listed_fields_from_one_shared_scan(tmp_path, monkeypatch):
+    _write(tmp_path, "grammar", "rule-a", level=["beginner"])
+    _write(tmp_path, "grammar", "rule-b", level=["advanced"])
+    _write(tmp_path, "culture", "topic-a", type="Cultural Context", level=["beginner"], extra_frontmatter=_CULTURE_DEFAULTS)
+
+    read_count = 0
+    original_read = okf.read
+
+    def counting_read(path):
+        nonlocal read_count
+        read_count += 1
+        return original_read(path)
+
+    monkeypatch.setattr(okf, "read", counting_read)
+
+    report = list_mode_report(tmp_path, {"type": "grammar", "level": "list", "period": "list", "dialect": None, "author": None})
+
+    # exactly one find_concepts() scan shared across both listed fields (2 grammar
+    # files), not one scan per field (which would read 2 files twice = 4 reads).
+    assert read_count == 2
+    assert dict(report["level"]) == {"beginner": 1, "advanced": 1}
+    # both rule-a and rule-b keep _write()'s default periods_spanned attic->attic.
+    assert dict(report["period"]) == {"attic": 2}

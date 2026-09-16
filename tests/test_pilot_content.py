@@ -174,8 +174,7 @@ def test_peloponnesian_war_setting_topic():
     assert concept.extra_frontmatter["dialect"] == ["attic"]
     assert "Pericles" in concept.body or "Перикл" in concept.body
     assert "Sparta" in concept.body or "Спарт" in concept.body
-    footnote_ids = set(re.findall(r"\[\^([^\]]+)\]", concept.body))
-    assert footnote_ids <= {s.id for s in concept.sources}
+    _assert_footnotes_resolve(concept)
 
 
 def test_greek_dialect_history_topic():
@@ -184,8 +183,7 @@ def test_greek_dialect_history_topic():
     assert concept.extra_frontmatter["dialect"] == []
     assert concept.extra_frontmatter["periods_spanned"] == {"from": "homeric", "to": "koine"}
     assert "κοινή" in concept.body or "koine" in concept.body.lower()
-    footnote_ids = set(re.findall(r"\[\^([^\]]+)\]", concept.body))
-    assert footnote_ids <= {s.id for s in concept.sources}
+    _assert_footnotes_resolve(concept)
 
 
 def test_bronze_age_chronology_topic():
@@ -194,8 +192,7 @@ def test_bronze_age_chronology_topic():
     assert concept.extra_frontmatter["dialect"] == []
     assert "776" in concept.body  # first Olympic Games
     assert "431" in concept.body  # war outbreak
-    footnote_ids = set(re.findall(r"\[\^([^\]]+)\]", concept.body))
-    assert footnote_ids <= {s.id for s in concept.sources}
+    _assert_footnotes_resolve(concept)
 
 
 def test_athenian_farmer_class_system_topic():
@@ -205,8 +202,7 @@ def test_athenian_farmer_class_system_topic():
     thucydides_cited = any(s.id == "thucydides-2-14" for s in concept.sources)
     assert thucydides_cited
     assert "zeugitai" in concept.body.lower() or "ζευγίτ" in concept.body
-    footnote_ids = set(re.findall(r"\[\^([^\]]+)\]", concept.body))
-    assert footnote_ids <= {s.id for s in concept.sources}
+    _assert_footnotes_resolve(concept)
 
 
 def test_dikaiopolis_name_and_acharnians_topic():
@@ -215,8 +211,7 @@ def test_dikaiopolis_name_and_acharnians_topic():
     assert "δίκαιος" in concept.body
     assert "πόλις" in concept.body
     assert "426" in concept.body
-    footnote_ids = set(re.findall(r"\[\^([^\]]+)\]", concept.body))
-    assert footnote_ids <= {s.id for s in concept.sources}
+    _assert_footnotes_resolve(concept)
 
 
 def test_slavery_in_athens_topic():
@@ -226,5 +221,4 @@ def test_slavery_in_athens_topic():
     assert pseudo_xenophon_cited
     assert "Ξανθίας" in concept.body
     assert "Aristotle" in concept.body or "Аристотель" in concept.body
-    footnote_ids = set(re.findall(r"\[\^([^\]]+)\]", concept.body))
-    assert footnote_ids <= {s.id for s in concept.sources}
+    _assert_footnotes_resolve(concept)

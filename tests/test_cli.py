@@ -6,6 +6,8 @@ real source data (see tests/test_wiring.py / tests/test_lookup.py for that)."""
 import sys
 from unittest.mock import Mock
 
+import pytest
+
 from okfbuild import cli
 
 
@@ -164,8 +166,7 @@ def test_cli_query_full_flag_prints_bodies(monkeypatch, capsys):
 def test_cli_query_rejects_unknown_type_shorthand(monkeypatch, capsys):
     monkeypatch.setattr(sys, "argv", ["greek-knowledge", "query", "--type", "not-a-real-type"])
 
-    try:
+    with pytest.raises(SystemExit) as exc_info:
         cli.main()
-        assert False, "expected SystemExit"
-    except SystemExit as exc:
-        assert exc.code == 2
+
+    assert exc_info.value.code == 2

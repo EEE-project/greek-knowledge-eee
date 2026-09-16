@@ -17,17 +17,10 @@ from pathlib import Path
 
 from okfbuild.concepts import lexical_entry
 from okfbuild.lookup import lookup_word
-from okfbuild.query import find_concepts, list_values
+from okfbuild.query import LIST_FIELDS, TYPE_BY_DIR, find_concepts, list_mode_report
 from okfbuild.wiring import default_source_bundle, full_source_bundle
 
 _DEFAULT_PERIODS = ["homeric", "attic", "modern"]
-
-_TYPE_SHORTHAND = {
-    "words": "Lexical Entry",
-    "grammar": "Grammatical Rule",
-    "culture": "Cultural Context",
-    "texts": "Literary Translation",
-}
 
 
 def _repo_root() -> Path:
@@ -55,25 +48,17 @@ def _cmd_build(args: argparse.Namespace) -> None:
     print(concept.body)
 
 
-_LIST_FIELDS = ("type", "level", "period", "dialect", "author")
-
-
 def _cmd_query(args: argparse.Namespace) -> None:
-    raw = {field: getattr(args, field) for field in _LIST_FIELDS}
-    list_fields = [field for field in _LIST_FIELDS if raw[field] == "list"]
-    if list_fields:
-        scope = {
-            field: (_TYPE_SHORTHAND.get(value) if field == "type" else value)
-            for field, value in raw.items()
-            if value is not None and value != "list"
-        }
-        for field in list_fields:
+    raw = {field: getattr(args, field) for field in LIST_FIELDS}
+    report = list_mode_report(_repo_root(), raw)
+    if report is not None:
+        for field, values in report.items():
             print(f"-- {field} --")
-            for value, count in list_values(_repo_root(), field, **scope):
+            for value, count in values:
                 print(f"{value} ({count})")
         return
 
-    concept_type = _TYPE_SHORTHAND.get(args.type) if args.type else None
+    concept_type = TYPE_BY_DIR.get(args.type) if args.type else None
     matches = find_concepts(
         _repo_root(),
         type=concept_type,
@@ -160,7 +145,7 @@ def main() -> None:
     regenerate_parser.set_defaults(func=_cmd_regenerate)
 
     query_parser = subparsers.add_parser("query", help="find committed grammar/culture/words/texts by level, period, dialect, author")
-    query_parser.add_argument("--type", choices=sorted(_TYPE_SHORTHAND) + ["list"], help="restrict to one concept type; 'list' prints the values in use instead of querying")
+    query_parser.add_argument("--type", choices=sorted(TYPE_BY_DIR) + ["list"], help="restrict to one concept type; 'list' prints the values in use instead of querying")
     query_parser.add_argument("--level", help="pass 'list' to print the values in use instead of querying")
     query_parser.add_argument("--period", help="pass 'list' to print the values in use instead of querying")
     query_parser.add_argument("--dialect", help="pass 'list' to print the values in use instead of querying")
