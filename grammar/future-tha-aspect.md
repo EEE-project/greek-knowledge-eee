@@ -10,20 +10,26 @@ tags:
 - modern-greek
 level:
 - A2
+- B1
 sources:
 - id: livexp-grammar
   resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
+- id: ellinika-b-ch8
+  resource: created_with_eee/modern_greek/ellinika_b/chapter_08/chapter_08_extracted_content.md
+  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1
+    (Εκδόσεις Πατάκη, 2012), Chapter 8: p. 126-127'
+  author: Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis
 generated:
   by: human
-  at: '2026-09-16T18:04:00+00:00'
+  at: '2026-09-16T21:26:07.135806+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-status: draft
 verified: []
+status: draft
 ---
 ## θα distinguishes ongoing future from a single, bounded event
 
@@ -37,6 +43,7 @@ The simple-future stem is formed regularly for most verbs by changing the stem-f
 
 Six common B-class verbs are irregular exceptions to that **-άω → -ήσω** pattern, traditionally learned as a fixed list: **φοράω → θα φορέσω**, **πονάω → θα πονέσω**, **μπορώ → θα μπορέσω**, **διψάω → θα διψάσω**, **πεινάω → θα πεινάσω**, **περνάω → θα περάσω**.[^livexp-grammar]
 
-A handful of very common verbs use the identical form for both aspects: **είμαι, έχω, κάνω, ξέρω, περιμένω, πάω**.[^livexp-grammar] This simple-future stem is the same one the [aorist](aorist-past-tense.md) is built from.
+A handful of very common verbs use the identical form for both aspects: **είμαι, έχω, κάνω, ξέρω, περιμένω, πάω**.[^livexp-grammar] This simple-future stem is the same one the [aorist](aorist-past-tense.md) is built from -- often, though not always, visibly related to that same verb's irregular aorist stem: **βλέπω → θα δω** (aorist **είδα**), **παίρνω → θα πάρω** (aorist **πήρα**), **πίνω → θα πιω** (aorist **ήπια**), **τρώω → θα φάω** (aorist **έφαγα**).[^ellinika-b-ch8]
 
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^ellinika-b-ch8]: Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 8: p. 126-127, Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis (created_with_eee/modern_greek/ellinika_b/chapter_08/chapter_08_extracted_content.md)
