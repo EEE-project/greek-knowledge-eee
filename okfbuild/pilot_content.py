@@ -90,29 +90,41 @@ _PSEUDO_XENOPHON_ATH_POL = Source(
     title="Constitution of the Athenians",
     author="Pseudo-Xenophon",
 )
+_EBOOKS_EDU_GR_ITHAKA = Source(
+    id="ebooks-edu-gr-ithaka",
+    resource="https://ebooks.edu.gr/ebooks/v/html/8547/2700/Keimena-Neoellinikis-Logotechnias_A-Lykeiou_html-empl/indexG3_2.html",
+    title="Κείμενα Νεοελληνικής Λογοτεχνίας Α΄ Λυκείου (official Greek Ministry of Education literature textbook)",
+    author="Greek Institute of Educational Policy (ΙΕΠ)",
+)
 
 _OSAN_BODY = """\
 ## The -οσαν aorist/imperfect 3rd plural
 
-In post-classical (Byzantine-period) Greek, the classical 3rd-plural \
-imperfect/2nd-aorist active ending **-ον** is often replaced by an \
-analogical ending **-οσαν** — grammarians call it "Boeotic, Chalcidean, \
-or Asiatic."[^sophocles-1887] The innovation resolves a real syncretism: \
-classically, a 2nd-aorist verb's 3rd-plural form is identical to its \
-1st-singular (ἦλθον = "I came" *or* "they came"; εἶδον = "I saw" *or* \
-"they saw"). The Byzantine -οσαν ending gives the 3rd plural a form of \
-its own.
+The classical 3rd-plural imperfect/2nd-aorist active ending **-ον** has \
+an analogical variant, **-οσαν** — grammarians traditionally call it \
+"Boeotic, Chalcidean, or Asiatic."[^sophocles-1887] It is attested from \
+the Hellenistic period onward, not as an exclusively Byzantine \
+innovation, though it became the norm only in Byzantine and later \
+Greek. The new ending also resolves a real syncretism: classically, a \
+2nd-aorist verb's 3rd-plural form is identical to its 1st-singular \
+(ἦλθον = "I came" *or* "they came"; εἶδον = "I saw" *or* "they saw") — \
+which may have helped -οσαν spread, giving the 3rd plural a distinct \
+form of its own.
 
 Both of the verbs cited below are common Homeric verbs of coming/going \
 and seeing, already attested (in their classical 3rd-singular aorist \
 forms, ἦλθε/ἴδεν) in the same Odyssey passage this knowledge base draws \
-its Lexical Entry examples from.
+its Lexical Entry examples from. Both belong to a suppletive aorist \
+stem, not a replacement of the present-tense lemma itself.
 
-ὁράω is replaced by ἴδοσαν in Byzantine Greek[^sophocles-1887]
+ὁράω's later 3rd-plural aorist ἴδοσαν occurs alongside classical \
+ἴδον[^sophocles-1887]
 
-ὁράω is replaced by εἴδοσαν in Byzantine Greek[^sophocles-1887]
+ὁράω's later 3rd-plural aorist εἴδοσαν occurs alongside classical \
+εἶδον[^sophocles-1887]
 
-ἔρχομαι is replaced by ἤλθοσαν in Byzantine Greek[^sophocles-1887]"""
+ἔρχομαι's later 3rd-plural aorist ἤλθοσαν occurs alongside classical \
+ἦλθον[^sophocles-1887]"""
 
 GRAMMAR_RULES: list[GrammarRuleSpec] = [
     GrammarRuleSpec(
@@ -572,13 +584,16 @@ _CAVAFY_LESSON_PROSE = [
         "## Who was Cavafy\n\n"
         "Constantine P. Cavafy was born in **Alexandria in 1863** and died there in "
         "**1933**. He left about **154 poems**, in which he often turns to history "
-        "and mythology to speak about modern man. «Ithaka» is perhaps his most "
-        "famous poem worldwide."
+        "and mythology to speak about modern man. «Ithaka» -- first published in "
+        "the journal *Γράμματα* (Grammata), October-November 1911, when Cavafy was "
+        "48 -- is perhaps his most famous poem worldwide.[^ebooks-edu-gr-ithaka]"
     ),
     (
-        "«Ithaka» speaks to Homer's Odyssey: Odysseus's journey home — a "
-        "[νόστος](../words/νόστος.md) — becomes, in Cavafy, an image of every "
-        "person's journey through life."
+        "«Ithaka» speaks to Homer's Odyssey: Odysseus's journey home is a "
+        "[νόστος](../words/νόστος.md) in the epic's own terms, though the "
+        "word itself doesn't appear in Cavafy's poem — Cavafy transforms "
+        "that homecoming into an image of every person's journey through "
+        "life."
     ),
     (
         "## Who they were\n\n"
@@ -598,10 +613,10 @@ _CAVAFY_LESSON_PROSE = [
         "## Metaphorical meaning\n\n"
         "These figures can symbolize: our fears, anxiety, insecurity, "
         "difficulties, problems, people who disappoint us, obstacles we create "
-        "for ourselves. The poem's language — the verbs of coming and arriving "
-        "discussed in [the -οσαν aorist grammatical rule](../grammar/aorist-3pl-osan.md) "
-        "among them — is the same vocabulary of travel and homecoming that runs "
-        "through the Odyssey itself."
+        "for ourselves. The poem's own vocabulary of travel and arrival — "
+        "βγεις, φτάσεις, ταξίδι, δρόμος — covers the same thematic ground as "
+        "the Odyssey itself, journey and homecoming, even though Cavafy "
+        "writes in Modern Greek, not Homer's own language."
     ),
 ]
 
@@ -614,6 +629,7 @@ CULTURAL_TOPICS: list[CulturalTopicSpec] = [
         tags=["poetry", "cavafy", "ithaka", "modern-greek-literature"],
         related_words=["νόστος"],
         related_lessons=["kavafis_ithaki/1", "kavafis_ithaki/2"],
+        extra_sources=[_EBOOKS_EDU_GR_ITHAKA],
     )
 ]
 
@@ -742,7 +758,7 @@ CULTURAL_TOPICS.append(
                 "**The Peloponnesian War:** war between Athens and the "
                 "Peloponnesian League breaks out in 431 BC. Plague strikes "
                 "Athens and Pericles dies, 430-429 BC. Aristophanes stages "
-                "*Acharnians* in 426 BC. A fragile peace holds in 421 BC; the "
+                "*Acharnians* in 425 BC. A fragile peace holds in 421 BC; the "
                 "Sicilian expedition (415 BC) fails disastrously by 413 BC, "
                 "reigniting the war outright, which ends with Athens's "
                 "surrender in 404 BC. Thucydides writes his *History of the "
@@ -765,7 +781,7 @@ CULTURAL_TOPICS.append(
         lesson_prose=[
             (
                 "## Farmers, the backbone of Athenian democracy\n\n"
-                "Dikaiopolis lives in the Attic deme of Kollytos, about "
+                "Dikaiopolis lives in the Attic deme of Cholleidai, about "
                 "twenty kilometers southeast of Athens. Though Athens and "
                 "its port, Piraeus, formed a substantial urban center by "
                 "ancient standards, most Athenians actually lived and worked "
@@ -830,7 +846,7 @@ CULTURAL_TOPICS.append(
             ),
             (
                 "Dikaiopolis is also the protagonist of Aristophanes's "
-                "comedy *Acharnians*, first staged in 426 BC — the play "
+                "comedy *Acharnians*, first staged in 425 BC — the play "
                 "Athenaze's own course draws its final readings from, where "
                 "Dikaiopolis appears as a peacemaker.[^athenaze-ch1]"
             ),

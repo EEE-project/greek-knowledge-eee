@@ -16,7 +16,7 @@ sources:
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T21:43:28.738791+00:00'
+  at: '2026-09-16T08:16:00.794284+00:00'
 related_words: []
 related_lessons:
 - ancient_greek/palaestra/athenaze-vol1/chapter-1
@@ -37,6 +37,6 @@ status: draft
 
 **The Athenian empire:** the Delian League, founded 478 BC, grows into the Athenian empire. Aeschylus's *Persians* is staged in 472 BC. Pericles dominates Athens 461-429 BC — radical democracy and imperial expansion, and, from 446 BC, a Thirty Years' Peace with Sparta. Herodotus writes his *Histories* in this period.[^athenaze-ch1-ext]
 
-**The Peloponnesian War:** war between Athens and the Peloponnesian League breaks out in 431 BC. Plague strikes Athens and Pericles dies, 430-429 BC. Aristophanes stages *Acharnians* in 426 BC. A fragile peace holds in 421 BC; the Sicilian expedition (415 BC) fails disastrously by 413 BC, reigniting the war outright, which ends with Athens's surrender in 404 BC. Thucydides writes his *History of the Peloponnesian War* covering these events.[^athenaze-ch1-ext]
+**The Peloponnesian War:** war between Athens and the Peloponnesian League breaks out in 431 BC. Plague strikes Athens and Pericles dies, 430-429 BC. Aristophanes stages *Acharnians* in 425 BC. A fragile peace holds in 421 BC; the Sicilian expedition (415 BC) fails disastrously by 413 BC, reigniting the war outright, which ends with Athens's surrender in 404 BC. Thucydides writes his *History of the Peloponnesian War* covering these events.[^athenaze-ch1-ext]
 
 [^athenaze-ch1-ext]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1 (extended transcription), M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/1. Athenaze. Vol. 1. Chpt. 1.md)

@@ -210,7 +210,7 @@ def test_dikaiopolis_name_and_acharnians_topic():
 
     assert "δίκαιος" in concept.body
     assert "πόλις" in concept.body
-    assert "426" in concept.body
+    assert "425" in concept.body
     _assert_footnotes_resolve(concept)
 
 
@@ -221,4 +221,16 @@ def test_slavery_in_athens_topic():
     assert pseudo_xenophon_cited
     assert "Ξανθίας" in concept.body
     assert "Aristotle" in concept.body or "Аристотель" in concept.body
+    _assert_footnotes_resolve(concept)
+
+
+def test_cavafy_topic_cites_official_textbook_not_the_unrelated_grammar_rule():
+    concept = _build_culture("cavafy")
+
+    ebooks_cited = any(s.id == "ebooks-edu-gr-ithaka" for s in concept.sources)
+    assert ebooks_cited
+    assert "Γράμματα" in concept.body
+    # regression guard: the poem's own body never uses -οσαν forms, so this
+    # entry must not link to the grammar rule about them (see CHANGELOG).
+    assert "aorist-3pl-osan" not in concept.body
     _assert_footnotes_resolve(concept)
