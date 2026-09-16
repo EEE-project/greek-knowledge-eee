@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-16 (5)
+
+- **Authored 19 new A2-level Modern Greek Grammatical Rule entries**, covering articles (definite/indefinite), core case uses (accusative objects/prepositions/time, genitive possession), noun plurals (masculine/feminine, neuter), verb morphology (B-class present, future θα-aspect and its six irregular "traitor" verbs, aorist formation), clause-level constructions (να-dependent clauses, negation δεν/όχι/μη(ν), the αρέσει "liking" construction), and word formation/order (prefixes, weak-pronoun clitic position, possessives/δικός, substantivized adjectives, vocative case). Source: the user's own LiveXP course notes (`~/work/greek/lectures/LiveXP/Γραμμστική.md`, 1211 lines, cited as `livexp-grammar`), cross-checked against two independent AI syntheses of the same material (`/data/tmp/modern_greek_a2_chatgpt/`, `/data/tmp/modern_greek_a2_notebooklm/` -- 4 of the 19 topics exist in both, giving a direct two-way check; all 19 verified directly against the primary notes file itself, not just the syntheses). B1-level material (`created_with_eee/modern_greek/ellinika_b/`, ~10 chapters of real, page-cited published-textbook content) is a separate, larger follow-up, not done here.
+- Full suite (`-m "not integration"`): 431 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean against the real corpus (36 grammar rules total).
+
 ## 2026-09-16 (4)
 
 - **Fixed a real gap in `words/` pruning: a hand-curated Lexical Entry (e.g. `words/κουβαλάω.md`) got marked `deprecated` on every `regenerate --write`, no matter how recently it was added.** `pipeline._collect_lexical_candidates()` only ever discovers lemmas from a course's vocabulary TSV, so a manually-added entry can never land in a run's `touched` set -- `_prune()` then (correctly, by its own existing logic) treated "never touched" as "stale." New `protected: true` frontmatter field on a Lexical Entry opts it out of pruning entirely; `words/κουβαλάω.md` now sets it, and `templates/lexical-entry.md` documents it for the next manual entry. New test: `tests/test_pipeline.py::test_run_pruning_skips_a_protected_word_even_when_never_touched`.

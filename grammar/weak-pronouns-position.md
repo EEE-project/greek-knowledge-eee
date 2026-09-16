@@ -1,0 +1,35 @@
+---
+type: Grammatical Rule
+title: weak-pronouns-position
+description: Weak personal-pronoun clitics precede a finite verb, follow a noun.
+tags:
+- pronoun
+- clitic
+- word-order
+- modern-greek
+level:
+- A2
+sources:
+- id: livexp-grammar
+  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  title: LiveXP Modern Greek grammar notes
+  author: LiveXP course notes
+generated:
+  by: human
+  at: '2026-09-16T18:17:00+00:00'
+periods_spanned:
+  from: modern
+  to: modern
+dialect: []
+status: draft
+verified: []
+---
+## Clitics attach in opposite directions to a verb and to a noun
+
+Weak (unstressed) personal-pronoun clitics attach to a finite verb by preceding it, in ordinary affirmative clauses -- **μου δίνουν τα λεφτά** "they give me the money," **με ρωτάνε** "they ask me," **τον βλέπω** "I see him."[^livexp-grammar] The same weak forms attach to a noun by following it instead, when marking possession (see [possessives-and-dikos](possessives-and-dikos.md)) -- the direction of attachment flips depending on what the clitic is attached to, not on the clitic itself.[^livexp-grammar]
+
+The weak accusative/object forms are **με, σε, τον, την, το, μας, σας, τους, τις, τα**; the weak genitive forms **μου, σου, του, της, μας, σας, τους** double as either an indirect object or a possessive, depending on the construction they appear in.[^livexp-grammar]
+
+The imperative reverses the ordinary verb-clitic order (the clitic attaches after an affirmative command) and follows its own separate rules, not covered here.[^livexp-grammar]
+
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
