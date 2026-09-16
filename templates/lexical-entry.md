@@ -15,9 +15,12 @@ of the latter -- a Beekes etymology citation).
    homeric/attic/koine/byzantine/modern this lemma is attested in --
    normally regenerate discovers this per-source; fill in only what
    you've actually verified.
-3. Run `uv run greek-knowledge check` -- note this only covers
-   grammar/culture/texts today, not words/, so a hand-added Lexical Entry
-   gets no automatic footnote/frontmatter validation yet.
+3. Set protected: true (below) -- a manually-added lemma is never in any
+   course's vocabulary TSV, so pipeline.run()'s pruning step would
+   otherwise mark it deprecated again the very next time anyone runs
+   `regenerate --write`, no matter how recently it was added.
+4. Run `uv run greek-knowledge check words/<lemma>.md` to validate it (or
+   with no arguments to check everything, words/ included).
 -->
 ---
 type: Lexical Entry
@@ -36,6 +39,7 @@ generated:
 lemma: <lemma>
 periods:
 - <homeric | attic | koine | byzantine | modern>
+protected: true
 status: draft
 verified: []
 ---

@@ -74,6 +74,25 @@ def test_run_pruning_marks_removed_word_deprecated_not_deleted(tmp_path, make_so
     assert report.unchanged == 1
 
 
+def test_run_pruning_skips_a_protected_word_even_when_never_touched(tmp_path, make_source_bundle):
+    course_dir = tmp_path / "course"
+    _write_vocabulary_tsv(course_dir, [{"lemma": "νόστος", "pos": "noun", "level": "B1", "tags": ""}])
+    out_dir = tmp_path / "out"
+    words_dir = out_dir / "words"
+    words_dir.mkdir(parents=True)
+    manual_path = words_dir / "κουβαλάω.md"
+    manual_path.write_text(
+        "---\ntype: Lexical Entry\ntitle: κουβαλάω\ndescription: d\ntags: []\nlevel: []\n"
+        "sources: []\ngenerated:\n  by: human\n  at: '2026-01-01T00:00:00+00:00'\n"
+        "lemma: κουβαλάω\nperiods: [modern]\nprotected: true\nstatus: draft\nverified: []\n---\nbody\n"
+    )
+    sources = make_source_bundle(attested_lemmas={"νόστος"})
+
+    run([course_dir], out_dir, sources)
+
+    assert _read_frontmatter(manual_path)["status"] == "draft"  # never marked deprecated
+
+
 def test_run_prune_isolates_malformed_existing_file(tmp_path, make_source_bundle):
     """A pre-existing, hand-corrupted concept file under words/ that isn't
     touched this run must not crash the whole pipeline during pruning — an

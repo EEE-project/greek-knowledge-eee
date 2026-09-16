@@ -430,6 +430,15 @@ def _prune(out_dir: Path, touched: set[Path], report: BuildReport) -> None:
             report.errors.append(f"prune {path}: could not parse existing frontmatter")
             continue
 
+        # A hand-curated entry (see templates/lexical-entry.md) never comes
+        # from _collect_lexical_candidates()'s course-TSV scan, so it can
+        # never land in `touched` no matter how many times this runs --
+        # without this check, every regenerate would mark it deprecated
+        # again the moment it was written. protected: true opts a Lexical
+        # Entry out of pruning entirely, permanently, regardless of touched.
+        if concept.extra_frontmatter.get("protected"):
+            continue
+
         deprecated = replace(concept, extra_frontmatter={**concept.extra_frontmatter, "status": "deprecated"})
         try:
             _apply_write(report, deprecated, path)

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-16 (4)
+
+- **Fixed a real gap in `words/` pruning: a hand-curated Lexical Entry (e.g. `words/κουβαλάω.md`) got marked `deprecated` on every `regenerate --write`, no matter how recently it was added.** `pipeline._collect_lexical_candidates()` only ever discovers lemmas from a course's vocabulary TSV, so a manually-added entry can never land in a run's `touched` set -- `_prune()` then (correctly, by its own existing logic) treated "never touched" as "stale." New `protected: true` frontmatter field on a Lexical Entry opts it out of pruning entirely; `words/κουβαλάω.md` now sets it, and `templates/lexical-entry.md` documents it for the next manual entry. New test: `tests/test_pipeline.py::test_run_pruning_skips_a_protected_word_even_when_never_touched`.
+- Full suite (`-m "not integration"`): 431 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean.
+
 ## 2026-09-16 (3)
 
 - **Added `texts/kavafis_ithaki/`: the first new Literary Translation work since Odyssey, for Cavafy's «Ithaka» (1911), στ. 1-23 of 40 -- the same span already used in created_with_eee's kavafis_ithaki course lessons.** Real text is included for the Greek original (public domain since 2003, cross-checked against the official Greek Ministry of Education literature textbook, ebooks.edu.gr) and two interlinear glosses (a freshly-authored English one, and the course's own uncredited Russian подстрочник). Four named literary translations are known (Valassopoulo 1924; the course's own Шмаков/Бродский, Ильинская, Левитов) but each gets a citation-only "(reference only, not reproduced)" section instead of its actual text: all four are still under copyright except Valassopoulo (public domain as a pre-1929 US publication, reviewed by Cavafy himself, but no complete reliable text source could be found).
