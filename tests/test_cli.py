@@ -163,6 +163,24 @@ def test_cli_query_full_flag_prints_bodies(monkeypatch, capsys):
     assert "Some text." in out
 
 
+def test_cli_query_list_mode_prints_report_and_skips_find_concepts(monkeypatch, capsys):
+    report = {"level": [("beginner", 15), ("advanced", 1)]}
+    monkeypatch.setattr(cli, "list_mode_report", Mock(return_value=report))
+    find_mock = Mock()
+    monkeypatch.setattr(cli, "find_concepts", find_mock)
+    monkeypatch.setattr(cli, "_repo_root", Mock(return_value="REPO_ROOT"))
+    monkeypatch.setattr(sys, "argv", ["greek-knowledge", "query", "--level", "list"])
+
+    cli.main()
+
+    cli.list_mode_report.assert_called_once_with("REPO_ROOT", {"type": None, "level": "list", "period": None, "dialect": None, "author": None})
+    find_mock.assert_not_called()
+    out = capsys.readouterr().out
+    assert "-- level --" in out
+    assert "beginner (15)" in out
+    assert "advanced (1)" in out
+
+
 def test_cli_query_rejects_unknown_type_shorthand(monkeypatch, capsys):
     monkeypatch.setattr(sys, "argv", ["greek-knowledge", "query", "--type", "not-a-real-type"])
 
