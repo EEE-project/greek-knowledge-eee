@@ -15,15 +15,20 @@ sources:
   resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
+- id: ellinika-a
+  resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 8, 10, 13
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
+  author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-16T18:07:00+00:00'
+  at: '2026-09-21T08:03:58.430918+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-status: draft
 verified: []
+status: draft
 ---
 ## Neuter plurals: the article and the ending both move to -α
 
@@ -31,4 +36,7 @@ Modern Greek neuter nouns take the plural article **τα** in both nominative an
 
 Loanwords borrowed into the neuter gender are often indeclinable and keep the same form in the plural: **το μπαρ → τα μπαρ**.[^livexp-grammar] Compound nouns generally form their plural by the rule for the compound's own final element, not the whole word's surface shape.[^livexp-grammar]
 
+A fourth pattern covers neuter nouns ending in **-ος** -- not to be confused with the *feminine* **-ος** class in [noun-declension-nom-acc-singular](noun-declension-nom-acc-singular.md) -- which form their plural in **-η** rather than **-α**: **το μέρος → τα μέρη** "place(s)" (**σε πολλά μέρη της Ελλάδας** "in many parts of Greece") and **το λάθος → τα λάθη** "mistake(s)" (**Διορθώνω τα λάθη.**).[^ellinika-a]
+
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 8, 10, 13)

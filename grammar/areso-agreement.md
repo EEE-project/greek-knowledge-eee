@@ -15,15 +15,20 @@ sources:
   resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
+- id: ellinika-a
+  resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 9, 16
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
+  author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-16T18:02:00+00:00'
+  at: '2026-09-21T07:43:06.155250+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-status: draft
 verified: []
+status: draft
 ---
 ## What is pleasing agrees with αρέσει, not the person who likes it
 
@@ -37,4 +42,7 @@ The liked thing must stay nominative even when it's easy to mistake for a direct
 
 To express liking an activity rather than a thing, **αρέσει** governs a **να**-clause in the present -- always the ongoing/habitual present, never a one-off event, since "liking to do something" is inherently a standing preference: **Μου αρέσει να κολυμπάω** "I like swimming."[^livexp-grammar]
 
+Two related impersonal constructions share the same genitive-clitic-plus-nominative-subject shape as **αρέσει** but cover a narrower, more concrete sense each. **μου πάει** "it suits me" judges how something looks on the wearer: **Σου πάει!** "It suits you!" **μου κάνει** "it fits/works for me" judges practical fit: **Δε μου κάνει.** "It doesn't fit me."[^ellinika-a]
+
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 9, 16)

@@ -21,9 +21,14 @@ sources:
   title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1
     (Εκδόσεις Πατάκη, 2012), Chapter 8: p. 126-127'
   author: Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis
+- id: ellinika-a
+  resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 7, 9, 14, 15, 17
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
+  author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-16T21:26:07.135806+00:00'
+  at: '2026-09-21T08:03:58.334114+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -43,7 +48,10 @@ The simple-future stem is formed regularly for most verbs by changing the stem-f
 
 Six common B-class verbs are irregular exceptions to that **-άω → -ήσω** pattern, traditionally learned as a fixed list: **φοράω → θα φορέσω**, **πονάω → θα πονέσω**, **μπορώ → θα μπορέσω**, **διψάω → θα διψάσω**, **πεινάω → θα πεινάσω**, **περνάω → θα περάσω**.[^livexp-grammar]
 
-A handful of very common verbs use the identical form for both aspects: **είμαι, έχω, κάνω, ξέρω, περιμένω, πάω**.[^livexp-grammar] This simple-future stem is the same one the [aorist](aorist-past-tense.md) is built from -- often, though not always, visibly related to that same verb's irregular aorist stem: **βλέπω → θα δω** (aorist **είδα**), **παίρνω → θα πάρω** (aorist **πήρα**), **πίνω → θα πιω** (aorist **ήπια**), **τρώω → θα φάω** (aorist **έφαγα**).[^ellinika-b-ch8]
+A handful of very common verbs use the identical form for both aspects: **είμαι, έχω, κάνω, ξέρω, περιμένω, πάω**.[^livexp-grammar] This simple-future stem is the same one the [aorist](aorist-past-tense.md) is built from -- often, though not always, visibly related to that same verb's irregular aorist stem: **βλέπω → θα δω** (aorist **είδα**), **παίρνω → θα πάρω** (aorist **πήρα**), **πίνω → θα πιω** (aorist **ήπια**), **τρώω → θα φάω** (aorist **έφαγα**).[^ellinika-b-ch8] A few more common irregulars in the same family: **λέω → θα πω**, **βρίσκω → θα βρω**, **μπαίνω/βγαίνω → θα μπω/θα βγω**, **ανεβαίνω/κατεβαίνω → θα ανεβώ/θα κατεβώ**, **έρχομαι/γίνομαι → θα έρθω/θα γίνω**, **φεύγω → θα φύγω**.[^ellinika-a]
+
+Common time markers for the future include **αύριο/μεθαύριο** "tomorrow/the day after tomorrow," **σε λίγο** "shortly," and **την επόμενη εβδομάδα** "next week": **Θα περάσω αύριο μετά τις 3:00.** "I'll drop by tomorrow after 3:00."[^ellinika-a]
 
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
 [^ellinika-b-ch8]: Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 8: p. 126-127, Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis (created_with_eee/modern_greek/ellinika_b/chapter_08/chapter_08_extracted_content.md)
+[^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 7, 9, 14, 15, 17)

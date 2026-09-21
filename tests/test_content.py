@@ -209,3 +209,39 @@ def test_cavafy_topic_cites_official_textbook_and_the_poem_text(repo_root):
     # regression guard: the poem's own body never uses -οσαν forms, so this
     # entry must not link to the grammar rule about them (see CHANGELOG).
     assert "aorist-3pl-osan" not in concept.body
+
+
+def test_article_rules_state_the_final_nu_rule_with_the_masculine_always_kept(repo_root):
+    for rule_id in ("definite-articles-nom-acc", "indefinite-article-enas"):
+        concept = _read_grammar(repo_root, rule_id)
+
+        assert any(s.id == "wikipedia-teliko-ni" for s in concept.sources)
+        assert "always written" in concept.body
+        # regression guard: the masculine -ν is always written, not "very often" kept (see CHANGELOG).
+        assert "very often" not in concept.body
+
+
+def test_ellinika_a_citations_carry_the_verified_bibliographic_form(repo_root):
+    authors = "Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου"
+    citing = 0
+    for path in sorted((repo_root / "grammar").glob("*.md")):
+        concept = okf.read(path)
+        if concept is None:
+            continue
+        for source in concept.sources:
+            if source.id != "ellinika-a":
+                continue
+            citing += 1
+            assert source.author == authors, path.name
+            assert "Εκδόσεις Πατάκη, 2010" in source.title, path.name
+            assert "(2015)" not in source.resource, path.name
+    assert citing > 0
+
+
+def test_imperative_rule_pairs_affirmative_and_negative_clitic_placement(repo_root):
+    concept = _read_grammar(repo_root, "imperative-mood-and-clitics")
+
+    assert any(s.id == "ellinika-a" for s in concept.sources)
+    assert "Περίμενέ με." in concept.body
+    assert "Μη με περιμένεις." in concept.body
+    assert "να μη διαβάσεις" in concept.body

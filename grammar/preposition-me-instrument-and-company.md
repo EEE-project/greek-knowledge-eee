@@ -15,6 +15,10 @@ sources:
   resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
+- id: ellinika-a
+  resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 6, 8
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010)'
+  author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
   at: '2026-09-16T18:13:00+00:00'
@@ -31,4 +35,7 @@ Modern Greek has no separate instrumental case; the preposition **με** ("with"
 
 The definite article also carries information here: **Πάω με βάρκα** names transport "by boat" in general, while **Πάω με τη βάρκα «Τιτανικ»** picks out one specific, identified boat.[^livexp-grammar]
 
+The textbook introduces **με** among its first prepositions (Unit 6), with transport phrases that carry the article -- **Πάω με το λεωφορείο.**, **Πάω με το τρόλεϊ.**, **Ο Μιχάι πηγαίνει στη δουλειά με το μετρό.** -- and uses it for payment at the till: **Μετρητά ή με κάρτα;** "Cash or by card?", **Όχι, με κάρτα.** "No, by card." For accompaniment it gives **Μένω με τον/την/το...** "I live with ..."[^ellinika-a]
+
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 6, 8)

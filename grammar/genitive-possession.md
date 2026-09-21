@@ -15,15 +15,20 @@ sources:
   resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
+- id: ellinika-a
+  resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 11, 12, 19
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
+  author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-16T18:05:00+00:00'
+  at: '2026-09-21T08:03:58.346484+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-status: draft
 verified: []
+status: draft
 ---
 ## Genitive possession: two nouns stand side by side, no preposition
 
@@ -33,4 +38,7 @@ The singular definite article is **του** for masculine and neuter, **της**
 
 Adjectives modifying a genitive noun inflect the same way the noun does; possessive pronouns (**μου, σου, του**...) do not change.[^livexp-grammar]
 
+Two further everyday uses take the genitive without looking like ordinary possession at first. Age is asked and stated in the genitive plural, treating years as "belonging to" the person: **Πόσων χρονών είσαι;** "How old are you?" (literally "of how many years"), answered with the number in the genitive plural too: **όταν ήμουν πέντε χρονών** "when I was five years old" (**τριών χρονών, τεσσάρων χρονών**...).[^ellinika-a] Calendar dates use the genitive for the month: **στις δύο Ιανουαρίου** "on the second of January," **στις τρεις του μήνα** "on the third of the month."[^ellinika-a] "Whose?" is asked with **Τίνος;**, which the textbook lists with the genitive, and a bare genitive answers it: **Το σπίτι είναι του Σταύρου.** "The house is Stavros's."[^ellinika-a]
+
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 11, 12, 19)

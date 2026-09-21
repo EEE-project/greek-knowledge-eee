@@ -15,15 +15,20 @@ sources:
   resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
+- id: ellinika-a
+  resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 2, 6, 11
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
+  author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-16T18:06:00+00:00'
+  at: '2026-09-21T07:43:06.340227+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-status: draft
 verified: []
+status: draft
 ---
 ## General location: only σε, refined by adverbs when it needs to be specific
 
@@ -38,6 +43,9 @@ Common adverbs of place used this way include **δίπλα (σε)** "next to," *
 - **Η ταβέρνα είναι δίπλα στον φούρνο.** -- "The tavern is next to the bakery."
 - **Το κινητό είναι μέσα στην τσάντα.** -- "The phone is inside the bag."
 
-An adverb of place is never used without a following preposition (usually **σε** or **από**) governing the noun.[^livexp-grammar]
+An adverb of place is never used without a following preposition (usually **σε** or **από**) governing the noun.[^livexp-grammar] The textbook lists the place adverbs **κοντά, μακριά, μέσα, έξω, δεξιά, αριστερά, απέναντι, δίπλα, ανάμεσα** and practises several of them with **από** (**απέναντι από**, **πίσω από**, **μπροστά από**, **έξω από**).[^ellinika-a]
+
+All of the above describes static location -- where something *is*. Movement *toward* a destination instead takes **προς** "toward, in the direction of," a distinct preposition from the static **σε**: **Οδηγώ προς την Πάφο.** "I'm driving toward Paphos."[^livexp-grammar]
 
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 2, 6, 11)

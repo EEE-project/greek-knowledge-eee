@@ -15,15 +15,24 @@ sources:
   resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
+- id: ellinika-a
+  resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 2, 11, 17
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
+  author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
+- id: wikipedia-tonismos
+  resource: https://el.wikipedia.org/wiki/Τονισμός
+  title: Τονισμός
+  author: Wikipedia
 generated:
   by: human
-  at: '2026-09-16T18:12:00+00:00'
+  at: '2026-09-21T08:03:58.509492+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-status: draft
 verified: []
+status: draft
 ---
 ## Possessives follow the noun; δικός adds emphasis
 
@@ -33,4 +42,8 @@ To emphasize or contrast ownership -- closer to English "my own" than plain "my"
 
 In that last example, two different **τους** appear side by side: the first is the definite article agreeing with **δικούς**, the second is the possessive pronoun completing the **δικός** construction -- the article-adjective-noun order of ordinary Greek still applies, with **δικούς τους** together filling the adjective slot.[^livexp-grammar]
 
+Adding a weak possessive to a noun already accented on its antepenult (three syllables from the end) adds a second stress, on the noun's own final syllable, rather than moving the original one: **το νόημα** "the meaning" → **το νόημά του** "its meaning" -- the noun ends up carrying two accents at once, not one shifted accent.[^wikipedia-tonismos] The textbook applies the same second-accent rule to verbs before a weak pronoun (**Κοίταξέ με.**, **Διάβασέ την.**; see [imperative-mood-and-clitics](imperative-mood-and-clitics.md)).[^ellinika-a]
+
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 2, 11, 17)
+[^wikipedia-tonismos]: Τονισμός, Wikipedia (https://el.wikipedia.org/wiki/Τονισμός)

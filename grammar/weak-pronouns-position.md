@@ -30,6 +30,6 @@ Weak (unstressed) personal-pronoun clitics attach to a finite verb by preceding 
 
 The weak accusative/object forms are **με, σε, τον, την, το, μας, σας, τους, τις, τα**; the weak genitive forms **μου, σου, του, της, μας, σας, τους** double as either an indirect object or a possessive, depending on the construction they appear in.[^livexp-grammar]
 
-The imperative reverses the ordinary verb-clitic order (the clitic attaches after an affirmative command) and follows its own separate rules, not covered here.[^livexp-grammar]
+The imperative reverses the ordinary verb-clitic order (the clitic attaches after an affirmative command) and follows its own separate rules -- see [imperative-mood-and-clitics](imperative-mood-and-clitics.md).[^livexp-grammar]
 
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)

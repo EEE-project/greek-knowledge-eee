@@ -15,15 +15,20 @@ sources:
   resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
+- id: ellinika-a
+  resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 16, 19
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
+  author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-16T18:09:00+00:00'
+  at: '2026-09-21T08:03:58.445317+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-status: draft
 verified: []
+status: draft
 ---
 ## Two finite verbs can't simply stand side by side
 
@@ -33,8 +38,11 @@ Modern Greek has no infinitive comparable to English "to do" or Russian's unmark
 - **Μου αρέσει να κολυμπάω.** -- "I like swimming."
 - **Πρέπει να τηλεφωνήσω.** -- "I must call."
 
+The class of governing verbs/expressions is large; the textbook's own examples include **Μπορώ να ρωτήσω κάτι;** "Can I ask something?", **Θέλω να κάνω μια κατάθεση.** "I want to make a deposit.", **Πρέπει να ξυπνήσεις νωρίς αύριο;** "Do you have to get up early tomorrow?", and **Αποφάσισα να κάνω ένα μεγάλο ταξίδι.** "I decided to take a long trip."[^ellinika-a]
+
 After **να** only two kinds of verb form are possible: the small set of verbs with identical present/future forms (**είμαι, έχω, κάνω, ξέρω, περιμένω, πάω**), or the dedicated non-past dependent form other verbs use here -- the same form the [simple future](future-tha-aspect.md) is built from.[^livexp-grammar]
 
 Negation can fall in either of two positions with a difference in scope: **δεν** before the governing verb negates the whole idea (**Δεν πρέπει να κάνω...** "I must not do..."), while **μην** inside the **να**-clause negates just the dependent action (**Πρέπει να μην κάνω...** "I should not-do...", i.e. "I ought to refrain").[^livexp-grammar]
 
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 16, 19)
