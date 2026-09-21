@@ -22,19 +22,29 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T08:03:58.346484+00:00'
+  at: '2026-09-21T15:29:38.605407+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-verified: []
 status: draft
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  - 'LiveXP: the genitive rules'
+  body_sha256: 312c45f11fe125616211f5776d17d9c79188b7b6e6d64a7b44cfc09f9d73f702
 ---
 ## Genitive possession: two nouns stand side by side, no preposition
 
 The genitive expresses possession and "of"-relationships directly, with the two nouns placed one after the other -- no preposition ever comes between them, unlike English "of": **το παιδί του άντρα** "the man's child," **η τσάντα της γυναίκας** "the woman's bag," **η πολιτική της χώρας μας** "our country's policy."[^livexp-grammar]
 
-The singular definite article is **του** for masculine and neuter, **της** for feminine; the plural is **των** for every gender.[^livexp-grammar] The noun's own ending changes too, depending on its declension class: masculine nouns not in **-ος** take the same form in genitive as in accusative (**ο άντρας → του άντρα**), masculine **-ος** nouns and all neuters change to **-ου** (**ο γιατρός → του γιατρού**, **το γράμμα → του γράμματος**), and feminine nouns add **-ς** (**η γυναίκα → της γυναίκας**).[^livexp-grammar] In the plural, every gender takes the ending **-ων**: **πολλών αθλητών** "of many athletes."[^livexp-grammar]
+The singular definite article is **του** for masculine and neuter, **της** for feminine; the plural is **των** for every gender.[^livexp-grammar] The noun's own ending changes too, depending on its declension class: masculine nouns not in **-ος** take the same form in genitive as in accusative (**ο άντρας → του άντρα**), masculine and feminine nouns in **-ος** change it to **-ου** (**ο γιατρός → του γιατρού**), neuters follow their own class (**το βιβλίο → του βιβλίου**, **το γράμμα → του γράμματος**), and other feminine nouns add **-ς** (**η γυναίκα → της γυναίκας**).[^livexp-grammar] In the plural, every gender takes the ending **-ων**: **πολλών αθλητών** "of many athletes."[^livexp-grammar]
 
 Adjectives modifying a genitive noun inflect the same way the noun does; possessive pronouns (**μου, σου, του**...) do not change.[^livexp-grammar]
 

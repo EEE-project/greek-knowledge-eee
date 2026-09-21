@@ -13,17 +13,27 @@ level:
 sources:
 - id: ellinika-b-ch2
   resource: created_with_eee/modern_greek/ellinika_b/chapter_02/chapter_02_extracted_content.md
-  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 2: p. 36'
+  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1
+    (Εκδόσεις Πατάκη, 2012), Chapter 2: p. 36'
   author: Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis
 generated:
   by: human
-  at: '2026-09-17T00:35:00+00:00'
+  at: '2026-09-21T15:29:38.531257+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: d4812a7d7870653d4e465a78ad2efb4921989e12cf2586620512c3b3f77fbab6
 ---
 ## The article turns δικός μου from "mine" into "MINE, not yours"
 

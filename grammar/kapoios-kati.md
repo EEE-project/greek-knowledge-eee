@@ -11,17 +11,27 @@ level:
 sources:
 - id: ellinika-b-ch3
   resource: created_with_eee/modern_greek/ellinika_b/chapter_03/chapter_03_extracted_content.md
-  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 3: p. 54'
+  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1
+    (Εκδόσεις Πατάκη, 2012), Chapter 3: p. 54'
   author: Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis
 generated:
   by: human
-  at: '2026-09-17T00:43:00+00:00'
+  at: '2026-09-21T15:29:38.715425+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: 255df5c63f1dc09f73054ca8dbc413d94a62d98728ec6aa9e28c32caa1d2b1da
 ---
 ## κάποιος/κάτι: an unspecified "someone/something," no negative reading
 

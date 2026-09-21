@@ -19,13 +19,22 @@ sources:
   author: Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis
 generated:
   by: human
-  at: '2026-09-16T21:19:19.101561+00:00'
+  at: '2026-09-21T15:29:38.999979+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-verified: []
 status: draft
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: 5b632fb8c1f10fe33920f58290fb857427de31d64e9ee63be295c83c4163b293
 ---
 ## Strong pronouns: after a preposition, for contrast, or standing alone
 

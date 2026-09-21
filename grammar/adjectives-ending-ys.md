@@ -12,17 +12,27 @@ level:
 sources:
 - id: ellinika-b-ch4
   resource: created_with_eee/modern_greek/ellinika_b/chapter_04/chapter_04_extracted_content.md
-  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 4: p. 66'
+  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1
+    (Εκδόσεις Πατάκη, 2012), Chapter 4: p. 66'
   author: Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis
 generated:
   by: human
-  at: '2026-09-17T00:45:00+00:00'
+  at: '2026-09-21T15:29:38.349453+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: 366ebf0f7263a125f827fea59dfc8c483bee4d65c378b892f6bf0bf3a5ce18fd
 ---
 ## A third adjective pattern: -ύς / -ιά / -ύ
 

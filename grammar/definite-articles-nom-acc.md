@@ -17,21 +17,32 @@ sources:
   author: LiveXP course notes
 - id: ellinika-a
   resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 8, 17
-  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010)'
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 - id: wikipedia-teliko-ni
   resource: https://el.wikipedia.org/wiki/Τελικό_νι
-  title: 'Τελικό νι (citing Φιλιππάκη-Warburton κ.ά., Γραμματική Ε΄ & ΣΤ΄ Δημοτικού, 2012, σ. 55)'
+  title: Τελικό νι (citing Φιλιππάκη-Warburton κ.ά., Γραμματική Ε΄ & ΣΤ΄ Δημοτικού,
+    2012, σ. 55)
   author: Wikipedia
 generated:
   by: human
-  at: '2026-09-16T18:00:00+00:00'
+  at: '2026-09-21T15:29:38.503555+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: b9e45f308a06b4440be0923cbebf6c13a0172cd8cfcf7d65d9206e958de84626
 ---
 ## The definite article: nominative and accusative
 

@@ -11,6 +11,7 @@ concept types was retired -- see CHANGELOG).
 import re
 
 from okfbuild import okf
+from okfbuild.query import find_concepts
 
 
 def _verse_lines(body: str) -> list[str]:
@@ -274,3 +275,71 @@ def test_imperative_rule_pairs_affirmative_and_negative_clitic_placement(repo_ro
     assert "Περίμενέ με." in concept.body
     assert "Μη με περιμένεις." in concept.body
     assert "να μη διαβάσεις" in concept.body
+
+
+def test_koine_to_modern_rules_state_the_corrected_facts(repo_root):
+    augment = _read_grammar(repo_root, "augment-loss").body
+    assert "wouldn't otherwise be accented" not in augment
+    assert "**ἐλύομεν**" in augment  # Koine's augment sits on every indicative form, stressed or not
+
+    assert "formally distinct only in the future and aorist" in _read_grammar(repo_root, "mediopassive-merger").body
+
+    participles = _read_grammar(repo_root, "reduplicated-participles-as-adjectives").body
+    assert "roughly forty" not in participles
+    assert "**φ → π**" in participles  # πεφωτισμένος and κεχαριτωμένος de-aspirate, so "repeat the first consonant" is wrong
+
+
+def test_a2_b1_rules_no_longer_state_what_review_found_wrong(repo_root):
+    wrong = {
+        "aorist-past-tense": ["When a stem has fewer than three syllables", "μίλησαν(ε)", "wholly different, suppletive stem"],
+        "combining-imperfect-aorist": ["λεωφορέιο"],
+        "genitive-possession": ["all neuters change to"],
+        "imperfect-formation": ["suppletive imperfect"],
+        "location-prepositions": ["never used without a following preposition", "Movement *toward* a destination instead takes"],
+        "masculine-feminine-noun-plurals": ["one true exception", "and all feminine nouns"],
+        "modern-neuter-noun-plurals": ["with stress staying on the same syllable as the singular"],
+        "na-dependent-verb-forms": ["only two kinds of verb form", "negates just the dependent action"],
+        "negation-questions-and-min": ["raised semicolon"],
+        "noun-declension-genitive-singular": ["masculine **-ος**, masculine **-ας**"],
+        "prefix-word-formation": ["**εξάρτητος** dependent"],  # not a Modern Greek word; ανεξάρτητος has no such base
+        "prepei-tense-shift": ["descends from Ancient Greek's lost infinitive"],
+    }
+    for rule_id, phrases in wrong.items():
+        body = _read_grammar(repo_root, rule_id).body
+        for phrase in phrases:
+            assert phrase not in body, f"{rule_id} still says {phrase!r}"
+
+
+def test_a2_b1_rules_carry_the_corrected_forms(repo_root):
+    assert "μιλήσανε" in _read_grammar(repo_root, "aorist-past-tense").body
+    assert "εδώ κοντά" in _read_grammar(repo_root, "location-prepositions").body
+    assert "**Νίκο!**" in _read_grammar(repo_root, "vocative-case").body
+    assert "**το μάθημα → τα μαθήματα**" in _read_grammar(repo_root, "modern-neuter-noun-plurals").body
+
+
+def test_the_noun_verb_ending_rule_stays_deleted(repo_root):
+    # It read the spelling cue on Ελληνικά Β΄ p. 19 (ο/ω, η/ει in nouns and verbs) as a rule that a noun's ending predicts its verb's conjugation.
+    assert not (repo_root / "grammar" / "noun-verb-ending-correlation.md").exists()
+
+
+def test_every_modern_grammar_rule_is_verified_for_its_current_text(repo_root):
+    # The modern-grammar selection must return only rules someone checked against sources. A rule that is new, or
+    # was edited after its review, fails here: check it, then `greek-knowledge verify <file> --by ... --against ...`.
+    rules = find_concepts(repo_root, type="Grammatical Rule", period="modern")
+
+    assert rules
+    unverified = [path.name for path, concept in rules if okf.current_verification(concept) is None]
+    assert unverified == []
+
+
+def test_koine_to_modern_comparisons_are_advanced_not_beginner(repo_root):
+    # They compare two periods of the language rather than teach Modern Greek, so a `--period modern --level beginner`
+    # selection must not hand them to a learner.
+    comparisons = [
+        concept
+        for _, concept in find_concepts(repo_root, type="Grammatical Rule", period="modern")
+        if concept.extra_frontmatter["periods_spanned"]["from"] != "modern"
+    ]
+
+    assert len(comparisons) == 8
+    assert all(concept.level == ["advanced"] for concept in comparisons)

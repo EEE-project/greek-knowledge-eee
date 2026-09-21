@@ -1,7 +1,8 @@
 ---
 type: Grammatical Rule
 title: verbs-in-omai-and-amai
-description: Present-tense conjugation of Modern Greek verbs in -ομαι (έρχομαι) and in -άμαι (θυμάμαι).
+description: Present-tense conjugation of Modern Greek verbs in -ομαι (έρχομαι) and
+  in -άμαι (θυμάμαι).
 tags:
 - verb
 - conjugation
@@ -12,17 +13,27 @@ level:
 sources:
 - id: ellinika-a
   resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 9, 11
-  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010)'
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T07:43:00+00:00'
+  at: '2026-09-21T15:29:39.056925+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: 72edc9adfae50f58d91c26ba52ae7621f325b755ce2ffe67cfc4fb5d6e070e1f
 ---
 ## Two families of present-tense verbs that do not end in -ω
 

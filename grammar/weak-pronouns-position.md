@@ -16,13 +16,22 @@ sources:
   author: LiveXP course notes
 generated:
   by: human
-  at: '2026-09-16T18:17:00+00:00'
+  at: '2026-09-21T15:29:39.095753+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: a9522d8b23d48894c8b914b28e6a73179e6c1be07848a73225d3073c26102d59
 ---
 ## Clitics attach in opposite directions to a verb and to a noun
 

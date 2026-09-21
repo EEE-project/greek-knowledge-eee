@@ -9,8 +9,8 @@ An 8-page comparison table covering every mood, tense, and voice of a
 single paradigm verb (λύω) across Hellenistic κοινή and Modern Greek,
 with historical notes on each divergence (θα's etymology from θέλω ἵνα,
 the optative's replacement, the middle/passive merger, unstressed
-augment loss, ~40 reduplicated perfect participles surviving as ordinary
-adjectives, and the new future-continuous tense with no κοινή ancestor).
+augment loss, a list of 48 reduplicated perfect participles ("some examples"
+of the many that survive as adjectives), and the new future-continuous tense with no κοινή ancestor).
 No individual named author on the document itself.
 
 **Status: integrated.** Sourced from the ΑΤΤΙΚΙΣΤΑ Telegram channel
@@ -37,9 +37,21 @@ treated the same way this repo treats every other document source
 (downloaded, curated, cited), not as an automated `SourceBundle` input.
 
 **Authority:** `linguistic: 3` — lower than CONSPECTVS GRAMMATICVS
-despite similarly checkable content (no errors found in the paradigm
-reviewed), because this source has no identifiable institutional
+despite similarly checkable content (a second reading found typos, listed
+below, but no error in the paradigm itself), because this source has no identifiable institutional
 continuity at all: no named author, no organization, nothing beyond "a
 post on a Telegram channel." Genuinely useful and independently
 verifiable, but with less standing behind it than an identifiable
 teaching organization's own handout.
+
+**Typos found on a second reading:** the Koine future 3pl is printed
+`λύουσι/ν` (expected `λύσουσι/ν`); the reduplicated-participle list has
+`κεχαριτομένος`, `μεμωνομένος` and `συγγεκριμένος` for the standard
+κεχαριτωμένος, μεμονωμένος and συγκεκριμένος (the standard forms are attested in
+a real-text corpus, the typo forms are not), and it lists `πεποιθώς`, an active
+participle, among the medio-passive ones. The table's only remark on the
+augment is «Безударный аугмент ε в новогреческом обычно опускается» ("the
+unstressed augment ε is usually dropped in Modern Greek"); it says nothing about
+when the Koine augment is added. Its list of 48 participles is introduced as
+«Некоторые» ("some"), and the participle row says Modern Greek uses
+«множество» ("many") of them -- so no number like "about forty" comes from it.

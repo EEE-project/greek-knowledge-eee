@@ -9,7 +9,7 @@ tags:
 - optative
 - modern-greek
 level:
-- beginner
+- advanced
 sources:
 - id: atticist-koine-tenses
   resource: https://t.me/atticist
@@ -21,13 +21,24 @@ sources:
   author: K. P. Cavafy
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-16T14:19:19.073335+00:00'
+  at: '2026-09-21T15:29:38.851212+00:00'
 periods_spanned:
   from: koine
   to: modern
 dialect: []
-verified: []
 status: draft
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  - 'source PDF (ΑΤΤΙΚΙΣΤΑ verb-tense table): its optative paragraph'
+  - 'texts/kavafis_ithaki/text.md: the quoted verse (στ. 2)'
+  body_sha256: 796d7bea7ece4484ad78e5840c7388bd3b341fb6ad7c6e1f365a9933db03032a
 ---
 ## The optative's decline and its Modern Greek replacements
 

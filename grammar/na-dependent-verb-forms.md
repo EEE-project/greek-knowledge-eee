@@ -22,17 +22,27 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T08:03:58.445317+00:00'
+  at: '2026-09-21T15:29:38.793369+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-verified: []
 status: draft
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  - 'LiveXP: Δεν πρέπει να κάνω and Πρέπει να μην κάνω both glossed ''I must not do'''
+  body_sha256: 5447e8c77bc91e6a4d002b35d56c53bf5564ad37a62760eb27eee5750edbf3f2
 ---
 ## Two finite verbs can't simply stand side by side
 
-Modern Greek has no infinitive comparable to English "to do" or Russian's unmarked infinitive form (see [infinitive-loss](infinitive-loss.md) for how that category disappeared from Greek generally). Two finite verbs can never simply follow one another in a clause; a dependent action is introduced instead by **να** plus a finite verb of its own, translating where English or Russian would use an infinitive or gerund.[^livexp-grammar]
+Modern Greek has no infinitive comparable to English "to do" or Russian's unmarked infinitive form (see [infinitive-loss](infinitive-loss.md) for how that category disappeared from Greek generally). A dependent action cannot simply be expressed by a second finite verb after the first; it is introduced instead by **να** plus a finite verb of its own, translating where English or Russian would use an infinitive or gerund.[^livexp-grammar]
 
 - **Θέλω να είμαι εδώ.** -- "I want to be here."
 - **Μου αρέσει να κολυμπάω.** -- "I like swimming."
@@ -40,9 +50,9 @@ Modern Greek has no infinitive comparable to English "to do" or Russian's unmark
 
 The class of governing verbs/expressions is large; the textbook's own examples include **Μπορώ να ρωτήσω κάτι;** "Can I ask something?", **Θέλω να κάνω μια κατάθεση.** "I want to make a deposit.", **Πρέπει να ξυπνήσεις νωρίς αύριο;** "Do you have to get up early tomorrow?", and **Αποφάσισα να κάνω ένα μεγάλο ταξίδι.** "I decided to take a long trip."[^ellinika-a]
 
-After **να** only two kinds of verb form are possible: the small set of verbs with identical present/future forms (**είμαι, έχω, κάνω, ξέρω, περιμένω, πάω**), or the dedicated non-past dependent form other verbs use here -- the same form the [simple future](future-tha-aspect.md) is built from.[^livexp-grammar]
+After **να** the verb has one of two aspectual forms: the present-stem form (**Μου αρέσει να κολυμπάω**) or the perfective dependent form, built on the same stem as the [simple future](future-tha-aspect.md) (**Πρέπει να τηλεφωνήσω**); a small set of verbs -- **είμαι, έχω, κάνω, ξέρω, περιμένω, πάω** -- has one form for both.[^livexp-grammar]
 
-Negation can fall in either of two positions with a difference in scope: **δεν** before the governing verb negates the whole idea (**Δεν πρέπει να κάνω...** "I must not do..."), while **μην** inside the **να**-clause negates just the dependent action (**Πρέπει να μην κάνω...** "I should not-do...", i.e. "I ought to refrain").[^livexp-grammar]
+Negation can fall in either of two positions: **δεν** before the governing verb (**Δεν πρέπει να κάνω...** "I must not do...") or **μην** inside the **να**-clause (**Πρέπει να μην κάνω...**, likewise "I must not do," the more formal, literary construction).[^livexp-grammar]
 
 [^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 16, 19)

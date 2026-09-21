@@ -1,7 +1,8 @@
 ---
 type: Grammatical Rule
 title: personality-adjectives-is-a-iko
-description: The -ης/-α/-ικο adjective pattern used for informal personality-trait words.
+description: The -ης/-α/-ικο adjective pattern used for informal personality-trait
+  words.
 tags:
 - morphology
 - adjective
@@ -12,17 +13,27 @@ level:
 sources:
 - id: ellinika-b-ch8
   resource: created_with_eee/modern_greek/ellinika_b/chapter_08/chapter_08_extracted_content.md
-  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 8: p. 133'
+  title: 'Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1
+    (Εκδόσεις Πατάκη, 2012), Chapter 8: p. 133'
   author: Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis
 generated:
   by: human
-  at: '2026-09-17T01:03:00+00:00'
+  at: '2026-09-21T15:29:38.887882+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: cea003eb4b04614dc5cec8b2c64c404052081976252214124a55b207bd1bd94d
 ---
 ## A fourth adjective pattern, mostly for character traits: -ης / -α / -ικο
 

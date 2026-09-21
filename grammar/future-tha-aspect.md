@@ -28,25 +28,36 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T08:03:58.334114+00:00'
+  at: '2026-09-21T15:29:38.582093+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-verified: []
 status: draft
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  - LiveXP future-stem tables
+  - 'corpus: αλλάξω, φωνάξω, γελάσω, ξεχάσω, κοιτάξω attested; αλλάσω, φωνάσω not'
+  body_sha256: 8f0091ead64636825a0aeeda02c8fa1c9beb8fa65557b05487663c83558dcec9
 ---
 ## θα distinguishes ongoing future from a single, bounded event
 
-Modern Greek's **θα** marks the future, but the verb form after it carries an aspectual distinction English doesn't grammaticalize the same way: **θα** + present-tense stem gives the continuous future ("I will be doing"), while **θα** + a separate future/subjunctive stem gives the simple future ("I will do").[^livexp-grammar]
+Modern Greek's **θα** marks the future, but the verb form after it carries an aspectual distinction English doesn't grammaticalize the same way: **θα** + present-tense stem gives the continuous future ("I will be doing"), while **θα** + a separate future/subjunctive stem (the perfective, or aorist, stem) gives the simple future ("I will do").[^livexp-grammar]
 
 - **Θα αγοράζω** -- "I will be buying (regularly/ongoing)."
 - **Θα αγοράσω** -- "I will buy (once)."
 - **Θα δίνω** vs. **Θα δώσω** -- "I will be giving" vs. "I will give."
 
-The simple-future stem is formed regularly for most verbs by changing the stem-final consonant before adding **-σω**: **-ζω/-νω/-ούω → -σω** (διαβάζω → θα διαβάσω), **-χνω/-γω → -ξω** (ανοίγω → θα ανοίξω), **-εύω/-αύω/-βω/-φω → -ψω** (γράφω → θα γράψω), and **-άω/-ώ → -ήσω** for B-class verbs (μιλάω → θα μιλήσω, αγαπάω → θα αγαπήσω).[^livexp-grammar]
+The simple-future stem is formed regularly for most verbs by changing the stem-final consonant before adding **-σω**: **-ζω/-νω/-ούω → -σω** (διαβάζω → θα διαβάσω), **-χνω/-γω → -ξω** (ανοίγω → θα ανοίξω), **-εύω/-αύω/-βω/-φω → -ψω** (γράφω → θα γράψω), and **-άω/-ώ → -ήσω** for B-class verbs (μιλάω → θα μιλήσω, αγαπάω → θα αγαπήσω).[^livexp-grammar] These patterns have exceptions: **αλλάζω → θα αλλάξω**, **φωνάζω → θα φωνάξω**, **μένω → θα μείνω**, **δίνω → θα δώσω**.
 
-Six common B-class verbs are irregular exceptions to that **-άω → -ήσω** pattern, traditionally learned as a fixed list: **φοράω → θα φορέσω**, **πονάω → θα πονέσω**, **μπορώ → θα μπορέσω**, **διψάω → θα διψάσω**, **πεινάω → θα πεινάσω**, **περνάω → θα περάσω**.[^livexp-grammar]
+Six common B-class verbs are irregular exceptions to that **-άω → -ήσω** pattern, traditionally learned as a fixed list (which is not exhaustive: **γελάω → θα γελάσω**, **ξεχνάω → θα ξεχάσω**, **κοιτάω → θα κοιτάξω** behave the same way): **φοράω → θα φορέσω**, **πονάω → θα πονέσω**, **μπορώ → θα μπορέσω**, **διψάω → θα διψάσω**, **πεινάω → θα πεινάσω**, **περνάω → θα περάσω**.[^livexp-grammar]
 
 A handful of very common verbs use the identical form for both aspects: **είμαι, έχω, κάνω, ξέρω, περιμένω, πάω**.[^livexp-grammar] This simple-future stem is the same one the [aorist](aorist-past-tense.md) is built from -- often, though not always, visibly related to that same verb's irregular aorist stem: **βλέπω → θα δω** (aorist **είδα**), **παίρνω → θα πάρω** (aorist **πήρα**), **πίνω → θα πιω** (aorist **ήπια**), **τρώω → θα φάω** (aorist **έφαγα**).[^ellinika-b-ch8] A few more common irregulars in the same family: **λέω → θα πω**, **βρίσκω → θα βρω**, **μπαίνω/βγαίνω → θα μπω/θα βγω**, **ανεβαίνω/κατεβαίνω → θα ανεβώ/θα κατεβώ**, **έρχομαι/γίνομαι → θα έρθω/θα γίνω**, **φεύγω → θα φύγω**.[^ellinika-a]
 

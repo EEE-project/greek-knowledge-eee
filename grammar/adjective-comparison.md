@@ -20,13 +20,22 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T08:03:58.198634+00:00'
+  at: '2026-09-21T15:29:38.337687+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-verified: []
 status: draft
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: 0d5a2e604dbf182a9cc98b339b0ffdc3f8c33838777b8e7f8c0c7cf63e9e8a76
 ---
 ## One ladder for adjectives and adverbs: base form, πιο ... από, πολύ
 

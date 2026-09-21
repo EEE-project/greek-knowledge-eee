@@ -1,7 +1,8 @@
 ---
 type: Grammatical Rule
 title: demonstratives-and-indefinites
-description: αυτός/εκείνος + article + noun (the article is obligatory), the -ν forms αυτόν/αυτήν, and κανένας in questions.
+description: αυτός/εκείνος + article + noun (the article is obligatory), the -ν forms
+  αυτόν/αυτήν, and κανένας in questions.
 tags:
 - pronoun
 - demonstrative
@@ -17,17 +18,27 @@ sources:
   author: LiveXP course notes
 - id: ellinika-a
   resource: Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 9, 16, 19
-  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010)'
+  title: 'Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2
+    (Εκδόσεις Πατάκη, 2010)'
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T07:42:00+00:00'
+  at: '2026-09-21T15:29:38.520419+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: e0ed3fdc32d6448bb5cd9d4affcebd8145ac1d7bb317abde8d41d3d077e17cb8
 ---
 ## "This" and "that" keep the article: αυτός ο υπολογιστής
 

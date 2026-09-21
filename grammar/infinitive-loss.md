@@ -10,7 +10,7 @@ tags:
 - subjunctive
 - modern-greek
 level:
-- beginner
+- advanced
 sources:
 - id: osu-loss-of-infinitive
   resource: https://u.osu.edu/greek/syntax-and-morphology/loss-of-infinitive/
@@ -18,13 +18,24 @@ sources:
   author: Ohio State University
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-16T14:45:19.710921+00:00'
+  at: '2026-09-21T15:29:38.693227+00:00'
 periods_spanned:
   from: koine
   to: modern
 dialect: []
-verified: []
 status: draft
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  - 'Ohio State ''Loss of the Infinitive'': 13 infinitives, restricted by the 10th
+    century, lost by the 16th'
+  body_sha256: f2d70b523fe3c70ea91e42ebdac56d10a735fadbac521e5a8a648bdfb79b4719
 ---
 ## The lost infinitive: να + subjunctive as one of its replacements
 

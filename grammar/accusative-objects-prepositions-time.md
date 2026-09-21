@@ -22,19 +22,28 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T07:43:06.111094+00:00'
+  at: '2026-09-21T15:29:38.326926+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
-verified: []
 status: draft
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: 7cbbfb9846a543ce8ba1cb50a8f27deb1b71b9db0a3d852bf81eee82ca3f32f1
 ---
 ## The accusative's core jobs: direct objects, prepositions, and time spans
 
 Beyond marking a direct object (**Ο Νίκος περιμένει τον Κώστα** "Nikos is waiting for Kostas"), the Modern Greek accusative also follows the everyday prepositions **με** "with," **σε** "at/in/to," **για** "for," and **από** "from" -- see [preposition-me-instrument-and-company](preposition-me-instrument-and-company.md) and [location-prepositions](location-prepositions.md) for two of these in detail.[^livexp-grammar] **σε** regularly contracts with the following definite article: **σε τον → στον**, **σε την → στην**, **σε το → στο**.[^livexp-grammar]
 
-The accusative also expresses time spans and points in time without a preposition -- months, times of day, and periods -- though not clock times or specific calendar dates: **τον Φεβρουάριο** "in February," **το πρωί** "in the morning."[^livexp-grammar]
+The accusative also expresses time spans and points in time without a preposition -- months, times of day, and periods -- while clock times and calendar dates are introduced by **σε** (**στις οχτώ**, **στις δύο Ιανουαρίου**): **τον Φεβρουάριο** "in February," **το πρωί** "in the morning."[^livexp-grammar]
 
 Clock time itself, by contrast, is expressed with **σε** + accusative rather than a bare accusative: **Το τρένο φεύγει στις 8:00.** "The train leaves at 8:00," **Το πλοίο ξεκινάει από τον Πειραιά στις οχτώ παρά τέταρτο το πρωί.** "The ship leaves Piraeus at a quarter to eight in the morning."[^ellinika-a] Duration uses the bare accusative the same way a time-point does: **Πόσον καιρό είσαι εδώ;** "How long have you been here?", answered with a bare span like **έναν μήνα** "for a month" -- or, for a duration still ongoing, **εδώ και δύο χρόνια** "for two years now."[^ellinika-a]
 

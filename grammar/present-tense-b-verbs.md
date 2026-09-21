@@ -1,7 +1,8 @@
 ---
 type: Grammatical Rule
 title: present-tense-b-verbs
-description: Present-tense conjugation of B-class (contract) verbs, groups B1, B2, and AB.
+description: Present-tense conjugation of B-class (contract) verbs, groups B1, B2,
+  and AB.
 tags:
 - verb
 - present
@@ -16,15 +17,24 @@ sources:
   author: LiveXP course notes
 generated:
   by: human
-  at: '2026-09-16T18:14:00+00:00'
+  at: '2026-09-21T15:29:38.974666+00:00'
 periods_spanned:
   from: modern
   to: modern
 dialect: []
 status: draft
-verified: []
+verified:
+- by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
+  at: '2026-09-21'
+  against:
+  - read in full, statement by statement
+  - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
+    against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
+  - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
+    (proper names, elisions, accented enclitics and Koine forms aside)'
+  body_sha256: 9a121f769b3cec4dfbf4f2221a00482dd73bd555e38eccab8a1348dfdaae0483
 ---
-## B-class verbs: a "contracted" and a "full" conjugation, otherwise interchangeable
+## B-class verbs: a "contracted" and a "full" conjugation, often interchangeable
 
 Modern Greek's B-class (contract) present-tense verbs split into two conjugation patterns that differ only in form, not in meaning or use. Group B1 verbs end **-άω** (stress on the **ά**): **μιλάω, μιλάς, μιλάει, μιλάμε, μιλάτε, μιλάνε** ("to speak"). Group B2 verbs end **-ώ** (stress on the ending itself): **τηλεφωνώ, τηλεφωνείς, τηλεφωνεί, τηλεφωνούμε, τηλεφωνείτε, τηλεφωνούν** ("to phone").[^livexp-grammar]
 
