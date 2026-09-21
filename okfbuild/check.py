@@ -73,7 +73,8 @@ def check_file(path: Path) -> list[Issue]:
             generated.pop("at", None)
     if existing_fm != rendered_fm:
         issues.append(Issue(path, "frontmatter doesn't match its canonical rendering (run check --fix)"))
-    if existing_body != rendered_body:
+    # Trailing newlines aren't content: an editor may add or drop the final one freely.
+    if existing_body.rstrip("\n") != rendered_body.rstrip("\n"):
         issues.append(Issue(path, "footnote-definitions block doesn't match sources: (run check --fix)"))
 
     return issues

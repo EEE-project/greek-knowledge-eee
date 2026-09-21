@@ -79,9 +79,7 @@ def test_check_file_ignores_a_non_slug_bracket_caret_substring_in_raw_source_tex
     assert issues == []
 
 
-def test_check_file_skips_citation_checks_for_literary_translation(tmp_path):
-    path = tmp_path / "texts" / "work" / "translations_el.md"
-    text = """\
+_LITERARY_TRANSLATION = """\
 ---
 type: Literary Translation
 title: work (1) — el translations
@@ -107,7 +105,21 @@ verified: []
 ## πρωτότυπο
 
 Plain poem text, no inline citations."""
-    _write(path, text)
+
+
+def test_check_file_skips_citation_checks_for_literary_translation(tmp_path):
+    path = tmp_path / "texts" / "work" / "translations_el.md"
+    _write(path, _LITERARY_TRANSLATION)
+
+    assert check.check_file(path) == []
+
+
+def test_check_file_accepts_an_editor_added_trailing_newline(tmp_path):
+    # Regression guard: a Literary Translation has no footnote-definitions block, so
+    # render() ends its body without a newline; an editor saving a final one must not
+    # fail the check with a misleading "footnote-definitions block" message.
+    path = tmp_path / "texts" / "work" / "translations_el.md"
+    _write(path, _LITERARY_TRANSLATION + "\n")
 
     assert check.check_file(path) == []
 
