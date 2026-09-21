@@ -8,6 +8,9 @@ per language covering the same work+passage).
 3. Run `uv run greek-knowledge check` (add --fix to normalize the
    frontmatter -- it never touches your body text).
 
+The work's original text does not belong here: it goes in
+texts/<work-slug>/text.md (templates/literary-text.md).
+
 Unlike Grammatical Rule/Cultural Context, sources: here is plain
 provenance for the whole passage (where the text came from, what it was
 verified against) -- the body is the translated text itself, not prose

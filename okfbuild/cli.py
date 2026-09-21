@@ -1,11 +1,13 @@
 """Command-line entry point (`greek-knowledge`, see pyproject.toml's
-[project.scripts]) for this KB's sources -- lookup and build are
-read-only exploration. regenerate is the one subcommand that writes to
+[project.scripts]) for this KB's sources -- lookup, build and query are
+read-only exploration. regenerate is the one subcommand that generates
 this repo's tracked words/ content, and only with an explicit --write
 flag (see _cmd_regenerate's docstring for why that matters); check
 validates any committed concept file (words/, grammar/, culture/, texts/)
 instead of generating it, and only writes with an explicit --fix flag
-(see okfbuild/check.py). No other command in this codebase writes there -- in
+(see okfbuild/check.py); verify changes nothing but the `verified:` record
+of the concept files it is given (see check.record_verification). No other
+command in this codebase writes there -- in
 particular, the test suite doesn't: tests/test_pilot_acceptance.py
 validates a real pipeline.run() against a scratch directory, never the
 real repo root, so `uv run pytest` (with or without -m flags) can never
@@ -19,7 +21,7 @@ from pathlib import Path
 
 from okfbuild.concepts import lexical_entry
 from okfbuild.lookup import lookup_word
-from okfbuild.query import LIST_FIELDS, TYPE_BY_DIR, find_concepts, list_mode_report
+from okfbuild.query import LIST_FIELDS, add_filter_arguments, concept_types, find_concepts, list_mode_report
 from okfbuild.wiring import default_source_bundle, full_source_bundle
 
 _DEFAULT_PERIODS = ["homeric", "attic", "modern"]
@@ -52,7 +54,7 @@ def _cmd_build(args: argparse.Namespace) -> None:
 
 def _cmd_query(args: argparse.Namespace) -> None:
     raw = {field: getattr(args, field) for field in LIST_FIELDS}
-    report = list_mode_report(_repo_root(), raw)
+    report = list_mode_report(_repo_root(), raw, verified=args.verified)
     if report is not None:
         for field, values in report.items():
             print(f"-- {field} --")
@@ -60,14 +62,16 @@ def _cmd_query(args: argparse.Namespace) -> None:
                 print(f"{value} ({count})")
         return
 
-    concept_type = TYPE_BY_DIR.get(args.type) if args.type else None
     matches = find_concepts(
         _repo_root(),
-        type=concept_type,
+        type=concept_types(args.type),
         level=args.level,
         period=args.period,
         dialect=args.dialect,
         author=args.author,
+        work=args.work,
+        language=args.language,
+        verified=args.verified,
     )
     if not matches:
         print("No concepts match those filters.")
@@ -78,6 +82,14 @@ def _cmd_query(args: argparse.Namespace) -> None:
             print(concept.body)
         else:
             print(f"{path.relative_to(_repo_root())}  —  {concept.title}")
+
+
+def _report_issues(issues: list, repo_root: Path) -> None:
+    """ruff-style: one line per problem, then exit 1 if there was any."""
+    for issue in issues:
+        print(f"{issue.path.relative_to(repo_root)}: {issue.message}")
+    if issues:
+        raise SystemExit(1)
 
 
 def _cmd_check(args: argparse.Namespace) -> None:
@@ -98,11 +110,26 @@ def _cmd_check(args: argparse.Namespace) -> None:
         for path in paths:
             check.fix_file(path)
 
-    issues = [issue for path in paths for issue in check.check_file(path)]
-    for issue in issues:
-        print(f"{issue.path.relative_to(repo_root)}: {issue.message}")
-    if issues:
-        raise SystemExit(1)
+    _report_issues([issue for path in paths for issue in check.check_file(path)], repo_root)
+
+
+def _cmd_verify(args: argparse.Namespace) -> None:
+    """Pins a verification record (who checked, on what date, against what)
+    to the current text of each given concept file -- or of every concept
+    file under a given directory. The record is only as good as the check
+    behind it, which is the caller's job: this command just makes it
+    durable. Writes nothing unless every target passes check.check_structure
+    (a file that is not well-formed cannot be vouched for); editing a file
+    afterwards makes its record stale, which `check` then reports."""
+    from okfbuild import check
+
+    repo_root = _repo_root()
+    paths = check.resolve_targets(repo_root, args.paths)
+    _report_issues([issue for path in paths for issue in check.check_structure(path)], repo_root)
+
+    for path in paths:
+        check.record_verification(path, by=args.by, against=args.against)
+        print(f"verified {path.relative_to(repo_root)}")
 
 
 def _cmd_regenerate(args: argparse.Namespace) -> None:
@@ -177,12 +204,16 @@ def main() -> None:
     check_parser.add_argument("--fix", action="store_true", help="mechanically re-render files that need it before reporting")
     check_parser.set_defaults(func=_cmd_check)
 
-    query_parser = subparsers.add_parser("query", help="find committed grammar/culture/words/texts by level, period, dialect, author")
-    query_parser.add_argument("--type", choices=sorted(TYPE_BY_DIR) + ["list"], help="restrict to one concept type; 'list' prints the values in use instead of querying")
-    query_parser.add_argument("--level", help="pass 'list' to print the values in use instead of querying")
-    query_parser.add_argument("--period", help="pass 'list' to print the values in use instead of querying")
-    query_parser.add_argument("--dialect", help="pass 'list' to print the values in use instead of querying")
-    query_parser.add_argument("--author", help="case-insensitive substring match against any source's author; pass 'list' to print the values in use instead of querying")
+    verify_parser = subparsers.add_parser(
+        "verify", help="record that a concept file was checked against sources (see `check`, and `query --verified`)"
+    )
+    verify_parser.add_argument("paths", nargs="+", help="concept files or directories to verify")
+    verify_parser.add_argument("--by", required=True, help="who checked it -- a person, or an AI reviewer named as such")
+    verify_parser.add_argument("--against", action="append", required=True, help="what it was checked against; repeat for several")
+    verify_parser.set_defaults(func=_cmd_verify)
+
+    query_parser = subparsers.add_parser("query", help="find committed grammar/culture/words/texts by level, period, dialect, author, work, language")
+    add_filter_arguments(query_parser)
     query_parser.add_argument("--full", action="store_true", help="print full bodies instead of just paths+titles")
     query_parser.set_defaults(func=_cmd_query)
 

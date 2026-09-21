@@ -21,12 +21,20 @@ sources:
   title: Constantine P. Cavafy
   author: Wikipedia
 - id: cavafy-ithaka-text
-  resource: texts/kavafis_ithaki/translations_el.md
-  title: Kavafis, Ithaka (1-23) — el translations
+  resource: texts/kavafis_ithaki/text.md
+  title: Kavafis, Ithaka (1-36) — original text (el)
   author: K. P. Cavafy
+- id: ithaka-reading-valtinos
+  resource: https://www.youtube.com/watch?v=r5lPCeT8Ex0
+  title: ΙΘΑΚΗ - Κ.Π. ΚΑΒΑΦΗΣ- ΓΡΗΓΟΡΗΣ ΒΑΛΤΙΝΟΣ
+  author: 1969anre (YouTube channel)
+- id: ithaka-reading-connery
+  resource: https://www.youtube.com/watch?v=i8is5ZE4_CU
+  title: Sean Connery reads ITHAKA | Powerful Life Poem by C.P.Cavafy
+  author: Upgrade Your Mindset (YouTube channel)
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-16T16:18:19.055504+00:00'
+  at: '2026-09-21T20:25:57.948407+00:00'
 related_words:
 - νόστος
 related_lessons:
@@ -60,7 +68,7 @@ Konstantinos Petrou Kavafis, known, especially in English, as Constantine P. Cav
 
 ## A mixed poetic language
 
-That "consciously individual style" shows up concretely in «Ithaka»'s own wording, word by word, across στ. 1-23 -- the portion of the poem this knowledge base's `texts/kavafis_ithaki/` actually carries; the poem continues to στ. 40, but nothing past στ. 23 is verified against a committed text here, so it isn't described below.[^cavafy-ithaka-text]
+That "consciously individual style" shows up concretely in «Ithaka»'s own wording, word by word, across στ. 1-23; the poem has 36 lines, and στ. 24-36, which this knowledge base's `texts/kavafis_ithaki/` now carries as well, aren't described below yet.[^cavafy-ithaka-text]
 
 **στ. 1-3.** The poem opens by naming the journey with **πηγαιμό** (from **πηγαίνω** "to go"), a noun with a bookish, poetic coloring -- ordinary Modern Greek would say **ταξίδι**, **δρόμος**, or **πορεία** for "journey." Set right next to it, the rest of the line is entirely everyday grammar: **εύχεσαι** is the plain 2nd-singular present of **εύχομαι** "to wish," and **να 'ναι** is the ordinary colloquial contraction of **να είναι** "[that it] be." One poetically marked noun inside an otherwise completely demotic sentence.[^cavafy-ithaka-text]
 
@@ -72,6 +80,12 @@ Two repetitions work the same alternation at the level of phrasing rather than s
 
 None of this settles into a single, nameable dialect. Cavafy moves between an archaizing, katharevousa-leaning register and plain demotic speech within the same sentence, sometimes the same line -- his own mixed poetic idiolect, not a text written "in" any one variety of Greek.
 
+## Ithaka read aloud
+
+«Ithaka» has also been recorded by performers. Two readings are on YouTube, linked here and not copied: a reading of the Greek text credited in its title to Grigoris Valtinos (uploaded by the channel 1969anre in 2012),[^ithaka-reading-valtinos] and an English reading credited to Sean Connery (uploaded by the channel Upgrade Your Mindset in 2021).[^ithaka-reading-connery]
+
 [^ebooks-edu-gr-ithaka]: Κείμενα Νεοελληνικής Λογοτεχνίας Α΄ Λυκείου (official Greek Ministry of Education literature textbook), Greek Institute of Educational Policy (ΙΕΠ) (https://ebooks.edu.gr/ebooks/v/html/8547/2700/Keimena-Neoellinikis-Logotechnias_A-Lykeiou_html-empl/indexG3_2.html)
 [^wikipedia]: Constantine P. Cavafy, Wikipedia (https://en.wikipedia.org/wiki/Constantine_P._Cavafy)
-[^cavafy-ithaka-text]: Kavafis, Ithaka (1-23) — el translations, K. P. Cavafy (texts/kavafis_ithaki/translations_el.md)
+[^cavafy-ithaka-text]: Kavafis, Ithaka (1-36) — original text (el), K. P. Cavafy (texts/kavafis_ithaki/text.md)
+[^ithaka-reading-valtinos]: ΙΘΑΚΗ - Κ.Π. ΚΑΒΑΦΗΣ- ΓΡΗΓΟΡΗΣ ΒΑΛΤΙΝΟΣ, 1969anre (YouTube channel) (https://www.youtube.com/watch?v=r5lPCeT8Ex0)
+[^ithaka-reading-connery]: Sean Connery reads ITHAKA | Powerful Life Poem by C.P.Cavafy, Upgrade Your Mindset (YouTube channel) (https://www.youtube.com/watch?v=i8is5ZE4_CU)

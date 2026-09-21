@@ -6,6 +6,8 @@ import yaml
 from okfbuild.okf import (
     ConceptFile,
     Source,
+    body_digest,
+    current_verification,
     read,
     render,
     resolve_slug,
@@ -62,6 +64,15 @@ def _minimal_literary_translation() -> dict:
     return fm
 
 
+def _minimal_literary_text() -> dict:
+    fm = _minimal_common_fields()
+    fm["type"] = "Literary Text"
+    fm["work"] = "Kavafis, Ithaka"
+    fm["passage"] = "1-36"
+    fm["language"] = "el"
+    return fm
+
+
 def _minimal_concept(**overrides) -> ConceptFile:
     defaults = dict(
         type="Lexical Entry",
@@ -115,6 +126,21 @@ def test_validate_rejects_literary_translation_missing_work():
     fm = _minimal_literary_translation()
     del fm["work"]
     with pytest.raises(ValueError):
+        validate_frontmatter(fm)
+
+
+def test_validate_accepts_minimal_literary_text_without_translators():
+    fm = _minimal_literary_text()
+    assert "translators" not in fm
+
+    validate_frontmatter(fm)
+
+
+@pytest.mark.parametrize("field", ["work", "passage", "language"])
+def test_validate_rejects_literary_text_missing_a_required_field(field):
+    fm = _minimal_literary_text()
+    del fm[field]
+    with pytest.raises(ValueError, match="Literary Text requires"):
         validate_frontmatter(fm)
 
 
@@ -234,17 +260,20 @@ def test_write_rewrite_via_read_does_not_duplicate_footnote(tmp_path):
     assert path.read_text().count("[^src-1]:") == 1
 
 
+def _set_verified(path, entries):
+    """Rewrite `path`'s frontmatter with a hand-edited `verified:` list, as a human editing the file would."""
+    _, yaml_text, body_text = path.read_text().split("---\n", 2)
+    frontmatter = yaml.safe_load(yaml_text)
+    frontmatter["verified"] = entries
+    path.write_text("---\n" + yaml.safe_dump(frontmatter, allow_unicode=True, sort_keys=False) + "---\n" + body_text)
+
+
 def test_write_preserves_manually_added_verified_entry(tmp_path):
     concept = _minimal_concept(body="original body")
     path = tmp_path / "test.md"
     write(concept, path)
 
-    text = path.read_text()
-    _, yaml_text, body_text = text.split("---\n", 2)
-    frontmatter = yaml.safe_load(yaml_text)
-    frontmatter["verified"] = [{"by": "human:x", "at": "2026-01-01T00:00:00+00:00"}]
-    new_text = "---\n" + yaml.safe_dump(frontmatter, allow_unicode=True, sort_keys=False) + "---\n" + body_text
-    path.write_text(new_text)
+    _set_verified(path, [{"by": "human:x", "at": "2026-01-01T00:00:00+00:00"}])
 
     concept2 = _minimal_concept(body="CHANGED body")
     write(concept2, path)
@@ -253,6 +282,67 @@ def test_write_preserves_manually_added_verified_entry(tmp_path):
     _, final_yaml, _ = final_text.split("---\n", 2)
     final_frontmatter = yaml.safe_load(final_yaml)
     assert final_frontmatter["verified"] == [{"by": "human:x", "at": "2026-01-01T00:00:00+00:00"}]
+
+
+# --- verification records: pinned to the text they were recorded for ---
+
+
+def _verification_entry(body: str) -> dict:
+    return {"by": "tester", "at": "2026-09-21", "against": ["a source"], "body_sha256": body_digest(body)}
+
+
+def test_body_digest_is_a_sha256_that_ignores_only_trailing_newlines():
+    assert len(body_digest("## A\n\ntext")) == 64
+    assert body_digest("## A\n\ntext\n\n") == body_digest("## A\n\ntext")
+    assert body_digest("## A\n\ntext") != body_digest("## A\n\ntext!")
+
+
+def test_read_returns_the_verified_entries_of_a_file(tmp_path):
+    path = tmp_path / "test.md"
+    write(_minimal_concept(body="claim"), path)
+    entry = _verification_entry("claim")
+    _set_verified(path, [entry])
+
+    assert read(path).verified == [entry]
+
+
+def test_read_of_a_file_without_verified_entries_returns_an_empty_list(tmp_path):
+    path = tmp_path / "test.md"
+    write(_minimal_concept(), path)
+
+    assert read(path).verified == []
+
+
+def test_render_writes_the_verified_entries_a_concept_carries():
+    entry = _verification_entry("claim")
+
+    text = render(_minimal_concept(body="claim", verified=[entry]))
+
+    assert yaml.safe_load(text.split("---\n", 2)[1])["verified"] == [entry]
+
+
+def test_current_verification_matches_only_the_text_it_was_recorded_for():
+    concept = _minimal_concept(body="claim")
+    entry = _verification_entry("claim")
+
+    assert current_verification(concept) is None
+    assert current_verification(replace(concept, verified=[entry])) == entry
+    assert current_verification(replace(concept, body="claim\n", verified=[entry])) == entry
+    assert current_verification(replace(concept, body="a different claim", verified=[entry])) is None
+
+
+def test_current_verification_ignores_entries_that_are_not_mappings():
+    concept = _minimal_concept(body="claim", verified=["human:x", {"by": "old", "at": "2026-01-01"}])
+
+    assert current_verification(concept) is None
+
+
+def test_validate_rejects_a_verified_field_that_is_not_a_list():
+    frontmatter = _minimal_grammatical_rule()
+    frontmatter["verified"] = "yes"
+
+    with pytest.raises(ValueError, match="verified"):
+        validate_frontmatter(frontmatter)
 
 
 # --- resolve_slug() ---

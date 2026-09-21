@@ -34,16 +34,21 @@ This repo's code is primarily a Python API, not a CLI -- but a small
 `greek-knowledge` CLI (installed via `uv sync --dev`, see
 `[project.scripts]`) and a matching `examples/` directory cover the
 common cases without wiring anything by hand: read-only exploration of
-what this KB's sources know about one word, the one action that changes
-this repo's own tracked words/ content, and validation of any committed
-concept file:
+what this KB's sources know about one word or of what its own files hold,
+the one action that regenerates this repo's own tracked words/ content,
+validation of any committed concept file, and a record that a rule was
+checked against sources:
 ```bash
 uv run greek-knowledge lookup ὕδωρ            # every lemma-keyed source's raw hit
 uv run greek-knowledge build ὕδωρ             # a full Lexical Entry body, unwritten
 uv run greek-knowledge query --type grammar --level beginner --dialect attic
-uv run greek-knowledge regenerate --write     # the ONLY command that writes to words/
+uv run greek-knowledge query --type texts --full   # every original text and translation, bodies only
+uv run greek-knowledge query --type grammar,culture --level A2,B1 --period homeric..attic   # several values, a period range
+uv run greek-knowledge query --type grammar --period modern --verified   # only rules checked against sources
+uv run greek-knowledge regenerate --write     # the ONLY command that regenerates words/
 uv run greek-knowledge check                  # validate words/grammar/culture/texts (--fix to auto-repair)
 uv run greek-knowledge check culture/cavafy.md  # or scope it to one file/directory
+uv run greek-knowledge verify grammar/x.md --by NAME --against WHAT   # record that a rule was checked (see "Verified rules")
 uv run python examples/lookup_word.py ὕδωρ    # same as `lookup`, as a script
 uv run python examples/build_one_concept.py ὕδωρ
 uv run python examples/query_knowledge.py --period koine --author Sophocles
@@ -53,12 +58,53 @@ uv run python examples/query_knowledge.py --period koine --author Sophocles
 vocabulary. Today's corpus mixes `beginner`, `advanced`, `B1`, and
 mostly-empty values; CEFR labels like `A2` used elsewhere in this
 project's docs are illustrative, not guaranteed to match anything.
-Pass `list` instead of a value to any of `query`'s five filters
-(`--type`, `--level`, `--period`, `--dialect`, `--author`) to print the
-values actually in use, with counts, instead of running a query --
+Pass `list` instead of a value to any of `query`'s seven filters
+(`--type`, `--level`, `--period`, `--dialect`, `--author`, `--work`,
+`--language`) to print the values actually in use, with counts, instead
+of running a query --
 e.g. `uv run greek-knowledge query --level list`. Any other filter given
 alongside scopes the tally (`--type grammar --dialect list` shows only
 the dialects used on Grammatical Rule entries).
+
+**Several values.** Every `query` filter takes more than one value: repeat the flag
+(`--language ru --language en`) or separate the values with a comma (`--language ru,en`, no space after
+it). A concept matching *any* of a filter's values is kept, and different filters still combine with
+AND -- `--type grammar --level A2,B1 --dialect attic` is the grammar rules that are (A2 or B1) and attic.
+A comma followed by a space stays part of the value, because real values contain one
+(`--work "Kavafis, Ithaka"`, `--author "Sophocles (1887), curated"` -- exactly as `list` prints them).
+`--period` also takes a range of the ordered periods `homeric < attic < koine < byzantine < modern`,
+ends included: `--period attic..modern` means `attic,koine,byzantine,modern`. A range read backwards
+(`attic..homeric`) or with an unknown end matches nothing, and `--level` has no range -- its values are
+free text with no order.
+
+**Verified rules.** Every concept file carries a `verified:` list, empty until someone checks the file
+against sources. `uv run greek-knowledge verify grammar/x.md --by NAME --against WHAT [--against WHAT ...]`
+pins a record to the file's current text: who checked it (`by` -- a person, or an AI reviewer named as
+such; an AI review is not a human sign-off), the date, what it was checked against (`against`, in words),
+and `body_sha256`, a fingerprint of the text (footnotes included). `query --verified` -- a switch, not a
+value filter; it also scopes a `list` tally -- returns only concepts whose *current* text has such a record,
+so `query --type grammar --period modern --verified` is the modern-grammar selection that has been checked,
+while without `--verified` the query also returns drafts nobody has checked (every file starts
+`status: draft`, `verified: []`). `check` fails on a record that is malformed or stale: edit a verified rule
+and it stops counting until it has been checked again and `verify` re-run. A directory argument verifies
+every concept file under it, and nothing is written unless every one passes `check`'s structural checks.
+
+**Reading a text and its translations.** `texts/` holds each work's original (`text.md`) and its
+`translations_<lang>.md` files. `query --type texts` selects among them; `--work` (a case-insensitive
+substring of the work's title) and `--language` (an exact code: `el`, `en`, `ru`, `grc`) narrow the
+selection, and `--full` prints the bodies (the frontmatter is left out; the `<!-- ... -->` provenance
+and echo comments are kept):
+```bash
+uv run greek-knowledge query --type texts --work list                           # which works there are
+uv run greek-knowledge query --type texts --work ithaka --language ru --full    # Ithaka, every Russian version
+uv run greek-knowledge query --type texts --work ithaka --language ru,en --full # Russian and English together
+uv run greek-knowledge query --type texts --work odyssey --language grc --full  # the Odyssey's Greek original
+```
+For one translator's section, or just a text's verse lines, use the shell, from the repo root:
+```bash
+awk '/^## Жуковский/{f=1;next} /^## /{f=0} f' texts/odyssey/translations_ru.md   # one translator's section
+sed '1,/^---$/d' texts/kavafis_ithaki/text.md | grep -v -E '^(#|<!--|$)'          # just the verse lines
+```
 
 `lookup`/`build`/the examples call `okfbuild.wiring.default_source_bundle()`,
 a simpler and less cache-optimized wiring than `tests/conftest.py`'s
@@ -186,21 +232,22 @@ reference wiring.
 
 ## Content model
 
-Four OKF concept types, each one markdown file with YAML frontmatter:
+Five OKF concept types, each one markdown file with YAML frontmatter:
 **Lexical Entry** (one file per word, with a section per attested
 historical period), **Grammatical Rule** (one file per documented
 grammatical rule -- a synchronic paradigm/syntax rule scoped to one
 period, or a period-to-period change), **Cultural Context** (one
-file per person/theme/work), and **Literary Translation** (one file
-per work/passage/language, gathering every translator's rendering of
-that passage). Every claim in a Lexical Entry/Grammatical Rule/
+file per person/theme/work), **Literary Text** (one file per
+work/passage holding the original text itself), and **Literary
+Translation** (one file per work/passage/language, gathering every
+translator's rendering of that passage). Every claim in a Lexical Entry/Grammatical Rule/
 Cultural Context file's body is footnote-cited back to a `sources[]`
-frontmatter entry; a Literary Translation file instead cites inline,
-via an HTML-comment description line under each translator's `##`
-heading. Both Grammatical Rule and Cultural Context entries may
+frontmatter entry; a Literary Text or Literary Translation file instead
+keeps plain provenance in `sources[]` and cites inline, via an
+HTML-comment description line under each translator's `##` heading. Both Grammatical Rule and Cultural Context entries may
 optionally carry a `dialect` field to annotate period-or-region-specific
 usage; Cultural Context may additionally carry an optional `periods_spanned`
-`{from, to}` mapping. Lexical Entry and Literary Translation are unaffected by these
+`{from, to}` mapping. Lexical Entry, Literary Text and Literary Translation are unaffected by these
 additions. See `okfbuild/okf.py` (added in section-02-okf-writer) for
 the exact schema.
 
@@ -243,6 +290,10 @@ the exact schema.
 
 ## Development
 
+`make all` runs the whole pre-commit routine -- `ruff check`, `greek-knowledge check` (including the
+verification records) and the tests that need no network; `make help` lists the individual goals
+(`lint`, `validate`, `check`, `test`).
+
 ```bash
 uv sync --dev
 uv run pytest
@@ -266,11 +317,12 @@ instead:
 uv run greek-knowledge regenerate --write
 ```
 `--write` is mandatory (bare `regenerate` refuses and exits 1) — this is
-the one command in this codebase that changes tracked `words/` content,
+the one command in this codebase that regenerates tracked `words/` content,
 so it's never a side effect of anything else, including tests (`grammar/`,
 `culture/`, and `texts/` are hand-authored and only ever change when a
-human/Claude edits them directly, or `uv run greek-knowledge check --fix`
-mechanically normalizes one — see `templates/README.md`). Review
+human/Claude edits them directly, `uv run greek-knowledge check --fix`
+mechanically normalizes one, or `verify` pins a verification record to
+one — see `templates/README.md`). Review
 the resulting `git diff` before committing, same as any other pilot
 regen. A downloaded Wiktextract dump
 (`data/wiktextract/README.md`) is only needed the first time, or when a

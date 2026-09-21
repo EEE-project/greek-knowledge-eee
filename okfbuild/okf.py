@@ -5,14 +5,15 @@ orchestrator use to assemble a concept's frontmatter/body into OKF-format
 markdown and write it to disk correctly.
 """
 
+import hashlib
 import re
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
 
-CONCEPT_TYPES = {"Lexical Entry", "Grammatical Rule", "Cultural Context", "Literary Translation"}
+CONCEPT_TYPES = {"Lexical Entry", "Grammatical Rule", "Cultural Context", "Literary Translation", "Literary Text"}
 
 _COMMON_FIELDS = ("title", "description", "tags", "level", "sources", "generated", "status")
 
@@ -60,6 +61,27 @@ class ConceptFile:
     generated_by: str
     body: str  # already-formatted markdown body, footnotes included
     extra_frontmatter: dict  # type-specific fields (lemma/periods, periods_spanned, related_words/related_lessons)
+    verified: list = field(default_factory=list)  # verification records, see current_verification()
+
+
+def body_digest(body: str) -> str:
+    """SHA-256 of a concept's body (footnote definitions included), ignoring
+    trailing newlines -- the fingerprint a verification record is pinned to."""
+    return hashlib.sha256(body.rstrip("\n").encode("utf-8")).hexdigest()
+
+
+def current_verification(concept: ConceptFile) -> dict | None:
+    """The `verified:` entry pinned to exactly this text of `concept`, or
+    None. An entry whose body_sha256 no longer matches (the text was edited
+    after it was recorded) does not count, so a rule changed since its
+    review stops being verified."""
+    if not isinstance(concept.verified, list):
+        return None
+    digest = body_digest(concept.body)
+    for entry in concept.verified:
+        if isinstance(entry, dict) and entry.get("body_sha256") == digest:
+            return entry
+    return None
 
 
 def validate_frontmatter(frontmatter: dict) -> None:
@@ -85,6 +107,10 @@ def validate_frontmatter(frontmatter: dict) -> None:
     if not isinstance(level, list):
         raise ValueError(f"level must be a list, got {type(level).__name__}")
 
+    verified = frontmatter.get("verified", [])
+    if not isinstance(verified, list):
+        raise ValueError(f"verified must be a list, got {type(verified).__name__}")
+
     if concept_type == "Lexical Entry":
         if "lemma" not in frontmatter or "periods" not in frontmatter:
             raise ValueError("Lexical Entry requires 'lemma' and 'periods'")
@@ -99,6 +125,10 @@ def validate_frontmatter(frontmatter: dict) -> None:
         missing = [k for k in ("work", "passage", "language", "translators") if k not in frontmatter]
         if missing:
             raise ValueError(f"Literary Translation requires {missing}")
+    elif concept_type == "Literary Text":
+        missing = [k for k in ("work", "passage", "language") if k not in frontmatter]
+        if missing:
+            raise ValueError(f"Literary Text requires {missing}")
 
 
 def render(concept: ConceptFile) -> str:
@@ -119,7 +149,7 @@ def render(concept: ConceptFile) -> str:
     }
     frontmatter.update(concept.extra_frontmatter)
     frontmatter.setdefault("status", "draft")
-    frontmatter.setdefault("verified", [])
+    frontmatter.setdefault("verified", concept.verified)
 
     validate_frontmatter(frontmatter)
 
@@ -271,6 +301,7 @@ def read(path: Path) -> ConceptFile | None:
             extra_frontmatter={
                 k: v for k, v in frontmatter.items() if k not in _COMMON_FIELDS and k not in ("type", "verified")
             },
+            verified=frontmatter.get("verified", []),
         )
     except (KeyError, TypeError):
         return None

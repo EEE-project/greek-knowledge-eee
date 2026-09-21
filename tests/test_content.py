@@ -8,7 +8,13 @@ Replaces that module (deleted when the build pipeline for these two
 concept types was retired -- see CHANGELOG).
 """
 
+import re
+
 from okfbuild import okf
+
+
+def _verse_lines(body: str) -> list[str]:
+    return [line for line in body.split("\n") if line.strip() and not line.startswith(("#", "<!--"))]
 
 
 def _read_grammar(repo_root, rule_id: str):
@@ -236,6 +242,29 @@ def test_ellinika_a_citations_carry_the_verified_bibliographic_form(repo_root):
             assert "Εκδόσεις Πατάκη, 2010" in source.title, path.name
             assert "(2015)" not in source.resource, path.name
     assert citing > 0
+
+
+def test_ithaka_text_is_the_complete_36_line_poem(repo_root):
+    concept = okf.read(repo_root / "texts" / "kavafis_ithaki" / "text.md")
+
+    assert concept.type == "Literary Text"
+    assert concept.extra_frontmatter["passage"] == "1-36"
+    lines = _verse_lines(concept.body)
+    assert len(lines) == 36
+    # regression guards: the course text had «Σαν» in στ. 1, and the span was once misstated as "of 40".
+    assert lines[0].startswith("Σα βγεις")
+    assert lines[32].startswith("Άλλα δεν έχει")
+
+
+def test_odyssey_text_carries_exactly_the_greek_lines_echoed_beside_the_glosses(repo_root):
+    concept = okf.read(repo_root / "texts" / "odyssey" / "text.md")
+    en = (repo_root / "texts" / "odyssey" / "translations_en.md").read_text(encoding="utf-8")
+    echoed = re.findall(r"(?m)^<!-- grc: (.*) -->$", en.split("\n## interlinear_en\n", 1)[1])
+
+    assert concept.type == "Literary Text"
+    assert concept.extra_frontmatter["language"] == "grc"
+    assert _verse_lines(concept.body) == echoed
+    assert len(echoed) == 41
 
 
 def test_imperative_rule_pairs_affirmative_and_negative_clitic_placement(repo_root):

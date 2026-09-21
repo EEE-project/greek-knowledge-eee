@@ -9,9 +9,15 @@ block. words/ is pipeline-generated, so it's already guaranteed to be
 well-formed at generation time -- but a human can and does hand-correct
 one afterward, so it's checked here the same as everything else; see
 templates/ for the expected shape of a new hand-authored file.
+
+A file's `verified:` records are checked too (see record_verification()):
+each must be well-formed, and at least one must be pinned to the file's
+current text, so a rule edited after its review is reported as stale.
 """
 
-from dataclasses import dataclass
+import re
+from dataclasses import dataclass, replace
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -20,13 +26,16 @@ from okfbuild import okf
 
 _CHECKED_DIRS = ("words", "grammar", "culture", "texts")
 
+_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+_DIGEST_RE = re.compile(r"[0-9a-f]{64}")
+
 # Lexical Entry/Grammatical Rule/Cultural Context prose makes claims and
 # cites sources inline via [^id] -- every declared source should be used
-# and every citation should resolve. Literary Translation's sources: list
-# is plain provenance for the whole passage (where the text came from),
-# not a set of claims to cite piecemeal -- its body is the translated
-# text itself, normally with no [^id] markers at all, so neither
-# direction applies.
+# and every citation should resolve. Literary Translation's and Literary
+# Text's sources: list is plain provenance for the whole passage (where the
+# text came from), not a set of claims to cite piecemeal -- the body is the
+# text itself, normally with no [^id] markers at all, so neither direction
+# applies.
 _TYPES_REQUIRING_INLINE_CITATIONS = {"Lexical Entry", "Grammatical Rule", "Cultural Context"}
 
 
@@ -39,13 +48,67 @@ class Issue:
         return f"{self.path}: {self.message}"
 
 
+def _unparseable(path: Path) -> Issue:
+    return Issue(path, "cannot parse as OKF markdown, or missing a required common field")
+
+
 def check_file(path: Path) -> list[Issue]:
-    """Check one concept file for internal consistency. Returns a list of
-    Issues (empty if the file is well-formed)."""
+    """Check one concept file for internal consistency and for a sound,
+    current verification record. Returns a list of Issues (empty if the
+    file is well-formed)."""
     concept = okf.read(path)
     if concept is None:
-        return [Issue(path, "cannot parse as OKF markdown, or missing a required common field")]
+        return [_unparseable(path)]
+    return _structure_issues(path, concept) + _verification_issues(path, concept)
 
+
+def check_structure(path: Path) -> list[Issue]:
+    """The structural checks of check_file() alone -- frontmatter shape,
+    citations, canonical rendering -- without judging the file's
+    verification record (a record left stale by an edit is exactly what
+    record_verification() is about to replace)."""
+    concept = okf.read(path)
+    if concept is None:
+        return [_unparseable(path)]
+    return _structure_issues(path, concept)
+
+
+def _verified_entry_problem(entry) -> str | None:
+    """Why one `verified:` entry is malformed, or None if it is well-formed."""
+    if not isinstance(entry, dict):
+        return "is not a mapping"
+    missing = [key for key in ("by", "at", "against", "body_sha256") if key not in entry]
+    if missing:
+        return f"is missing {', '.join(missing)}"
+    if not isinstance(entry["by"], str) or not entry["by"].strip():
+        return "needs a non-empty by"
+    if not _DATE_RE.fullmatch(str(entry["at"])):
+        return "needs at as a YYYY-MM-DD date"
+    against = entry["against"]
+    if not isinstance(against, list) or not against or not all(isinstance(item, str) and item.strip() for item in against):
+        return "needs against as a non-empty list of text"
+    if not isinstance(entry["body_sha256"], str) or not _DIGEST_RE.fullmatch(entry["body_sha256"]):
+        return "needs body_sha256 as 64 hex characters"
+    return None
+
+
+def _verification_issues(path: Path, concept: okf.ConceptFile) -> list[Issue]:
+    if not isinstance(concept.verified, list) or not concept.verified:
+        return []  # nothing recorded (a non-list is already reported as invalid frontmatter)
+
+    issues = [
+        Issue(path, f"verified entry {number} {problem}")
+        for number, entry in enumerate(concept.verified, start=1)
+        if (problem := _verified_entry_problem(entry))
+    ]
+    if not issues and okf.current_verification(concept) is None:
+        issues.append(
+            Issue(path, "verified record is stale: the text changed after it was verified (re-check it, then run greek-knowledge verify)")
+        )
+    return issues
+
+
+def _structure_issues(path: Path, concept: okf.ConceptFile) -> list[Issue]:
     issues: list[Issue] = []
     referenced_ids = okf.referenced_footnote_ids(concept.body)
     source_ids = {s.id for s in concept.sources}
@@ -128,3 +191,29 @@ def fix_file(path: Path) -> bool:
     if concept is None:
         return False
     return okf.write(concept, path)
+
+
+def record_verification(path: Path, *, by: str, against: list[str], on: date | None = None) -> list[Issue]:
+    """Pin a verification record -- who checked the rule (`by`), on what
+    date, against what (`against`) -- to the text `path` has right now,
+    replacing any earlier record. Returns the structural Issues that stopped
+    it, in which case nothing is written: a file that is not well-formed
+    cannot be vouched for. Editing the text afterwards makes the record
+    stale, which check_file() reports and query's `verified` filter ignores."""
+    concept = okf.read(path)
+    if concept is None:
+        return [_unparseable(path)]
+    issues = _structure_issues(path, concept)
+    if issues:
+        return issues
+
+    entry = {
+        "by": by,
+        "at": (on or date.today()).isoformat(),
+        "against": list(against),
+        "body_sha256": okf.body_digest(concept.body),
+    }
+    if problem := _verified_entry_problem(entry):
+        raise ValueError(f"cannot record a verification: it {problem}")
+    path.write_text(okf.render(replace(concept, verified=[entry])), encoding="utf-8")
+    return []

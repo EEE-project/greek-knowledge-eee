@@ -1,10 +1,17 @@
-from okfbuild import check
+from datetime import date
+
+import pytest
+import yaml
+
+from okfbuild import check, okf
 
 
 def _write(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
 
+
+_UNPARSEABLE = "---\n---\nno frontmatter fields at all\n"
 
 _GOOD_RULE = """\
 ---
@@ -114,6 +121,16 @@ def test_check_file_skips_citation_checks_for_literary_translation(tmp_path):
     assert check.check_file(path) == []
 
 
+def test_check_file_accepts_a_literary_text_without_citations_or_translators(tmp_path):
+    path = tmp_path / "texts" / "work" / "text.md"
+    text = _LITERARY_TRANSLATION.replace("type: Literary Translation", "type: Literary Text")
+    text = text.replace("translators:\n- πρωτότυπο\n", "")
+    assert "Literary Text" in text and "translators" not in text
+    _write(path, text)
+
+    assert check.check_file(path) == []
+
+
 def test_check_file_accepts_an_editor_added_trailing_newline(tmp_path):
     # Regression guard: a Literary Translation has no footnote-definitions block, so
     # render() ends its body without a newline; an editor saving a final one must not
@@ -126,7 +143,7 @@ def test_check_file_accepts_an_editor_added_trailing_newline(tmp_path):
 
 def test_check_file_flags_unparseable_frontmatter(tmp_path):
     path = tmp_path / "grammar" / "broken.md"
-    _write(path, "---\n---\nno frontmatter fields at all\n")
+    _write(path, _UNPARSEABLE)
 
     issues = check.check_file(path)
 
@@ -148,6 +165,25 @@ def test_check_file_flags_stale_footnote_definitions_and_fix_file_repairs_it(tmp
 
     assert changed
     assert check.check_file(path) == []
+
+
+def test_check_file_flags_frontmatter_that_is_not_canonical_and_fix_file_repairs_it(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _GOOD_RULE.replace("verified: []\n", ""))
+
+    assert any("canonical rendering" in issue.message for issue in check.check_file(path))
+
+    assert check.fix_file(path) is True
+    assert check.check_file(path) == []
+
+
+def test_fix_file_leaves_a_file_it_cannot_parse_alone(tmp_path):
+    path = tmp_path / "grammar" / "broken.md"
+    _write(path, _UNPARSEABLE)
+    before = path.read_bytes()
+
+    assert check.fix_file(path) is False
+    assert path.read_bytes() == before
 
 
 def test_check_corpus_skips_index_files_and_dirs_outside_the_checked_set(tmp_path):
@@ -189,3 +225,173 @@ def test_check_corpus_against_real_repo_content_is_clean(repo_root):
     issues = check.check_corpus(repo_root)
 
     assert issues == [], [str(issue) for issue in issues]
+
+
+# --- verification records ---
+
+
+def _current_entry():
+    return {
+        "by": "tester",
+        "at": "2026-09-21",
+        "against": ["a source"],
+        "body_sha256": okf.body_digest(_GOOD_RULE.split("---\n", 2)[2]),
+    }
+
+
+def _rule_with_verified(entries):
+    return _GOOD_RULE.replace("verified: []\n", yaml.safe_dump({"verified": entries}, allow_unicode=True, sort_keys=False))
+
+
+def test_check_file_accepts_a_verification_pinned_to_the_current_text(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _rule_with_verified([_current_entry()]))
+
+    assert check.check_file(path) == []
+
+
+def test_check_file_flags_a_verification_of_older_text_as_stale(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _rule_with_verified([_current_entry()]).replace("Some claim.", "Another claim."))
+
+    issues = check.check_file(path)
+
+    assert any("stale" in issue.message for issue in issues), [str(issue) for issue in issues]
+
+
+@pytest.mark.parametrize(
+    "change",
+    [{"by": ""}, {"by": None}, {"at": "yesterday"}, {"against": []}, {"against": [""]}, {"body_sha256": "abc"}],
+)
+def test_check_file_flags_a_malformed_verification(tmp_path, change):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _rule_with_verified([{**_current_entry(), **change}]))
+
+    issues = check.check_file(path)
+
+    assert any("verified entry" in issue.message for issue in issues), [str(issue) for issue in issues]
+
+
+@pytest.mark.parametrize("missing", ["by", "at", "against", "body_sha256"])
+def test_check_file_flags_a_verification_missing_a_field(tmp_path, missing):
+    entry = _current_entry()
+    del entry[missing]
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _rule_with_verified([entry]))
+
+    issues = check.check_file(path)
+
+    assert any("verified entry" in issue.message and missing in issue.message for issue in issues)
+
+
+def test_check_file_flags_a_verified_field_that_is_not_a_list(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _GOOD_RULE.replace("verified: []", "verified: yes"))
+
+    issues = check.check_file(path)
+
+    assert any("verified" in issue.message for issue in issues)
+
+
+def test_record_verification_pins_a_record_to_the_current_text(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _GOOD_RULE)
+
+    issues = check.record_verification(path, by="tester", against=["a source", "the corpus"], on=date(2026, 9, 21))
+
+    assert issues == []
+    concept = okf.read(path)
+    assert concept.verified == [
+        {"by": "tester", "at": "2026-09-21", "against": ["a source", "the corpus"], "body_sha256": okf.body_digest(concept.body)}
+    ]
+    assert okf.current_verification(concept) is not None
+    assert check.check_file(path) == []
+
+
+def test_record_verification_dates_the_record_today_by_default(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _GOOD_RULE)
+
+    check.record_verification(path, by="tester", against=["a source"])
+
+    assert okf.read(path).verified[0]["at"] == date.today().isoformat()
+
+
+def test_record_verification_replaces_the_record_of_older_text(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _GOOD_RULE)
+    check.record_verification(path, by="first", against=["x"], on=date(2026, 9, 1))
+    path.write_text(path.read_text(encoding="utf-8").replace("Some claim.", "Another claim."), encoding="utf-8")
+    assert any("stale" in issue.message for issue in check.check_file(path))
+
+    issues = check.record_verification(path, by="second", against=["y"], on=date(2026, 9, 21))
+
+    assert issues == []
+    assert [entry["by"] for entry in okf.read(path).verified] == ["second"]
+    assert check.check_file(path) == []
+
+
+def test_record_verification_refuses_a_file_that_fails_the_structural_check(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _GOOD_RULE.replace("Some claim.[^src]", "Some claim.[^src][^ghost]"))
+    before = path.read_bytes()
+
+    issues = check.record_verification(path, by="tester", against=["a source"])
+
+    assert any("ghost" in issue.message for issue in issues)
+    assert path.read_bytes() == before
+
+
+def test_fix_file_leaves_a_current_verification_alone(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _GOOD_RULE)
+    check.record_verification(path, by="tester", against=["a source"], on=date(2026, 9, 21))
+    before = path.read_bytes()
+
+    assert check.fix_file(path) is False
+
+    assert path.read_bytes() == before
+
+
+def test_check_file_flags_a_verification_entry_that_is_not_a_mapping(tmp_path):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _rule_with_verified(["checked by someone"]))
+
+    issues = check.check_file(path)
+
+    assert any("verified entry 1 is not a mapping" in issue.message for issue in issues)
+
+
+def test_check_structure_ignores_a_stale_record_but_still_flags_a_broken_file(tmp_path):
+    stale = tmp_path / "grammar" / "stale.md"
+    _write(stale, _rule_with_verified([_current_entry()]).replace("Some claim.", "Another claim."))
+    broken = tmp_path / "grammar" / "broken.md"
+    _write(broken, _UNPARSEABLE)
+
+    assert check.check_structure(stale) == []
+    assert [issue.message for issue in check.check_structure(broken)] == [
+        "cannot parse as OKF markdown, or missing a required common field"
+    ]
+
+
+def test_record_verification_refuses_a_file_that_cannot_be_parsed(tmp_path):
+    path = tmp_path / "grammar" / "broken.md"
+    _write(path, _UNPARSEABLE)
+    before = path.read_bytes()
+
+    issues = check.record_verification(path, by="tester", against=["a source"])
+
+    assert len(issues) == 1 and "cannot parse" in issues[0].message
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("kwargs", [{"by": "", "against": ["a source"]}, {"by": "tester", "against": []}])
+def test_record_verification_will_not_record_an_anonymous_or_unfounded_check(tmp_path, kwargs):
+    path = tmp_path / "grammar" / "test-rule.md"
+    _write(path, _GOOD_RULE)
+    before = path.read_bytes()
+
+    with pytest.raises(ValueError, match="cannot record a verification"):
+        check.record_verification(path, **kwargs)
+
+    assert path.read_bytes() == before

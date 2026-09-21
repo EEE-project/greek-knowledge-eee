@@ -16,8 +16,8 @@ sources:
   title: Verb tenses in Hellenistic Koine and Modern Greek
   author: ΑΤΤΙΚΙΣΤΑ (t.me/atticist)
 - id: cavafy-ithaka-text
-  resource: texts/kavafis_ithaki/translations_el.md
-  title: Kavafis, Ithaka (1-23) — el translations
+  resource: texts/kavafis_ithaki/text.md
+  title: Kavafis, Ithaka (1-36) — original text (el)
   author: K. P. Cavafy
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
@@ -36,4 +36,4 @@ The Ancient Greek optative (**εὐκτική**) declined unevenly through κο�
 Cavafy's «Ithaka» (1911) opens with one of these: **να εύχεσαι να 'ναι μακρύς ο δρόμος** — "wish that the road be long." **εύχεσαι** is the 2nd-singular present of **εύχομαι** "I wish," a deponent verb (middle morphology, active meaning) here governing a further να-clause (**να 'ναι**, elided from **να είναι**). However the opening **να** is best parsed, the line is built entirely from ordinary modern subjunctive machinery, not any inherited optative form.[^cavafy-ithaka-text]
 
 [^atticist-koine-tenses]: Verb tenses in Hellenistic Koine and Modern Greek, ΑΤΤΙΚΙΣΤΑ (t.me/atticist) (https://t.me/atticist)
-[^cavafy-ithaka-text]: Kavafis, Ithaka (1-23) — el translations, K. P. Cavafy (texts/kavafis_ithaki/translations_el.md)
+[^cavafy-ithaka-text]: Kavafis, Ithaka (1-36) — original text (el), K. P. Cavafy (texts/kavafis_ithaki/text.md)

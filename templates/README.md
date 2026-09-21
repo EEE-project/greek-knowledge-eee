@@ -5,6 +5,7 @@ directly:
 
 - [`grammar-rule.md`](grammar-rule.md) → `grammar/<rule-id>.md`
 - [`cultural-context.md`](cultural-context.md) → `culture/<topic-id>.md`
+- [`literary-text.md`](literary-text.md) → `texts/<work-slug>/text.md` (a work's original)
 - [`literary-translation.md`](literary-translation.md) → `texts/<work-slug>/translations_<lang>.md`
 - [`lexical-entry.md`](lexical-entry.md) → `words/<lemma>.md` (rare -- see
   that template's own comment for when a manual entry makes sense instead
@@ -21,6 +22,12 @@ directly:
    never invents or edits your prose or your `sources:` list). Pass a
    file or directory to scope it (e.g. `uv run greek-knowledge check
    grammar/my-new-rule.md`) instead of checking everything.
+4. Once the file has really been checked against its sources, record it:
+   `uv run greek-knowledge verify grammar/my-new-rule.md --by NAME --against
+   WHAT` (repeat `--against` for each source). The record is pinned to the
+   text as it is then, so any later edit makes it stale and `check` reports
+   it until the file is checked again. Unverified files work everywhere;
+   `query --verified` just skips them.
 
 grammar/, culture/, and texts/ content is hand-authored and validated,
 not generated -- see `okfbuild/check.py`'s module docstring for exactly
