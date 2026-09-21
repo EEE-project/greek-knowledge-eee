@@ -286,6 +286,9 @@ the exact schema.
 | Greek For Euclid (Calvert) | 26-lesson course on mathematical Greek for reading Euclid's *Elements* (legacy SPIonic font, not integrated) | [`references/sources/greek-for-euclid.md`](references/sources/greek-for-euclid.md) |
 | Textkit | Open CC BY-SA library of 180+ public-domain Ancient Greek/Latin textbooks (PDFs, not integrated) | [`references/sources/textkit.md`](references/sources/textkit.md) |
 | Irby (2017), scientific-Greek reading anthology | Annotated Greek passages across 8+ scientific disciplines incl. an Euclid excerpt, CC BY 3.0 (not integrated) | [`references/sources/irby-scientific-greek.md`](references/sources/irby-scientific-greek.md) |
+| Ancient-author abbreviation lists (LSJ, OCD) | Citation-abbreviation convention for ancient authors and works; the OCD list is reachable only via the Wayback Machine (reference lists, not integrated) | [`references/sources/author-abbreviations.md`](references/sources/author-abbreviations.md) |
+| arXiv Complete Corpus (Hugging Face) | Snapshot of ~3.1M arXiv papers (metadata, LaTeX, PDFs; ~16 TB, per-paper licences; not Greek-specific, not integrated) | [`references/sources/arxiv-complete-corpus.md`](references/sources/arxiv-complete-corpus.md) |
+| ΕΙΔΟΣ picture vocabulary (Crowell) | Illustrated Ancient Greek vocabulary with a LaTeX glossary, CC-BY-SA (not integrated) | [`references/sources/eidos-picture-vocabulary.md`](references/sources/eidos-picture-vocabulary.md) |
 
 
 ## Development
