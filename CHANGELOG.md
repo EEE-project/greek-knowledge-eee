@@ -1,9 +1,19 @@
 # Changelog
 
-## 2026-09-22
+## 2026-09-22 (3)
 
 - **A citation to another file in this repo now renders as a clickable relative link, in prose and in auto-generated footnote-definitions lines alike.** `okf.render()` takes an optional `path` (the file being rendered); when given, a `sources:` entry's `resource` renders as `[resource](relative/link)` instead of plain text if it resolves to a real file under this repo -- never for an external URL (already auto-links on Codeberg/GitHub) or a path outside the repo (a private local lecture copy, say, which wouldn't resolve for anyone else). `check --fix` re-rendered the three existing files with a real internal citation (`words/κουβαλάω.md`, `grammar/optative-replacement.md`, `culture/cavafy.md`); `optative-replacement.md`'s verification record, pinned to the whole body including footnotes, went stale from the text change and was re-pinned with its existing reviewer/against info -- nothing was re-reviewed, only the citation's rendering changed. Separately, 106 plain `` `path` `` mentions across 34 files (`grammar/`, `culture/`, `texts/`, `words/`, `references/`, `templates/`, `README.md`, every `index.md`) became `` [`path`](relative/path) `` the same way; a bare category mention naming several directories at once (`words/, grammar/, culture/, texts/`) was left as plain text, since it doesn't point at one resource.
 - Full suite (`-m "not integration"`): 540 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean against the real corpus (71 grammar rules total).
+
+## 2026-09-22 (2)
+
+- **Noted that this knowledge base mixes two transliterations of Καβάφης's name, and added five more recorded readings of «Ithaka».** `culture/cavafy.md`'s bio paragraph now says why: **Cavafy** here (matching Wikipedia and English-language publishers), **Kavafis** in `texts/kavafis_ithaki/`'s own directory name (matching the created_with_eee course it draws its Greek text from), and Russian-language sources -- including the readings below -- following the closer-to-Greek pattern, **Кавафис**. "Ithaka read aloud" grew from 2 readings to 7: a second Greek reading (an "Official Audio Release" from the channel Ελληνική Ποίηση & Θέατρο, 2019), a second English reading (Tom O'Bedlam, uploaded by SpokenVerse, 2011), and three Russian readings (Irina Kovalevskaya, 2023; actor and Vedogon Theatre founder Pavel Kurochkin, 2018; an episode of Chersonesos Taurica's «Мой Херсонес» series, 2021, whose own description names the Ильинская translation already cited reference-only in `texts/kavafis_ithaki/translations_ru.md`). Every reading is linked and cited by title/channel/date, verified via YouTube's own oEmbed endpoint or page metadata before adding -- nothing beyond that is reproduced.
+- Full suite (`-m "not integration"`): 534 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean against the real corpus (71 grammar rules total).
+
+## 2026-09-22 (1)
+
+- **Extended `culture/cavafy.md`'s word-by-word register analysis from στ. 1-23 to the complete 36-line «Ithaka».** Two new paragraphs: **στ. 24-33** covers `φθάσιμον`'s archaic katharevousa **-ον** (against demotic `φθάσιμο`), `ν' αράξεις`'s nautical/colloquial register, and the section's elisions; **στ. 34-36** covers the `πτωχική`/`φτωχή` katharevousa/demotic doublet (the same **πτ-**/**φτ-** shift as `πτερό`/`φτερό`) and `δεν σε γέλασε`'s idiomatic "deceived," not "laughed." The opening **στ. 1-3** paragraph also gained a note on **Σα**, the colloquial elided form of the conjunction **σαν** "when" (not its other, comparative sense "like"): Modern Greek's final-**ν** rule drops it before a consonant outside the keep-set **κ, π, τ, ξ, ψ, γκ, μπ, ντ**, and **β** (in **βγεις**) isn't in it -- the same pattern already documented for **την**/**δεν**/**μην** in `grammar/definite-articles-nom-acc.md`, now cross-linked.
+- Full suite (`-m "not integration"`): 534 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean against the real corpus (71 grammar rules total).
 
 ## 2026-09-21
 
