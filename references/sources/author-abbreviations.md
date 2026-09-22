@@ -12,7 +12,7 @@ OCD and LSJ.
   abbreviation in brackets, a date, and the standard edition, e.g.
   `Abydenus Historicus [ Abyd. ] ii A D. (?) Ed. C. Müller, FHG iv p.
   279.` It is LSJ's own key to the author abbreviations that appear in
-  its entries, the same field `okfbuild/sources/lsj_index.py` records as
+  its entries, the same field [`okfbuild/sources/lsj_index.py`](../../okfbuild/sources/lsj_index.py) records as
   each citation's `author_abbreviation`.
 - **OCD 4th edition, "Abbreviations List"** —
   `https://oxfordre.com/classics/fileasset/images/ORECLA/OCD.ABBREVIATIONS.pdf`,

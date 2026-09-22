@@ -30,8 +30,8 @@ directly:
    `query --verified` just skips them.
 
 grammar/, culture/, and texts/ content is hand-authored and validated,
-not generated -- see `okfbuild/check.py`'s module docstring for exactly
+not generated -- see [`okfbuild/check.py`](../okfbuild/check.py)'s module docstring for exactly
 what it checks. words/ is the one type still built by a real pipeline
-(`okfbuild/pipeline.py`, wired through `greek-knowledge regenerate`) from
+([`okfbuild/pipeline.py`](../okfbuild/pipeline.py), wired through `greek-knowledge regenerate`) from
 external sources (LSJ, Wiktextract, Morpheus, IE-CoR...), since those
 entries are genuine data derivation, not curated prose.

@@ -6,6 +6,7 @@ markdown and write it to disk correctly.
 """
 
 import hashlib
+import os
 import re
 from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
@@ -131,8 +132,54 @@ def validate_frontmatter(frontmatter: dict) -> None:
             raise ValueError(f"Literary Text requires {missing}")
 
 
-def render(concept: ConceptFile) -> str:
-    """Serialize a ConceptFile into OKF-format markdown (YAML frontmatter + body)."""
+def _find_repo_root(start: Path) -> Path | None:
+    """Walk upward from `start` looking for this repo's own marker
+    (`pyproject.toml`), or None if none is found before the filesystem
+    root -- e.g. a test writing to a bare tmp_path with no such marker."""
+    for directory in (start, *start.parents):
+        if (directory / "pyproject.toml").is_file():
+            return directory
+    return None
+
+
+def _internal_link_target(resource: str, repo_root: Path) -> Path | None:
+    """The real file `resource` names, if it is a same-repo citation worth
+    linking: not an external URL, not an absolute path (a private path on
+    one machine, e.g. a local lecture copy, never resolvable for anyone
+    else or in the repo's own published rendering), and it actually exists
+    under `repo_root` (a relative-looking path can still point outside this
+    repo, e.g. `lectures/...` course materials this repo doesn't track)."""
+    if resource.startswith(("http://", "https://", "/")):
+        return None
+    candidate = (repo_root / resource).resolve()
+    if candidate.is_file() and candidate.is_relative_to(repo_root.resolve()):
+        return candidate
+    return None
+
+
+def _footnote_resource_text(source: Source, path: Path | None) -> str:
+    """The `(resource)` -- or, for a citation this render() can verify
+    points at a real file in the same repo as `path`, a clickable
+    `([resource](relative/link))` -- for one footnote-definition line.
+    `path` is the concept file being rendered; linking is opt-in (None by
+    default) so every path-less render() call keeps its exact prior text."""
+    if path is not None:
+        repo_root = _find_repo_root(path.parent)
+        if repo_root is not None:
+            target = _internal_link_target(source.resource, repo_root)
+            if target is not None:
+                relative = os.path.relpath(target, start=path.parent)
+                return f"[{source.resource}]({relative})"
+    return source.resource
+
+
+def render(concept: ConceptFile, *, path: Path | None = None) -> str:
+    """Serialize a ConceptFile into OKF-format markdown (YAML frontmatter + body).
+
+    `path` is the file this rendering will be written to (or is being
+    checked against) -- when given, a footnote citing another file in the
+    same repo renders its resource as a clickable relative link instead of
+    plain text; omit it (the default) to render exactly as before."""
     frontmatter = {
         "type": concept.type,
         "title": concept.title,
@@ -168,7 +215,7 @@ def render(concept: ConceptFile) -> str:
     body = _FOOTNOTE_DEF_LINE_RE.sub("", concept.body).rstrip("\n")
 
     footnote_lines = [
-        f"[^{source.id}]: {source.title}, {source.author} ({source.resource})"
+        f"[^{source.id}]: {source.title}, {source.author} ({_footnote_resource_text(source, path)})"
         for source in concept.sources
         if source.id in referenced_ids
     ]
@@ -255,7 +302,7 @@ def write(concept: ConceptFile, path: Path) -> bool:
         extra_frontmatter["verified"] = existing_frontmatter.get("verified", [])
         concept = replace(concept, extra_frontmatter=extra_frontmatter)
 
-    rendered = render(concept)
+    rendered = render(concept, path=path)
 
     if existing is not None:
         _, rendered_yaml, rendered_body = rendered.split("---\n", 2)

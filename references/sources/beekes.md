@@ -16,16 +16,16 @@ for word-family/IE-root data).
 Perseus's GitHub) or Wiktextract (CC BY-SA/GFDL bulk JSONL dumps), EDG is
 a copyrighted academic publication with no open digital edition or API —
 and unlike the Byzantine verb lexicon (see
-`references/sources/byzantine-lexicon.md`), which still has a real
-`okfbuild/sources/byzantine_lexicon.py` client loading a merged YAML file at
+[`references/sources/byzantine-lexicon.md`](byzantine-lexicon.md)), which still has a real
+[`okfbuild/sources/byzantine_lexicon.py`](../../okfbuild/sources/byzantine_lexicon.py) client loading a merged YAML file at
 build time, Beekes has **no `okfbuild/sources/*.py` client at all**. A human
 (or an LLM with access to the actual text) reads the relevant entry and
 transcribes a page-cited quote — word family, IE root, competing
 etymologies — directly as curated input to a concept builder.
 
-`okfbuild/concepts/lexical_entry.py` (added in section-04-concept-builders)
+[`okfbuild/concepts/lexical_entry.py`](../../okfbuild/concepts/lexical_entry.py) (added in section-04-concept-builders)
 accepts this curated citation as optional input -- the Lexical Entry
-equivalent of how `grammar/aorist-3pl-osan.md` cites its own curated
+equivalent of how [`grammar/aorist-3pl-osan.md`](../../grammar/aorist-3pl-osan.md) cites its own curated
 Sophocles excerpt directly, hand-authored rather than built. When no
 curated Beekes citation is supplied for a given lemma, the Lexical Entry
 is built without an etymology section from Beekes — this is never a

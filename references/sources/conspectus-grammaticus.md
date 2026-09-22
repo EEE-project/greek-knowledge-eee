@@ -28,11 +28,11 @@ live:
   μέγας/πολύς suppletive paradigm.
 
 Cited (dual-sourced alongside Athenaze) in
-`grammar/second-declension-masc-neut.md`,
-`grammar/third-singular-present-indicative.md`,
-`grammar/movable-nu-and-enclitics.md`,
-`grammar/present-imperative-active.md`, and
-`grammar/adjective-declension-and-suppletion.md`.
+[`grammar/second-declension-masc-neut.md`](../../grammar/second-declension-masc-neut.md),
+[`grammar/third-singular-present-indicative.md`](../../grammar/third-singular-present-indicative.md),
+[`grammar/movable-nu-and-enclitics.md`](../../grammar/movable-nu-and-enclitics.md),
+[`grammar/present-imperative-active.md`](../../grammar/present-imperative-active.md), and
+[`grammar/adjective-declension-and-suppletion.md`](../../grammar/adjective-declension-and-suppletion.md).
 
 **Confirmed out of scope:**
 `lectures/ancient_greek/CONSPECTVS GRAMMATICVS IV_graecus.pdf` (1st-

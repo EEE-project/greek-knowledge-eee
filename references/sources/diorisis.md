@@ -19,12 +19,12 @@ investigator), The Alan Turing Institute / University of Oxford /
 University of Cambridge, funded by EPSRC grant EP/N510129/1. Licensed
 CC BY-SA 3.0 (US).
 
-**Status: partially integrated.** `okfbuild/sources/lsj_periods.py` uses
+**Status: partially integrated.** [`okfbuild/sources/lsj_periods.py`](../../okfbuild/sources/lsj_periods.py) uses
 Diorisis's own small `catalog.tsv` (821 lines: author, title, TLG
 author/work numbers, date, genre — downloaded once from `jtauber/diorisis`
 on GitHub and committed to `data/diorisis/catalog.tsv`) to resolve a
 historical period for LSJ citations, joined via TLG author/work numbers
-(see [`references/sources/lsj.md`](lsj.md#perioddialect-stratification)).
+(see [[`references/sources/lsj.md`](lsj.md)](lsj.md#perioddialect-stratification)).
 This is metadata-only: the full 820-file/2.5GB per-word-annotated corpus
 described above, with its pre-computed lemma/POS/morphology, is **still
 not integrated** — remains a strong candidate for the reasons below,

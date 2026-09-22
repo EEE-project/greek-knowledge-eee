@@ -13,7 +13,7 @@ journal page); no explicit Creative Commons or other reuse license is
 stated, copyright held by Société des Études Classiques a.s.b.l.
 Candidate citation source for a Cultural Context / historical-linguistics
 entry on the Pre-Greek substrate debate itself — same role as
-[`references/sources/greek-alphabet-origins.md`](greek-alphabet-origins.md)
+[[`references/sources/greek-alphabet-origins.md`](greek-alphabet-origins.md)](greek-alphabet-origins.md)
 plays for the alphabet-origins topic — rather than for individual word
 etymologies, which stay with Beekes' EDG (see
-[`references/sources/beekes.md`](beekes.md)).
+[[`references/sources/beekes.md`](beekes.md)](beekes.md)).

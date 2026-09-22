@@ -54,7 +54,7 @@ sources:
   author: Ελληνική Ποίηση & Θέατρο (YouTube channel)
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-22T08:11:07.022836+00:00'
+  at: '2026-09-22T08:35:13.835501+00:00'
 related_words:
 - νόστος
 related_lessons:
@@ -84,7 +84,7 @@ For Cavafy, these figures are not just mythological characters — they carry a 
 
 These figures can symbolize: our fears, anxiety, insecurity, difficulties, problems, people who disappoint us, obstacles we create for ourselves. The poem's own vocabulary of travel and arrival — βγεις, φτάσεις, ταξίδι, δρόμος — covers the same thematic ground as the Odyssey itself, journey and homecoming, even though Cavafy writes in Modern Greek, not Homer's own language.
 
-Konstantinos Petrou Kavafis, known, especially in English, as Constantine P. Cavafy and often published as C. P. Cavafy, was a Greek poet, journalist, and civil servant from Alexandria. A major figure of modern Greek literature, he is sometimes considered the most distinguished Greek poet of the 20th century. His works and consciously individual style earned him a place among the most important contributors not only to Greek poetry, but to Western poetry as a whole.[^wikipedia] This knowledge base itself mixes the two spellings: **Cavafy** here (matching Wikipedia and English-language publishers), **Kavafis** in `texts/kavafis_ithaki/`'s own directory name (matching the created_with_eee course it draws its Greek text from) -- both transliterate the same **Καβάφης**, and Russian-language sources, including the readings below, follow the same closer-to-Greek pattern: **Кавафис**, not a Cavafy-style spelling.
+Konstantinos Petrou Kavafis, known, especially in English, as Constantine P. Cavafy and often published as C. P. Cavafy, was a Greek poet, journalist, and civil servant from Alexandria. A major figure of modern Greek literature, he is sometimes considered the most distinguished Greek poet of the 20th century. His works and consciously individual style earned him a place among the most important contributors not only to Greek poetry, but to Western poetry as a whole.[^wikipedia] This knowledge base itself mixes the two spellings: **Cavafy** here (matching Wikipedia and English-language publishers), **Kavafis** in [`texts/kavafis_ithaki/`](../texts/kavafis_ithaki/index.md)'s own directory name (matching the created_with_eee course it draws its Greek text from) -- both transliterate the same **Καβάφης**, and Russian-language sources, including the readings below, follow the same closer-to-Greek pattern: **Кавафис**, not a Cavafy-style spelling.
 
 ## A mixed poetic language
 
@@ -106,11 +106,11 @@ None of this settles into a single, nameable dialect. Cavafy moves between an ar
 
 ## Ithaka read aloud
 
-«Ithaka» has also been recorded by performers. Seven readings are on YouTube, linked here and not copied: two readings of the Greek text -- one credited in its title to Grigoris Valtinos (uploaded by the channel 1969anre in 2012),[^ithaka-reading-valtinos] the other an "Official Audio Release" from the channel Ελληνική Ποίηση & Θέατρο ("Greek Poetry & Theatre," 2019)[^ithaka-reading-greek-poetry-theatre] -- two English readings -- Sean Connery's (uploaded by the channel Upgrade Your Mindset in 2021)[^ithaka-reading-connery] and the SpokenVerse channel's, read by Tom O'Bedlam (2011)[^ithaka-reading-obedlam] -- and three Russian readings: Irina Kovalevskaya's audio reading (2023),[^ithaka-reading-kovalevskaya] actor and Vedogon Theatre founder Pavel Kurochkin's reading (2018, uploaded by Eugenia Kritsevskagia),[^ithaka-reading-kurochkin] and an episode of Chersonesos Taurica's «Мой Херсонес» poetry series (2021), which names its translation -- Ильинская's, already cited (reference-only) in `texts/kavafis_ithaki/translations_ru.md`.[^ithaka-reading-chersonesos]
+«Ithaka» has also been recorded by performers. Seven readings are on YouTube, linked here and not copied: two readings of the Greek text -- one credited in its title to Grigoris Valtinos (uploaded by the channel 1969anre in 2012),[^ithaka-reading-valtinos] the other an "Official Audio Release" from the channel Ελληνική Ποίηση & Θέατρο ("Greek Poetry & Theatre," 2019)[^ithaka-reading-greek-poetry-theatre] -- two English readings -- Sean Connery's (uploaded by the channel Upgrade Your Mindset in 2021)[^ithaka-reading-connery] and the SpokenVerse channel's, read by Tom O'Bedlam (2011)[^ithaka-reading-obedlam] -- and three Russian readings: Irina Kovalevskaya's audio reading (2023),[^ithaka-reading-kovalevskaya] actor and Vedogon Theatre founder Pavel Kurochkin's reading (2018, uploaded by Eugenia Kritsevskagia),[^ithaka-reading-kurochkin] and an episode of Chersonesos Taurica's «Мой Херсонес» poetry series (2021), which names its translation -- Ильинская's, already cited (reference-only) in [`texts/kavafis_ithaki/translations_ru.md`](../texts/kavafis_ithaki/translations_ru.md).[^ithaka-reading-chersonesos]
 
 [^ebooks-edu-gr-ithaka]: Κείμενα Νεοελληνικής Λογοτεχνίας Α΄ Λυκείου (official Greek Ministry of Education literature textbook), Greek Institute of Educational Policy (ΙΕΠ) (https://ebooks.edu.gr/ebooks/v/html/8547/2700/Keimena-Neoellinikis-Logotechnias_A-Lykeiou_html-empl/indexG3_2.html)
 [^wikipedia]: Constantine P. Cavafy, Wikipedia (https://en.wikipedia.org/wiki/Constantine_P._Cavafy)
-[^cavafy-ithaka-text]: Kavafis, Ithaka (1-36) — original text (el), K. P. Cavafy (texts/kavafis_ithaki/text.md)
+[^cavafy-ithaka-text]: Kavafis, Ithaka (1-36) — original text (el), K. P. Cavafy ([texts/kavafis_ithaki/text.md](../texts/kavafis_ithaki/text.md))
 [^ithaka-reading-valtinos]: ΙΘΑΚΗ - Κ.Π. ΚΑΒΑΦΗΣ- ΓΡΗΓΟΡΗΣ ΒΑΛΤΙΝΟΣ, 1969anre (YouTube channel) (https://www.youtube.com/watch?v=r5lPCeT8Ex0)
 [^ithaka-reading-connery]: Sean Connery reads ITHAKA | Powerful Life Poem by C.P.Cavafy, Upgrade Your Mindset (YouTube channel) (https://www.youtube.com/watch?v=i8is5ZE4_CU)
 [^ithaka-reading-kovalevskaya]: ИТАКА. Константинос Кавафис.  Читает Ирина Ковалевская. Аудио-версия., Irina Kovalevskaja (YouTube channel) (https://www.youtube.com/watch?v=RN_SJgOu0EI)

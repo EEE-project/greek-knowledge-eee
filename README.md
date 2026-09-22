@@ -214,7 +214,7 @@ two pilot courses).
 
 To also fill morphology gaps via a real LLM, pass a `GapFillerConfig` as
 `sources.llm_gap_filler` and a `gap_fill_cache_dir` to `run()` — see
-`okfbuild/gap_filler_pilot.py`'s `run_gap_filler_pilot()` for the reference
+[`okfbuild/gap_filler_pilot.py`](okfbuild/gap_filler_pilot.py)'s `run_gap_filler_pilot()` for the reference
 wiring, and "Development" below for the paid-test gating this same
 mechanism uses.
 
@@ -248,7 +248,7 @@ HTML-comment description line under each translator's `##` heading. Both Grammat
 optionally carry a `dialect` field to annotate period-or-region-specific
 usage; Cultural Context may additionally carry an optional `periods_spanned`
 `{from, to}` mapping. Lexical Entry, Literary Text and Literary Translation are unaffected by these
-additions. See `okfbuild/okf.py` (added in section-02-okf-writer) for
+additions. See [`okfbuild/okf.py`](okfbuild/okf.py) (added in section-02-okf-writer) for
 the exact schema.
 
 
@@ -256,39 +256,39 @@ the exact schema.
 
 | Source | What it covers | Doc |
 |---|---|---|
-| EEE morphology engine (`eee_project`) | Homeric/Attic/Modern inflected forms, already installed | [`references/sources/eee-engine.md`](references/sources/eee-engine.md) |
-| Morpheus | Classical/Koine Ancient Greek morphological analysis | [`references/sources/morpheus.md`](references/sources/morpheus.md) |
-| Byzantine verb lexicon | Byzantine-period attested verb forms | [`references/sources/byzantine-lexicon.md`](references/sources/byzantine-lexicon.md) |
-| LSJ (Liddell-Scott-Jones) | Classical Ancient Greek definitions/etymology | [`references/sources/lsj.md`](references/sources/lsj.md) |
-| Wiktextract (kaikki.org) | Modern + Ancient Greek dictionary data | [`references/sources/wiktextract.md`](references/sources/wiktextract.md) |
-| Wikipedia | Cultural/biographical context | [`references/sources/wikipedia.md`](references/sources/wikipedia.md) |
-| Beekes' EDG | Indo-European etymology, word families (hand-curated, no bulk access) | [`references/sources/beekes.md`](references/sources/beekes.md) |
-| Thesaurus Linguae Graecae (TLG) | Canonical Greek text library, Homer–Byzantine (subscription-only, not integrated) | [`references/sources/tlg.md`](references/sources/tlg.md) |
-| Patrologia Graeca corpus (GREgORI/Calfa) | Late-antique/Byzantine Greek text, ~6M words, ~1% CER (not yet integrated) | [`references/sources/patrologia-graeca.md`](references/sources/patrologia-graeca.md) |
-| ancientrome.ru | Greek author index + Dvoretsky Greek-Russian dictionary listing (finding aid, not integrated) | [`references/sources/ancientrome-ru.md`](references/sources/ancientrome-ru.md) |
-| Digital Encyclopedia of Atticism (DEA) | Atticist lexica — prescriptive "correct Attic usage" commentary (not integrated) | [`references/sources/atticism-eu.md`](references/sources/atticism-eu.md) |
-| Grammar references (Kühner, Gildersleeve, Sobolevsky, Kozarzhevsky, Wolf, Chantraine) | Citation sources for Grammatical Rule entries (print works, not integrated) | [`references/sources/grammar-references.md`](references/sources/grammar-references.md) |
-| CONSPECTVS GRAMMATICVS (Palaestra reference grammar) | Athenaze-referenced grammar handbook: paradigms, gender-assignment rules, and verb forms (Volumes I-III integrated) | [`references/sources/conspectus-grammaticus.md`](references/sources/conspectus-grammaticus.md) |
-| Verb tenses in Hellenistic Koine and Modern Greek (ΑΤΤΙΚΙΣΤΑ) | Paradigm comparison (λύω) across Hellenistic Koine and Modern Greek with historical divergence notes (Telegram channel, integrated) | [`references/sources/atticist-koine-tenses.md`](references/sources/atticist-koine-tenses.md) |
-| Athenaze: Introduzione al greco antico | Narrative-based introductory Ancient Greek course (Balme/Lawall/Miraglia/Bórri): Vol. I Ch. 1-2 pedagogical grammar framing/examples and cultural essays (integrated) | [`references/sources/athenaze.md`](references/sources/athenaze.md) |
-| Thucydides, History of the Peloponnesian War | Primary contemporary account of the Peloponnesian War (431-404 BC); cited directly for the II.14 passage on rural Athenians' wartime relocation | [`references/sources/thucydides.md`](references/sources/thucydides.md) |
-| Pseudo-Xenophon, Constitution of the Athenians | 5th-century-BC anti-democratic pamphlet ("the Old Oligarch"); cited directly for its I.10 remark on Athenian slaves and metics | [`references/sources/pseudo-xenophon.md`](references/sources/pseudo-xenophon.md) |
-| Diorisis Ancient Greek Corpus | 820 works, per-word lemma/POS/morphology, TLG-numbered, CC BY-SA (catalog integrated for LSJ period mapping; full per-word morphology not yet integrated) | [`references/sources/diorisis.md`](references/sources/diorisis.md) |
-| Homer/Odyssey scholarship | Commentary/scholarship on Homer (Голинкевич, Гордезиани, Lord, Сахарный, Тахо-Годи; not integrated) | [`references/sources/homer-scholarship.md`](references/sources/homer-scholarship.md) |
-| Greek alphabet origins | Papers on the Greek alphabet's formation and pre-alphabetic antecedents (not integrated) | [`references/sources/greek-alphabet-origins.md`](references/sources/greek-alphabet-origins.md) |
-| Pre-Greek substrate overview (Hieber) | Blog/newsletter survey of ~1,000 non-IE Ancient Greek words (orientation citation, not integrated) | [`references/sources/pre-greek-substrate-overview.md`](references/sources/pre-greek-substrate-overview.md) |
-| Verhasselt (2009), Pre-Greek substratum survey | Open-access literature review of Pre-Greek substrate scholarship (not integrated) | [`references/sources/verhasselt-pre-greek-substratum.md`](references/sources/verhasselt-pre-greek-substratum.md) |
-| Pre-Greek toponyms dataset (Hieber) | Pre-Greek place names ranked by certainty (view-only, not integrated) | [`references/sources/pre-greek-toponyms.md`](references/sources/pre-greek-toponyms.md) |
-| Leiden IE Etymological Dictionary Series (Brill) | ~12-volume IE-branch dictionary series incl. Beekes' Greek volume (subscription-only, not integrated beyond Beekes) | [`references/sources/leiden-ie-dictionary-series.md`](references/sources/leiden-ie-dictionary-series.md) |
-| IE-CoR | Ancient Greek cognate sets + PIE roots, CC BY 4.0 CLDF data (integrated: 172-word etymology citation alongside Beekes) | [`references/sources/iecor.md`](references/sources/iecor.md) |
-| CLARIN Virtual Language Observatory | Meta-catalog of ~975k language-resource records (discovery tool, not integrated) | [`references/sources/clarin-vlo.md`](references/sources/clarin-vlo.md) |
-| European Language Grid catalogue | Meta-catalog of language resources/tools (discovery tool, not integrated) | [`references/sources/european-language-grid.md`](references/sources/european-language-grid.md) |
-| Greek For Euclid (Calvert) | 26-lesson course on mathematical Greek for reading Euclid's *Elements* (legacy SPIonic font, not integrated) | [`references/sources/greek-for-euclid.md`](references/sources/greek-for-euclid.md) |
-| Textkit | Open CC BY-SA library of 180+ public-domain Ancient Greek/Latin textbooks (PDFs, not integrated) | [`references/sources/textkit.md`](references/sources/textkit.md) |
-| Irby (2017), scientific-Greek reading anthology | Annotated Greek passages across 8+ scientific disciplines incl. an Euclid excerpt, CC BY 3.0 (not integrated) | [`references/sources/irby-scientific-greek.md`](references/sources/irby-scientific-greek.md) |
-| Ancient-author abbreviation lists (LSJ, OCD) | Citation-abbreviation convention for ancient authors and works; the OCD list is reachable only via the Wayback Machine (reference lists, not integrated) | [`references/sources/author-abbreviations.md`](references/sources/author-abbreviations.md) |
-| arXiv Complete Corpus (Hugging Face) | Snapshot of ~3.1M arXiv papers (metadata, LaTeX, PDFs; ~16 TB, per-paper licences; not Greek-specific, not integrated) | [`references/sources/arxiv-complete-corpus.md`](references/sources/arxiv-complete-corpus.md) |
-| ΕΙΔΟΣ picture vocabulary (Crowell) | Illustrated Ancient Greek vocabulary with a LaTeX glossary, CC-BY-SA (not integrated) | [`references/sources/eidos-picture-vocabulary.md`](references/sources/eidos-picture-vocabulary.md) |
+| EEE morphology engine (`eee_project`) | Homeric/Attic/Modern inflected forms, already installed | [[`references/sources/eee-engine.md`](references/sources/eee-engine.md)](references/sources/eee-engine.md) |
+| Morpheus | Classical/Koine Ancient Greek morphological analysis | [[`references/sources/morpheus.md`](references/sources/morpheus.md)](references/sources/morpheus.md) |
+| Byzantine verb lexicon | Byzantine-period attested verb forms | [[`references/sources/byzantine-lexicon.md`](references/sources/byzantine-lexicon.md)](references/sources/byzantine-lexicon.md) |
+| LSJ (Liddell-Scott-Jones) | Classical Ancient Greek definitions/etymology | [[`references/sources/lsj.md`](references/sources/lsj.md)](references/sources/lsj.md) |
+| Wiktextract (kaikki.org) | Modern + Ancient Greek dictionary data | [[`references/sources/wiktextract.md`](references/sources/wiktextract.md)](references/sources/wiktextract.md) |
+| Wikipedia | Cultural/biographical context | [[`references/sources/wikipedia.md`](references/sources/wikipedia.md)](references/sources/wikipedia.md) |
+| Beekes' EDG | Indo-European etymology, word families (hand-curated, no bulk access) | [[`references/sources/beekes.md`](references/sources/beekes.md)](references/sources/beekes.md) |
+| Thesaurus Linguae Graecae (TLG) | Canonical Greek text library, Homer–Byzantine (subscription-only, not integrated) | [[`references/sources/tlg.md`](references/sources/tlg.md)](references/sources/tlg.md) |
+| Patrologia Graeca corpus (GREgORI/Calfa) | Late-antique/Byzantine Greek text, ~6M words, ~1% CER (not yet integrated) | [[`references/sources/patrologia-graeca.md`](references/sources/patrologia-graeca.md)](references/sources/patrologia-graeca.md) |
+| ancientrome.ru | Greek author index + Dvoretsky Greek-Russian dictionary listing (finding aid, not integrated) | [[`references/sources/ancientrome-ru.md`](references/sources/ancientrome-ru.md)](references/sources/ancientrome-ru.md) |
+| Digital Encyclopedia of Atticism (DEA) | Atticist lexica — prescriptive "correct Attic usage" commentary (not integrated) | [[`references/sources/atticism-eu.md`](references/sources/atticism-eu.md)](references/sources/atticism-eu.md) |
+| Grammar references (Kühner, Gildersleeve, Sobolevsky, Kozarzhevsky, Wolf, Chantraine) | Citation sources for Grammatical Rule entries (print works, not integrated) | [[`references/sources/grammar-references.md`](references/sources/grammar-references.md)](references/sources/grammar-references.md) |
+| CONSPECTVS GRAMMATICVS (Palaestra reference grammar) | Athenaze-referenced grammar handbook: paradigms, gender-assignment rules, and verb forms (Volumes I-III integrated) | [[`references/sources/conspectus-grammaticus.md`](references/sources/conspectus-grammaticus.md)](references/sources/conspectus-grammaticus.md) |
+| Verb tenses in Hellenistic Koine and Modern Greek (ΑΤΤΙΚΙΣΤΑ) | Paradigm comparison (λύω) across Hellenistic Koine and Modern Greek with historical divergence notes (Telegram channel, integrated) | [[`references/sources/atticist-koine-tenses.md`](references/sources/atticist-koine-tenses.md)](references/sources/atticist-koine-tenses.md) |
+| Athenaze: Introduzione al greco antico | Narrative-based introductory Ancient Greek course (Balme/Lawall/Miraglia/Bórri): Vol. I Ch. 1-2 pedagogical grammar framing/examples and cultural essays (integrated) | [[`references/sources/athenaze.md`](references/sources/athenaze.md)](references/sources/athenaze.md) |
+| Thucydides, History of the Peloponnesian War | Primary contemporary account of the Peloponnesian War (431-404 BC); cited directly for the II.14 passage on rural Athenians' wartime relocation | [[`references/sources/thucydides.md`](references/sources/thucydides.md)](references/sources/thucydides.md) |
+| Pseudo-Xenophon, Constitution of the Athenians | 5th-century-BC anti-democratic pamphlet ("the Old Oligarch"); cited directly for its I.10 remark on Athenian slaves and metics | [[`references/sources/pseudo-xenophon.md`](references/sources/pseudo-xenophon.md)](references/sources/pseudo-xenophon.md) |
+| Diorisis Ancient Greek Corpus | 820 works, per-word lemma/POS/morphology, TLG-numbered, CC BY-SA (catalog integrated for LSJ period mapping; full per-word morphology not yet integrated) | [[`references/sources/diorisis.md`](references/sources/diorisis.md)](references/sources/diorisis.md) |
+| Homer/Odyssey scholarship | Commentary/scholarship on Homer (Голинкевич, Гордезиани, Lord, Сахарный, Тахо-Годи; not integrated) | [[`references/sources/homer-scholarship.md`](references/sources/homer-scholarship.md)](references/sources/homer-scholarship.md) |
+| Greek alphabet origins | Papers on the Greek alphabet's formation and pre-alphabetic antecedents (not integrated) | [[`references/sources/greek-alphabet-origins.md`](references/sources/greek-alphabet-origins.md)](references/sources/greek-alphabet-origins.md) |
+| Pre-Greek substrate overview (Hieber) | Blog/newsletter survey of ~1,000 non-IE Ancient Greek words (orientation citation, not integrated) | [[`references/sources/pre-greek-substrate-overview.md`](references/sources/pre-greek-substrate-overview.md)](references/sources/pre-greek-substrate-overview.md) |
+| Verhasselt (2009), Pre-Greek substratum survey | Open-access literature review of Pre-Greek substrate scholarship (not integrated) | [[`references/sources/verhasselt-pre-greek-substratum.md`](references/sources/verhasselt-pre-greek-substratum.md)](references/sources/verhasselt-pre-greek-substratum.md) |
+| Pre-Greek toponyms dataset (Hieber) | Pre-Greek place names ranked by certainty (view-only, not integrated) | [[`references/sources/pre-greek-toponyms.md`](references/sources/pre-greek-toponyms.md)](references/sources/pre-greek-toponyms.md) |
+| Leiden IE Etymological Dictionary Series (Brill) | ~12-volume IE-branch dictionary series incl. Beekes' Greek volume (subscription-only, not integrated beyond Beekes) | [[`references/sources/leiden-ie-dictionary-series.md`](references/sources/leiden-ie-dictionary-series.md)](references/sources/leiden-ie-dictionary-series.md) |
+| IE-CoR | Ancient Greek cognate sets + PIE roots, CC BY 4.0 CLDF data (integrated: 172-word etymology citation alongside Beekes) | [[`references/sources/iecor.md`](references/sources/iecor.md)](references/sources/iecor.md) |
+| CLARIN Virtual Language Observatory | Meta-catalog of ~975k language-resource records (discovery tool, not integrated) | [[`references/sources/clarin-vlo.md`](references/sources/clarin-vlo.md)](references/sources/clarin-vlo.md) |
+| European Language Grid catalogue | Meta-catalog of language resources/tools (discovery tool, not integrated) | [[`references/sources/european-language-grid.md`](references/sources/european-language-grid.md)](references/sources/european-language-grid.md) |
+| Greek For Euclid (Calvert) | 26-lesson course on mathematical Greek for reading Euclid's *Elements* (legacy SPIonic font, not integrated) | [[`references/sources/greek-for-euclid.md`](references/sources/greek-for-euclid.md)](references/sources/greek-for-euclid.md) |
+| Textkit | Open CC BY-SA library of 180+ public-domain Ancient Greek/Latin textbooks (PDFs, not integrated) | [[`references/sources/textkit.md`](references/sources/textkit.md)](references/sources/textkit.md) |
+| Irby (2017), scientific-Greek reading anthology | Annotated Greek passages across 8+ scientific disciplines incl. an Euclid excerpt, CC BY 3.0 (not integrated) | [[`references/sources/irby-scientific-greek.md`](references/sources/irby-scientific-greek.md)](references/sources/irby-scientific-greek.md) |
+| Ancient-author abbreviation lists (LSJ, OCD) | Citation-abbreviation convention for ancient authors and works; the OCD list is reachable only via the Wayback Machine (reference lists, not integrated) | [[`references/sources/author-abbreviations.md`](references/sources/author-abbreviations.md)](references/sources/author-abbreviations.md) |
+| arXiv Complete Corpus (Hugging Face) | Snapshot of ~3.1M arXiv papers (metadata, LaTeX, PDFs; ~16 TB, per-paper licences; not Greek-specific, not integrated) | [[`references/sources/arxiv-complete-corpus.md`](references/sources/arxiv-complete-corpus.md)](references/sources/arxiv-complete-corpus.md) |
+| ΕΙΔΟΣ picture vocabulary (Crowell) | Illustrated Ancient Greek vocabulary with a LaTeX glossary, CC-BY-SA (not integrated) | [[`references/sources/eidos-picture-vocabulary.md`](references/sources/eidos-picture-vocabulary.md)](references/sources/eidos-picture-vocabulary.md) |
 
 
 ## Development
@@ -325,7 +325,7 @@ so it's never a side effect of anything else, including tests (`grammar/`,
 `culture/`, and `texts/` are hand-authored and only ever change when a
 human/Claude edits them directly, `uv run greek-knowledge check --fix`
 mechanically normalizes one, or `verify` pins a verification record to
-one — see `templates/README.md`). Review
+one — see [`templates/README.md`](templates/README.md)). Review
 the resulting `git diff` before committing, same as any other pilot
 regen. A downloaded Wiktextract dump
 (`data/wiktextract/README.md`) is only needed the first time, or when a

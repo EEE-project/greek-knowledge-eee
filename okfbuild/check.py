@@ -1,7 +1,9 @@
 """Checks that any committed OKF concept file is well-formed markdown:
 parseable frontmatter, every citation resolvable in both directions, and
 canonically rendered (the footnote-definitions block matches sources: and
-what's actually cited in the body). Unlike okfbuild/pipeline.py, this
+what's actually cited in the body -- and, for a source citing another file
+in this repo, is a clickable relative link; see okf.py's render()). Unlike
+okfbuild/pipeline.py, this
 never invents body prose -- it only verifies (and, via fix_file(),
 mechanically re-renders) the parts okf.render() already derives from
 what's written: YAML frontmatter shape and the footnote-definitions
@@ -120,7 +122,7 @@ def _structure_issues(path: Path, concept: okf.ConceptFile) -> list[Issue]:
             issues.append(Issue(path, f"sources: entry {unused!r} is never cited as [^{unused}] in the body"))
 
     try:
-        rendered = okf.render(concept)
+        rendered = okf.render(concept, path=path)
     except ValueError as exc:
         issues.append(Issue(path, f"invalid frontmatter: {exc}"))
         return issues
@@ -215,5 +217,5 @@ def record_verification(path: Path, *, by: str, against: list[str], on: date | N
     }
     if problem := _verified_entry_problem(entry):
         raise ValueError(f"cannot record a verification: it {problem}")
-    path.write_text(okf.render(replace(concept, verified=[entry])), encoding="utf-8")
+    path.write_text(okf.render(replace(concept, verified=[entry]), path=path), encoding="utf-8")
     return []

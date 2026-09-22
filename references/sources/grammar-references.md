@@ -21,9 +21,9 @@ type, distinct from the lexical/corpus sources above.
   openly hosted as full structured HTML by Perseus Digital Library
   (`perseus.tufts.edu`, `Perseus:text:1999.04.0007`) — the same Perseus
   ecosystem this KB already parses for LSJ, see
-  [`references/sources/lsj.md`](lsj.md). Also distributed as a PDF by
+  [[`references/sources/lsj.md`](lsj.md)](lsj.md). Also distributed as a PDF by
   Textkit, see
-  [`references/sources/textkit.md`](textkit.md).
+  [[`references/sources/textkit.md`](textkit.md)](textkit.md).
 
 **Russian academic textbooks:**
 - Sobolevsky (Сергей Иванович Соболевский), *Древнегреческий язык*

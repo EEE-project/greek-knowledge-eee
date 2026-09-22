@@ -21,12 +21,12 @@ discussion group. Local file:
 `/data/work/sadov/docs/books/lang/Greek/Ancient/Времена_глагола_в_
 Ἑλληνιστικὴ_Κοινή_и_Νεοελληνικὴ_Κοινή.pdf`.
 
-Cited in `grammar/future-tha-periphrasis.md`,
-`grammar/perfect-pluperfect-periphrasis.md`,
-`grammar/optative-replacement.md`, `grammar/mediopassive-merger.md`,
-`grammar/augment-loss.md`,
-`grammar/reduplicated-participles-as-adjectives.md`, and
-`grammar/future-continuous-new-tense.md` — the seven Grammatical Rule
+Cited in [`grammar/future-tha-periphrasis.md`](../../grammar/future-tha-periphrasis.md),
+[`grammar/perfect-pluperfect-periphrasis.md`](../../grammar/perfect-pluperfect-periphrasis.md),
+[`grammar/optative-replacement.md`](../../grammar/optative-replacement.md), [`grammar/mediopassive-merger.md`](../../grammar/mediopassive-merger.md),
+[`grammar/augment-loss.md`](../../grammar/augment-loss.md),
+[`grammar/reduplicated-participles-as-adjectives.md`](../../grammar/reduplicated-participles-as-adjectives.md), and
+[`grammar/future-continuous-new-tense.md`](../../grammar/future-continuous-new-tense.md) — the seven Grammatical Rule
 entries this pass added spanning `periods_spanned: {from: koine, to:
 modern}`.
 

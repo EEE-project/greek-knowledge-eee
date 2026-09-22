@@ -15,6 +15,6 @@ infrastructure may expose harvesting APIs elsewhere, but that wasn't
 verified. Value here is as a discovery starting point if a specific new
 Ancient or Modern Greek resource is ever needed — not a build-time
 dependency candidate. See
-[`references/sources/european-language-grid.md`](european-language-grid.md)
+[[`references/sources/european-language-grid.md`](european-language-grid.md)](european-language-grid.md)
 for the equivalent EU catalog aimed more at language-technology tools
 than raw datasets.

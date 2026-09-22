@@ -13,7 +13,7 @@ surviving ancient historians — he explicitly distinguishes eyewitness
 testimony from hearsay in his own preface (I.22).
 
 **Status: integrated.** Cited directly (via `extra_sources`, not merely
-paraphrased through Athenaze) in `culture/athenian-farmer-class-system.md`
+paraphrased through Athenaze) in [`culture/athenian-farmer-class-system.md`](../../culture/athenian-farmer-class-system.md)
 for the II.14 passage on rural Athenians' reluctance to relocate inside
 the city walls at the war's outbreak.
 

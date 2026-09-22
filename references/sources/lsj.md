@@ -64,7 +64,7 @@ correctly has no space after the parenthesis), and distinguishing this
 one genuine gap from every legitimate no-space `*` usage isn't possible
 from the text alone.
 
-Parsed by `okfbuild/sources/lsj_index.py` (added in
+Parsed by [`okfbuild/sources/lsj_index.py`](../../okfbuild/sources/lsj_index.py) (added in
 section-03-source-clients), which must disable XML entity
 expansion/external entity resolution even though this specific file comes
 from a trusted source -- while still allowing the real files' own DOCTYPE
@@ -78,11 +78,11 @@ would otherwise reject too.
 Each `LSJCitation` extracted from the dump can carry a resolved historical
 period and/or dialect(s), rendered as an inline `**[5th c. BC, Doric]**`-
 style tag immediately before the citation's own text (`render_lsj_entry()`
-in `okfbuild/concepts/lexical_entry.py`) whenever either is known — a
+in [`okfbuild/concepts/lexical_entry.py`](../../okfbuild/concepts/lexical_entry.py)) whenever either is known — a
 citation with neither renders untagged, exactly as before this capability
 existed.
 
-**Period resolution** (`okfbuild/sources/lsj_periods.py`,
+**Period resolution** ([`okfbuild/sources/lsj_periods.py`](../../okfbuild/sources/lsj_periods.py),
 `LSJPeriodMap.period_for_citation()`), in order: (1) Diorisis work-level,
 when the citation's TLG author+work both resolve and a matching
 `data/diorisis/catalog.tsv` row exists; (2) Diorisis author-level fallback
@@ -92,10 +92,10 @@ period. `data/diorisis/catalog.tsv` is Diorisis's own small (821-line)
 catalog file, downloaded once from `jtauber/diorisis` on GitHub and
 committed directly (unlike the 270MB LSJ dump itself) — not the full
 820-file/2.5GB per-word-annotated corpus (see
-[`references/sources/diorisis.md`](diorisis.md)), so only Diorisis's
+[[`references/sources/diorisis.md`](diorisis.md)](diorisis.md)), so only Diorisis's
 author/work/date metadata is used here, not its morphological analysis.
 
-**Dialect resolution** (`okfbuild/sources/lsj_index.py`,
+**Dialect resolution** ([`okfbuild/sources/lsj_index.py`](../../okfbuild/sources/lsj_index.py),
 `_resolve_dialect_scope()`) implements a scope-precedence table derived
 from directly sampling the real dump, not assumed from the DTD: a
 `<gramGrp>` immediately preceding an `<orth>`/`<foreign>` word-form variant

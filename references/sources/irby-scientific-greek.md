@@ -4,7 +4,7 @@ Georgia Irby (College of William & Mary), published in *Teaching
 Classical Languages* 8.2 (2017): 85–153
 (`https://tcl.camws.org/sites/default/files/TCL%208.2%20Irby.pdf`). Not
 a sequential course like
-[`references/sources/greek-for-euclid.md`](greek-for-euclid.md), but a
+[[`references/sources/greek-for-euclid.md`](greek-for-euclid.md)](greek-for-euclid.md), but a
 professionally curated, annotated anthology of dozens of short Ancient
 Greek passages — full Greek text, grammar/syntax tags, and per-word
 vocabulary notes for each, graded-reader style — drawn from primary
@@ -25,5 +25,5 @@ rather than a full text. Notably has **no Medicine/Hippocrates
 section**, despite discussing Galen and Hippocratic method at length in
 its introduction — a real gap if this KB ever wants a Greek-medicine
 angle; none of this batch's sources cover Hippocrates specifically. See
-[`references/sources/greek-for-euclid.md`](greek-for-euclid.md) for the
+[[`references/sources/greek-for-euclid.md`](greek-for-euclid.md)](greek-for-euclid.md) for the
 one narrow-domain course this list does have, on mathematical Greek.

@@ -7,7 +7,7 @@ reconstructions. Notable volumes: de Vaan, *Etymological Dictionary of
 Latin and the Other Italic Languages* (vol. 7, 2008); **Beekes,
 *Etymological Dictionary of Greek* (vol. 10, 2010) — the volume this KB
 already uses, see**
-[`references/sources/beekes.md`](beekes.md); Kroonen, *Etymological
+[[`references/sources/beekes.md`](beekes.md)](beekes.md); Kroonen, *Etymological
 Dictionary of Proto-Germanic* (vol. 11, 2013); plus Slavic, Baltic,
 Celtic, Armenian, and Tocharian volumes by other authors.
 
@@ -21,4 +21,4 @@ would only become relevant if this KB ever needs comparative
 cross-branch IE cognate citations beyond single-word Greek etymology —
 no current use case. For an openly-licensed alternative covering
 cross-branch cognate data (not full dictionary entries), see
-[`references/sources/iecor.md`](iecor.md).
+[[`references/sources/iecor.md`](iecor.md)](iecor.md).

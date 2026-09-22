@@ -5,7 +5,7 @@
 textbooks, readers, and answer keys as free PDFs (e.g. White's *First
 Greek Book*, D'Ooge's *Latin for Beginners*, and a PDF of Smyth's *Greek
 Grammar* — see
-[`references/sources/grammar-references.md`](grammar-references.md) for
+[[`references/sources/grammar-references.md`](grammar-references.md)](grammar-references.md) for
 Smyth's separately-hosted, structured Perseus edition), plus a learner
 community forum. All library content is licensed **CC BY-SA 3.0**.
 

@@ -17,7 +17,7 @@ Aristophanes by the end of the course.
 
 **Status: integrated.** Vol. I, Ch. 1-2 sourced (two independent
 transcriptions merged — see the `athenaze-ch1`/`athenaze-ch1-ext`/
-`athenaze-ch2`/`athenaze-ch2-ext` source IDs in `okfbuild/pilot_content.py`)
+`athenaze-ch2`/`athenaze-ch2-ext` source IDs in [`okfbuild/pilot_content.py`](../../okfbuild/pilot_content.py))
 for grammar-rule pedagogical framing/examples throughout this pass's
 Grammatical Rule content, and for its own cultural essays (Peloponnesian
 War setting, Athenian farmer class system, Dikaiopolis/Aristophanes'

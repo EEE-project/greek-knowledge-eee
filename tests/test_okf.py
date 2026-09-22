@@ -184,6 +184,104 @@ def test_render_includes_footnote_block_per_source():
     assert "[^src-1]:" in rendered
 
 
+def test_render_leaves_a_resource_plain_when_no_path_is_given():
+    """The default, path-less call every existing caller (and this test file)
+    already makes must render exactly as before -- linking is opt-in."""
+    concept = _minimal_concept(
+        sources=[Source(id="src-1", resource="texts/kavafis_ithaki/text.md", title="Example", author="test")],
+        body="A claim here[^src-1]",
+    )
+    rendered = render(concept)
+    assert "[^src-1]: Example, test (texts/kavafis_ithaki/text.md)" in rendered
+
+
+def _fake_repo(tmp_path):
+    """A tmp_path with a pyproject.toml marker -- what render()'s repo-root
+    detection looks for, matching this repo's own layout."""
+    (tmp_path / "pyproject.toml").write_text("[project]\nname = \"fake\"\n")
+    return tmp_path
+
+
+def test_render_links_an_internal_resource_that_exists_in_the_repo(tmp_path):
+    repo_root = _fake_repo(tmp_path)
+    (repo_root / "texts" / "kavafis_ithaki").mkdir(parents=True)
+    (repo_root / "texts" / "kavafis_ithaki" / "text.md").write_text("the target file")
+    path = repo_root / "culture" / "cavafy.md"
+    path.parent.mkdir()
+    concept = _minimal_concept(
+        sources=[Source(id="src-1", resource="texts/kavafis_ithaki/text.md", title="Example", author="test")],
+        body="A claim here[^src-1]",
+    )
+
+    rendered = render(concept, path=path)
+
+    assert "[^src-1]: Example, test ([texts/kavafis_ithaki/text.md](../texts/kavafis_ithaki/text.md))" in rendered
+
+
+def test_render_leaves_an_external_url_resource_plain_even_with_a_path(tmp_path):
+    repo_root = _fake_repo(tmp_path)
+    path = repo_root / "culture" / "cavafy.md"
+    path.parent.mkdir()
+    concept = _minimal_concept(
+        sources=[Source(id="src-1", resource="https://example.com/page", title="Example", author="test")],
+        body="A claim here[^src-1]",
+    )
+
+    rendered = render(concept, path=path)
+
+    assert "[^src-1]: Example, test (https://example.com/page)" in rendered
+    assert "[https://example.com/page]" not in rendered
+
+
+def test_render_leaves_a_resource_plain_when_it_matches_no_real_file_in_the_repo(tmp_path):
+    repo_root = _fake_repo(tmp_path)
+    path = repo_root / "culture" / "cavafy.md"
+    path.parent.mkdir()
+    concept = _minimal_concept(
+        sources=[Source(id="src-1", resource="lectures/Palaestra/nonexistent.md", title="Example", author="test")],
+        body="A claim here[^src-1]",
+    )
+
+    rendered = render(concept, path=path)
+
+    assert "[^src-1]: Example, test (lectures/Palaestra/nonexistent.md)" in rendered
+
+
+def test_render_leaves_an_absolute_path_resource_plain_even_if_it_exists(tmp_path):
+    """A citation to a file outside the repo (e.g. a private local lecture
+    copy) must never become a link -- it wouldn't resolve for anyone else,
+    or in the repo's own published rendering."""
+    repo_root = _fake_repo(tmp_path)
+    path = repo_root / "culture" / "cavafy.md"
+    path.parent.mkdir()
+    outside = tmp_path / "outside.md"
+    outside.write_text("exists, but outside the repo")
+    concept = _minimal_concept(
+        sources=[Source(id="src-1", resource=str(outside), title="Example", author="test")],
+        body="A claim here[^src-1]",
+    )
+
+    rendered = render(concept, path=path)
+
+    assert f"[^src-1]: Example, test ({outside})" in rendered
+
+
+def test_render_computes_a_correct_relative_path_across_sibling_directories(tmp_path):
+    repo_root = _fake_repo(tmp_path)
+    (repo_root / "words").mkdir()
+    (repo_root / "words" / "νόστος.md").write_text("the target file")
+    path = repo_root / "grammar" / "some-rule.md"
+    path.parent.mkdir()
+    concept = _minimal_concept(
+        sources=[Source(id="src-1", resource="words/νόστος.md", title="Example", author="test")],
+        body="A claim here[^src-1]",
+    )
+
+    rendered = render(concept, path=path)
+
+    assert "([words/νόστος.md](../words/νόστος.md))" in rendered
+
+
 def test_render_does_not_duplicate_footnote_when_body_already_has_one():
     """A body already ending with a footnote-definitions block (e.g. from
     read() reconstructing a ConceptFile that was rendered once before) must

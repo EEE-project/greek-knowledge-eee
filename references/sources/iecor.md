@@ -14,18 +14,18 @@ and machine-readable: the data is curated at `github.com/lexibank/iecor`
 in CLDF (Cross-Linguistic Data Format), with versioned releases archived
 on Zenodo (DOI `10.5281/zenodo.8089434`), licensed **CC BY 4.0**.
 
-`okfbuild/sources/iecor_client.py`'s `load_iecor_cognates()` loads
+[`okfbuild/sources/iecor_client.py`](../../okfbuild/sources/iecor_client.py)'s `load_iecor_cognates()` loads
 `data/iecor/ancient_greek_cognates.tsv` — a small, committed extract of
 IE-CoR's 172 "Greek: Ancient" (Language_ID 110) forms, joined through
 its `cognates.csv`/`cognatesets.csv` to each headword's root and the
 editors' own justification prose (extraction is a one-off, not a
 checked-in script — the TSV itself is the committed artifact, same as
-[`references/sources/diorisis.md`](diorisis.md)'s `catalog.tsv`). Wired
+[[`references/sources/diorisis.md`](diorisis.md)](diorisis.md)'s `catalog.tsv`). Wired
 into `SourceBundle.iecor` and consumed by
-`okfbuild/concepts/lexical_entry.py`'s `_etymology_section()`, which
+[`okfbuild/concepts/lexical_entry.py`](../../okfbuild/concepts/lexical_entry.py)'s `_etymology_section()`, which
 cites it in the "## Etymology" section alongside (never replacing) a
 hand-curated Beekes citation — see
-[`references/sources/beekes.md`](beekes.md). Coverage is real but
+[[`references/sources/beekes.md`](beekes.md)](beekes.md). Coverage is real but
 narrow: IE-CoR's own wordlist is a fixed ~170-word comparative-linguistics
 core vocabulary (body parts, numbers, colors, common verbs), not a
 general lexicon — checked against this KB's 634 built `words/*.md`

@@ -1,10 +1,10 @@
 # Literary Text and Literary Translation entries
 
 One subdirectory per literary work, each with its own `index.md`. Hand-
-authored, not built by `okfbuild/pipeline.py` — there is no live source to
+authored, not built by [`okfbuild/pipeline.py`](../okfbuild/pipeline.py) — there is no live source to
 query for a human translation, and no generator step at all: copy
-[`templates/literary-text.md`](../templates/literary-text.md) for a work's
-original or [`templates/literary-translation.md`](../templates/literary-translation.md)
+[[`templates/literary-text.md`](../templates/literary-text.md)](../templates/literary-text.md) for a work's
+original or [[`templates/literary-translation.md`](../templates/literary-translation.md)](../templates/literary-translation.md)
 for a translation, fill it in, and run `uv run greek-knowledge check` to
 validate it.
 `kavafis_ithaki/` is authored this way already; `odyssey/` still has its

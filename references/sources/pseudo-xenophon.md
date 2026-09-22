@@ -11,7 +11,7 @@ traditionally transmitted among Xenophon's works but not actually by him
 an explicitly anti-democratic aristocratic viewpoint.
 
 **Status: integrated.** Cited directly (via `extra_sources`) in
-`culture/slavery-in-ancient-athens.md` for its I.10 remark on slaves and
+[`culture/slavery-in-ancient-athens.md`](../../culture/slavery-in-ancient-athens.md) for its I.10 remark on slaves and
 metics, and the practical impossibility of telling them apart from
 citizens by dress alone.
 

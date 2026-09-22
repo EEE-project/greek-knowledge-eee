@@ -7,7 +7,7 @@ Concept files for Cavafy's «Ithaka» (1911), which has 36 lines: `text.md`
 authored for this entry in the same manner).
 Each interlinear file echoes its Greek source line as an
 `<!-- el: ... -->` comment ahead of the plain word-by-word gloss, same
-convention `texts/odyssey/` uses with `<!-- grc: ... -->`.
+convention [`texts/odyssey/`](../odyssey/index.md) uses with `<!-- grc: ... -->`.
 
 Named literary translations are known -- Valassopoulo (1924),
 Keeley/Sherrard (1975), Barnstone (2006) and Mendelsohn (2012) into English,
@@ -20,11 +20,11 @@ link where one exists, and a one-line copyright-status note, no poem text --
 see the `{en,ru}.md` files' own reference sections.
 
 Two recorded readings of the poem (Greek, Grigoris Valtinos; English, Sean Connery)
-are linked from [`culture/cavafy.md`](../../culture/cavafy.md), not from here.
+are linked from [[`culture/cavafy.md`](../../culture/cavafy.md)](../../culture/cavafy.md), not from here.
 
-Hand-authored directly (see [`templates/literary-text.md`](../../templates/literary-text.md),
-[`templates/literary-translation.md`](../../templates/literary-translation.md) and
-`templates/README.md`), not generated -- `uv run greek-knowledge
+Hand-authored directly (see [[`templates/literary-text.md`](../../templates/literary-text.md)](../../templates/literary-text.md),
+[[`templates/literary-translation.md`](../../templates/literary-translation.md)](../../templates/literary-translation.md) and
+[`templates/README.md`](../../templates/README.md)), not generated -- `uv run greek-knowledge
 check` validates frontmatter shape here the same way it does for
 grammar/ and culture/.
 

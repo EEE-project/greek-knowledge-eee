@@ -21,7 +21,7 @@ sources:
   author: K. P. Cavafy
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-21T15:29:38.851212+00:00'
+  at: '2026-09-22T08:49:42.105702+00:00'
 periods_spanned:
   from: koine
   to: modern
@@ -29,7 +29,7 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-22'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
@@ -38,7 +38,7 @@ verified:
     (proper names, elisions, accented enclitics and Koine forms aside)'
   - 'source PDF (ΑΤΤΙΚΙΣΤΑ verb-tense table): its optative paragraph'
   - 'texts/kavafis_ithaki/text.md: the quoted verse (στ. 2)'
-  body_sha256: 796d7bea7ece4484ad78e5840c7388bd3b341fb6ad7c6e1f365a9933db03032a
+  body_sha256: a90f8f394855cd2a59effe16fd0a39b00a0ed091941786189a10d13c78400038
 ---
 ## The optative's decline and its Modern Greek replacements
 
@@ -47,4 +47,4 @@ The Ancient Greek optative (**εὐκτική**) declined unevenly through κο�
 Cavafy's «Ithaka» (1911) opens with one of these: **να εύχεσαι να 'ναι μακρύς ο δρόμος** — "wish that the road be long." **εύχεσαι** is the 2nd-singular present of **εύχομαι** "I wish," a deponent verb (middle morphology, active meaning) here governing a further να-clause (**να 'ναι**, elided from **να είναι**). However the opening **να** is best parsed, the line is built entirely from ordinary modern subjunctive machinery, not any inherited optative form.[^cavafy-ithaka-text]
 
 [^atticist-koine-tenses]: Verb tenses in Hellenistic Koine and Modern Greek, ΑΤΤΙΚΙΣΤΑ (t.me/atticist) (https://t.me/atticist)
-[^cavafy-ithaka-text]: Kavafis, Ithaka (1-36) — original text (el), K. P. Cavafy (texts/kavafis_ithaki/text.md)
+[^cavafy-ithaka-text]: Kavafis, Ithaka (1-36) — original text (el), K. P. Cavafy ([texts/kavafis_ithaki/text.md](../texts/kavafis_ithaki/text.md))

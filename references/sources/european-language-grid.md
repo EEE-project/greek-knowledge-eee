@@ -2,7 +2,7 @@
 
 `https://live.european-language-grid.eu/catalogue/` — similar in kind to
 CLARIN's Virtual Language Observatory (see
-[`references/sources/clarin-vlo.md`](clarin-vlo.md)): a searchable
+[[`references/sources/clarin-vlo.md`](clarin-vlo.md)](clarin-vlo.md)): a searchable
 catalogue of language resources and language-technology tools, not a
 single dataset. Part of the broader ELG platform, whose focus leans more
 toward callable NLP services (translation, NER, and similar tools) than
