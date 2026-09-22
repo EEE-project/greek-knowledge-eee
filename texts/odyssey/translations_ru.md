@@ -2,7 +2,8 @@
 type: Literary Translation
 title: Odyssey (I.1-21, IX.19-38) — ru translations
 description: 'ru translations of Odyssey I.1-21, IX.19-38: подстрочник, Жуковский,
-  Вересаев.'
+  Вересаев, plus a citation-only reference to G. Starikovsky''s 2025 translation
+  (taktovnik, not hexameter), which is in copyright -- not reproduced here.'
 tags: []
 level: []
 sources:
@@ -28,6 +29,7 @@ translators:
 - подстрочник
 - Жуковский
 - Вересаев
+- Стариковский (reference only)
 verified: []
 status: draft
 ---
@@ -100,10 +102,18 @@ status: draft
 
 ---
 
+## Стариковский (reference only, not reproduced)
+
+<!-- Г. Стариковский, Одиссея (пер. с др.-греч., тактовик вместо гексаметра; изд-во «Носорог» совместно с Jaromír Hladík press, ноябрь 2025). Переводчик жив, перевод под охраной авторского права, НЕ воспроизводится здесь. Страница издательства: https://nosorog.media/tproduct/418921535-224857850372-odisseya -->
+
+*(Not reproduced here -- in copyright; see the citation above.)*
+
+---
+
 ## Жуковский
 
 <!-- Жуковский В. А. Одиссея. СПб., 1849 · https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский) -->
-<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
+<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9)) · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
 
 ### Odyss. I.1–5
 
@@ -176,7 +186,7 @@ status: draft
 ## Вересаев
 
 <!-- Вересаев В. В. Одиссея. М., 1953 · http://az.lib.ru/g/gomer/text_0070.shtml -->
-<!-- **Вересаев, 1953** · [az.lib.ru ↗](http://az.lib.ru/g/gomer/text_0070.shtml) · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод -->
+<!-- **Вересаев, 1953** · [az.lib.ru ↗](http://az.lib.ru/g/gomer/text_0070.shtml) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110540/http://az.lib.ru/g/gomer/text_0070.shtml) · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод -->
 
 ### Odyss. I.1–5
 

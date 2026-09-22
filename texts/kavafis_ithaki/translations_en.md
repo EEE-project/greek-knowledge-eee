@@ -157,18 +157,18 @@ already will it you-understood the Ithacas what they-mean.
 
 ## Keeley/Sherrard (reference only, not reproduced)
 
-<!-- E. Keeley and P. Sherrard, C. P. Cavafy: Collected Poems (Princeton University Press, 1975). Translation copyright © 1975, 1992 by Edmund Keeley and Philip Sherrard -- in copyright, so NOT reproduced here. The Poetry Foundation reprints it "with permission of Princeton University Press": https://www.poetryfoundation.org/poems/51296/ithaka-56d22eef917ec . Uncredited copies with wording changes circulate elsewhere (e.g. in the description of a YouTube reading by Sean Connery, and at the foot of the Levitov page cited in translations_ru.md); they are not cited. -->
+<!-- E. Keeley and P. Sherrard, C. P. Cavafy: Collected Poems (Princeton University Press, 1975). Translation copyright © 1975, 1992 by Edmund Keeley and Philip Sherrard -- in copyright, so NOT reproduced here. The Poetry Foundation reprints it "with permission of Princeton University Press": https://www.poetryfoundation.org/poems/51296/ithaka-56d22eef917ec (archived 22.09.2026: https://web.archive.org/web/20260922105052/https://www.poetryfoundation.org/poems/51296/ithaka-56d22eef917ec) . Uncredited copies with wording changes circulate elsewhere (e.g. in the description of a YouTube reading by Sean Connery, and at the foot of the Levitov page cited in translations_ru.md); they are not cited. -->
 
 *(Not reproduced here -- in copyright; see the citation above.)*
 
 ## Barnstone (reference only, not reproduced)
 
-<!-- A. Barnstone, The Collected Poems of C. P. Cavafy: A New Translation (W. W. Norton; 2006, per the review at https://thecaptivereader.com/2024/11/07/the-collected-poems-of-c-p-cavafy-translated-by-aliki-barnstone/). Presumptively still under copyright, so NOT reproduced here. Publisher page: https://wwnorton.com/books/The-Collected-Poems-of-C-P-Cavafy -->
+<!-- A. Barnstone, The Collected Poems of C. P. Cavafy: A New Translation (W. W. Norton; 2006, per the review at https://thecaptivereader.com/2024/11/07/the-collected-poems-of-c-p-cavafy-translated-by-aliki-barnstone/, archived 22.09.2026: https://web.archive.org/web/20260922105631/https://thecaptivereader.com/2024/11/07/the-collected-poems-of-c-p-cavafy-translated-by-aliki-barnstone/). Presumptively still under copyright, so NOT reproduced here. Publisher page: https://wwnorton.com/books/The-Collected-Poems-of-C-P-Cavafy (archived 22.09.2026: https://web.archive.org/web/20260922110224/https://wwnorton.com/books/The-Collected-Poems-of-C-P-Cavafy) -->
 
 *(Not reproduced here -- presumptively still under copyright; see the citation above.)*
 
 ## Mendelsohn (reference only, not reproduced)
 
-<!-- D. Mendelsohn, C. P. Cavafy: Complete Poems, translated with introduction and commentary (Penguin Random House, published 22 May 2012). Presumptively still under copyright, so NOT reproduced here. Publisher page: https://www.penguinrandomhouse.com/books/218091/complete-poems-of-c-p-cavafy-by-c-p-cavafy-translated-with-introduction-and-commentary-by-daniel-mendelsohn/ -->
+<!-- D. Mendelsohn, C. P. Cavafy: Complete Poems, translated with introduction and commentary (Penguin Random House, published 22 May 2012). Presumptively still under copyright, so NOT reproduced here. Publisher page: https://www.penguinrandomhouse.com/books/218091/complete-poems-of-c-p-cavafy-by-c-p-cavafy-translated-with-introduction-and-commentary-by-daniel-mendelsohn/ (archived 22.09.2026: https://web.archive.org/web/20260922110423/https://www.penguinrandomhouse.com/books/218091/complete-poems-of-c-p-cavafy-by-c-p-cavafy-translated-with-introduction-and-commentary-by-daniel-mendelsohn/) -->
 
 *(Not reproduced here -- presumptively still under copyright; see the citation above.)*

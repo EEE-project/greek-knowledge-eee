@@ -1,7 +1,9 @@
 ---
 type: Literary Translation
 title: Odyssey (I.1-21, IX.19-38) — el translations
-description: 'el translations of Odyssey I.1-21, IX.19-38: Πολυλάς, interlinear_el.'
+description: 'el translations of Odyssey I.1-21, IX.19-38: Πολυλάς, interlinear_el,
+  plus a citation-only reference to the Καζαντζάκης-Κακριδής translation (1965),
+  which is in copyright -- not reproduced here.'
 tags: []
 level: []
 sources:
@@ -26,13 +28,14 @@ language: el
 translators:
 - Πολυλάς
 - interlinear_el
+- Καζαντζάκης/Κακριδής (reference only)
 verified: []
 status: draft
 ---
 ## Πολυλάς
 
 <!-- Πολυλάς Ι. Ὀδύσσεια. Ἀθήνα, 1875 · https://www.openbook.gr/omirou-odysseia-metafrasi/ -->
-<!-- **Πολυλάς, 1875/1877** · I.1-21 [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · IX.19-38 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
+<!-- **Πολυλάς, 1875/1877** · I.1-21 [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · IX.19-38 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) (archived 22.09.2026: https://web.archive.org/web/20260922111612/https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
 
 ### Odyss. I.1–5
 
@@ -241,3 +244,11 @@ status: draft
 
 <!-- grc: ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι. -->
 που ο Ζευς μου ετοίμασε αφού έφυγα από Τροία.
+
+---
+
+## Καζαντζάκης/Κακριδής (reference only, not reproduced)
+
+<!-- Ν. Καζαντζάκης – Ι. Θ. Κακριδής, Ὁμήρου Ὀδύσσεια (πρώτη έκδοση: τυπ. Μ. Ρόδη, 1965· επανέκδοση: Ίδρυμα Μανόλη Τριανταφυλλίδη, 2015). Ο Καζαντζάκης πέθανε το 1957, ο Κακριδής το 1992 -- η μετάφραση παραμένει υπό πνευματικά δικαιώματα, ΔΕΝ αναπαράγεται εδώ. Επίσημη βιβλιογραφική αναφορά: https://www.kazantzaki.gr/gr/metafraseis/logotexnika-222 -->
+
+*(Not reproduced here -- in copyright; see the citation above.)*

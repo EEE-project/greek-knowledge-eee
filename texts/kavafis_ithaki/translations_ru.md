@@ -5,7 +5,7 @@ description: 'Russian renderings of Cavafy''s «Ithaka» (Ιθάκη, 1911), the
   poem (36 lines): a full interlinear подстрочник (στ. 1-23 from the kavafis_ithaki course,
   στ. 24-36 authored for this entry), plus citation-only
   references to seven published literary translations (Шмаков/Бродский, Ильинская
-  1984, Величанский, Колесов, Якушева, Некляев/Вланес, Левитов) not reproduced here
+  1984, Величанский, Колесов, Якушева, Некляев/Вланес, Левитов/Никонов) not reproduced here
   -- presumptively all still under copyright.'
 tags: []
 level: []
@@ -24,7 +24,7 @@ translators:
 - Колесов (reference only)
 - Якушева (reference only)
 - Некляев/Вланес (reference only)
-- Левитов (reference only)
+- Левитов/Никонов (reference only)
 verified: []
 status: draft
 ---
@@ -122,8 +122,8 @@ status: draft
 
 *(Not reproduced here -- presumptively still under copyright; see the citation above for where to read it.)*
 
-## Левитов (reference only, not reproduced)
+## Левитов/Никонов (reference only, not reproduced)
 
-<!-- Николай Левитов -- рифмованный стих. Текст: https://stihi.ru/2021/02/15/6272 -- современный/недавний перевод, предположительно под охраной авторского права; биографические данные переводчика независимо не проверены. -->
+<!-- Николай Левитов -- рифмованный стих; на странице stihi.ru автор подписан как Николай Никонов (аккаунт /avtor/nikons) -- независимо не проверено, какое из двух имён настоящее. Текст (архивная копия от 22.09.2026; страница ранее уже пропадала и позже была восстановлена, поэтому нельзя полагаться на доступность оригинала): https://web.archive.org/web/20260922100555/https://stihi.ru/2021/02/15/6272 (оригинал: https://stihi.ru/2021/02/15/6272) -- НЕ воспроизводится здесь: современный/недавний перевод, предположительно под охраной авторского права; биографические данные переводчика независимо не проверены. -->
 
 *(Not reproduced here -- presumptively still under copyright; see the citation above for where to read it.)*
