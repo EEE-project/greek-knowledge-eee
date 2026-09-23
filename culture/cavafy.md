@@ -58,8 +58,9 @@ generated:
 related_words:
 - νόστος
 related_lessons:
-- kavafis_ithaki/1
-- kavafis_ithaki/2
+- modern_greek/b1greeklanguageandculture/kavafis_ithaki/1
+- modern_greek/b1greeklanguageandculture/kavafis_ithaki/2
+- modern_greek/b1greeklanguageandculture/kavafis_ithaki/3-4
 dialect: []
 verified: []
 status: draft
