@@ -22,6 +22,14 @@ sources:
   resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 2'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
+- id: smyth-substantives
+  resource: https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.04.0007:part=2:chapter=13
+  title: A Greek Grammar for Colleges, Part II Ch. 13 (Substantives)
+  author: H. W. Smyth
+- id: smyth-vocative
+  resource: https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.04.0007:part=2:chapter=13:section=15
+  title: A Greek Grammar for Colleges, §233 (Vocative Singular, 2nd Declension)
+  author: H. W. Smyth
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
   at: '2026-09-23T10:22:48.339222+00:00'
@@ -41,8 +49,14 @@ Where the accent falls is lexical, not predictable purely from the ending: **π�
 
 Athenaze's own first examples keep to the nominative and accusative singular — **ὁ κλῆρος** (subject) and **τὸν κλῆρον** (direct object) — with gender marked by the article rather than guessable from the noun's own ending alone.[^athenaze-ch1]
 
-A handful of vocative peculiarities are worth noting early: θεός has no singular vocative in classical authors at all (the New Testament's ὦ θεέ is a later development); ἀδελφός more often takes ὦ ἄδελφε than the "regular" ὦ ἀδελφέ; and the vocative is sometimes replaced by the nominative outright, ὦ φίλος alongside ὦ φίλε.[^conspectus-i]
+A handful of vocative peculiarities are worth noting early: θεός has no distinct vocative form of its own — the nominative θεός is used in its place (ὦ θεός), with the New Testament's ὦ θεέ a later development;[^smyth-vocative] ἀδελφός more often takes ὦ ἄδελφε than the "regular" ὦ ἀδελφέ; and the vocative is sometimes replaced by the nominative outright, ὦ φίλος alongside ὦ φίλε.[^conspectus-i]
+
+## Second-declension feminines (the exception)
+
+A small set of nouns take the same endings (**-ος, -ου, -ῳ, -ον**) but are grammatically feminine, not masculine — the article and any agreeing adjective show feminine forms even though the noun's own ending looks masculine. The commonest are **ἡ ὁδός** "road, way," **ἡ νῆσος** "island," and **ἡ παρθένος** "maiden, girl": **ἡ καλὴ νῆσος**, "the beautiful island," not *ὁ καλός νῆσος*.[^smyth-substantives]
 
 [^conspectus-i]: CONSPECTVS GRAMMATICVS I, Palaestra (Sodalitas Litterarum) (lectures/resources.md)
 [^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)
 [^athenaze-ch2]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)
+[^smyth-substantives]: A Greek Grammar for Colleges, Part II Ch. 13 (Substantives), H. W. Smyth (https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.04.0007:part=2:chapter=13)
+[^smyth-vocative]: A Greek Grammar for Colleges, §233 (Vocative Singular, 2nd Declension), H. W. Smyth (https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.04.0007:part=2:chapter=13:section=15)
