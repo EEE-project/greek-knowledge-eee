@@ -2,10 +2,10 @@
 
 Concept files for Cavafy's «Ithaka» (1911), which has 36 lines: `text.md`
 (a Literary Text -- the Greek original itself, complete), `translations_en.md`
-(a freshly-authored interlinear gloss, complete), and `translations_ru.md`
-(a literal подстрочник, complete: στ. 1-23 are the kavafis_ithaki course's own text, στ. 24-36 were
+(interlinear_en, a freshly-authored interlinear gloss, complete), and `translations_ru.md`
+(interlinear_ru, a literal подстрочник, complete: στ. 1-23 are the kavafis_ithaki course's own text, στ. 24-36 were
 authored for this entry in the same manner).
-Each interlinear file echoes its Greek source line as an
+Each interlinear section echoes its Greek source line as an
 `<!-- el: ... -->` comment ahead of the plain word-by-word gloss, same
 convention [`texts/odyssey/`](../odyssey/index.md) uses with `<!-- grc: ... -->`.
 
@@ -34,6 +34,6 @@ grammar/ and culture/.
 uv run greek-knowledge query --type texts --work ithaka --language ru --full   # --language el/en for the others, comma-separated for several; drop it for all three
 cat texts/kavafis_ithaki/text.md                # the Greek original
 cat texts/kavafis_ithaki/translations_en.md     # English interlinear gloss + link to a published translation
-cat texts/kavafis_ithaki/translations_ru.md     # Russian подстрочник + links to published translations
-awk '/^## подстрочник/{f=1;next} /^## /{f=0} f' texts/kavafis_ithaki/translations_ru.md   # just the подстрочник
+cat texts/kavafis_ithaki/translations_ru.md     # interlinear_ru + links to published translations
+awk '/^## interlinear_ru/{f=1;next} /^## /{f=0} f' texts/kavafis_ithaki/translations_ru.md   # just the interlinear_ru section
 ```
