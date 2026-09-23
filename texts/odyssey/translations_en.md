@@ -772,6 +772,458 @@ but come let-me-tell you my return full-of-cares,
 <!-- grc: ὅν μοι Ζεὺς ἐφέηκεν ἀπὸ Τροίηθεν ἰόντι. -->
 which to-me Zeus sent from Troy departing.
 
+### Odyss. IX.39–46
+
+<!-- grc: Ἰλιόθεν με φέρων ἄνεμος Κικόνεσσι πέλασσεν, -->
+from-Ilion me carrying wind to-the-Cicones drove-near,
+
+<!-- grc: Ἰσμάρῳ. ἔνθα δ᾽ ἐγὼ πόλιν ἔπραθον, ὤλεσα δ᾽ αὐτούς: -->
+to-Ismarus. there and I city sacked, destroyed and them:
+
+<!-- grc: ἐκ πόλιος δ᾽ ἀλόχους καὶ κτήματα πολλὰ λαβόντες -->
+from city and wives and possessions many having-taken
+
+<!-- grc: δασσάμεθ᾽, ὡς μή τίς μοι ἀτεμβόμενος κίοι ἴσης. -->
+we-divided, so-that not anyone from-me being-deprived might-go of-equal-share.
+
+<!-- grc: ἔνθ᾽ ἦ τοι μὲν ἐγὼ διερῷ ποδὶ φευγέμεν ἡμέας -->
+then indeed I with-nimble foot to-flee us
+
+<!-- grc: ἠνώγεα, τοὶ δὲ μέγα νήπιοι οὐκ ἐπίθοντο. -->
+was-urging, but-they greatly foolish not obeyed.
+
+<!-- grc: ἔνθα δὲ πολλὸν μὲν μέθυ πίνετο, πολλὰ δὲ μῆλα -->
+and-there much indeed wine was-being-drunk, and-many sheep
+
+<!-- grc: ἔσφαζον παρὰ θῖνα καὶ εἰλίποδας ἕλικας βοῦς: -->
+they-were-slaughtering beside shore, and shambling-footed curved-horned cattle:
+
+### Odyss. IX.47–55
+
+<!-- grc: τόφρα δ᾽ ἄρ᾽ οἰχόμενοι Κίκονες Κικόνεσσι γεγώνευν, -->
+meanwhile then having-gone-off Cicones to-Cicones were-calling-out,
+
+<!-- grc: οἵ σφιν γείτονες ἦσαν, ἅμα πλέονες καὶ ἀρείους, -->
+who to-them neighbors were, both more-numerous and braver,
+
+<!-- grc: ἤπειρον ναίοντες, ἐπιστάμενοι μὲν ἀφ᾽ ἵππων -->
+mainland dwelling, knowing-how indeed from horses
+
+<!-- grc: ἀνδράσι μάρνασθαι καὶ ὅθι χρὴ πεζὸν ἐόντα. -->
+with-men to-fight, and where it-is-necessary on-foot being.
+
+<!-- grc: ἦλθον ἔπειθ᾽ ὅσα φύλλα καὶ ἄνθεα γίγνεται ὥρῃ, -->
+they-came then, as-many-as leaves and flowers come-to-be in-season,
+
+<!-- grc: ἠέριοι: τότε δή ῥα κακὴ Διὸς αἶσα παρέστη -->
+at-dawn: then indeed evil of-Zeus fate came-upon
+
+<!-- grc: ἡμῖν αἰνομόροισιν, ἵν᾽ ἄλγεα πολλὰ πάθοιμεν. -->
+us ill-fated, so-that pains many we-might-suffer.
+
+<!-- grc: στησάμενοι δ᾽ ἐμάχοντο μάχην παρὰ νηυσὶ θοῇσι, -->
+having-drawn-up and they-fought battle beside ships swift,
+
+<!-- grc: βάλλον δ᾽ ἀλλήλους χαλκήρεσιν ἐγχείῃσιν. -->
+they-were-striking and one-another with-bronze-tipped spears.
+
+### Odyss. IX.56–66
+
+<!-- grc: ὄφρα μὲν ἠὼς ἦν καὶ ἀέξετο ἱερὸν ἦμαρ, -->
+as-long-as dawn was and was-growing sacred day,
+
+<!-- grc: τόφρα δ᾽ ἀλεξόμενοι μένομεν πλέονάς περ ἐόντας. -->
+so-long defending-ourselves we-stood-firm, though-more-numerous being.
+
+<!-- grc: ἦμος δ᾽ ἠέλιος μετενίσσετο βουλυτόνδε, -->
+but-when sun was-turning-towards ox-loosing-time (evening),
+
+<!-- grc: καὶ τότε δὴ Κίκονες κλῖναν δαμάσαντες Ἀχαιούς. -->
+and then indeed Cicones turned-back, having-overpowered Achaeans.
+
+<!-- grc: ἓξ δ᾽ ἀφ᾽ ἑκάστης νηὸς ἐυκνήμιδες ἑταῖροι -->
+six and from each ship well-greaved comrades
+
+<!-- grc: ὤλονθ᾽: οἱ δ᾽ ἄλλοι φύγομεν θάνατόν τε μόρον τε. -->
+perished: and-the others we-escaped both-death and-doom.
+
+<!-- grc: ἔνθεν δὲ προτέρω πλέομεν ἀκαχήμενοι ἦτορ, -->
+and-from-there onward we-sailed, grieving in-heart,
+
+<!-- grc: ἄσμενοι ἐκ θανάτοιο, φίλους ὀλέσαντες ἑταίρους. -->
+glad from death, dear having-lost comrades.
+
+<!-- grc: οὐδ᾽ ἄρα μοι προτέρω νῆες κίον ἀμφιέλισσαι, -->
+and-not indeed my onward ships went, curved-at-both-ends,
+
+<!-- grc: πρίν τινα τῶν δειλῶν ἑτάρων τρὶς ἕκαστον ἀῦσαι, -->
+before someone of-the wretched comrades, thrice each, to-call-out,
+
+<!-- grc: οἳ θάνον ἐν πεδίῳ Κικόνων ὕπο δῃωθέντες. -->
+who died on plain, by-Cicones having-been-slain.
+
+### Odyss. IX.67–75
+
+<!-- grc: νηυσὶ δ᾽ ἐπῶρσ᾽ ἄνεμον Βορέην νεφεληγερέτα Ζεὺς -->
+and-upon-ships roused North-wind, cloud-gathering Zeus,
+
+<!-- grc: λαίλαπι θεσπεσίῃ, σὺν δὲ νεφέεσσι κάλυψε -->
+with-supernatural storm-blast, and-together-with clouds covered
+
+<!-- grc: γαῖαν ὁμοῦ καὶ πόντον: ὀρώρει δ᾽ οὐρανόθεν νύξ. -->
+earth together-and sea: had-risen and from-heaven night.
+
+<!-- grc: αἱ μὲν ἔπειτ᾽ ἐφέροντ᾽ ἐπικάρσιαι, ἱστία δέ σφιν -->
+they (ships) indeed then were-carried aslant, and-their sails
+
+<!-- grc: τριχθά τε καὶ τετραχθὰ διέσχισεν ἲς ἀνέμοιο. -->
+into-three and into-four tore-apart force of-wind.
+
+<!-- grc: καὶ τὰ μὲν ἐς νῆας κάθεμεν, δείσαντες ὄλεθρον, -->
+and them (sails) indeed into ships we-lowered, having-feared destruction,
+
+<!-- grc: αὐτὰς δ᾽ ἐσσυμένως προερέσσαμεν ἤπειρόνδε. -->
+and-them (ships) hastily we-rowed-forward toward-mainland.
+
+<!-- grc: ἔνθα δύω νύκτας δύο τ᾽ ἤματα συνεχὲς αἰεὶ -->
+there two nights and-two days continuously always
+
+<!-- grc: κείμεθ᾽, ὁμοῦ καμάτῳ τε καὶ ἄλγεσι θυμὸν ἔδοντες. -->
+we-lay, together with-toil and with-pains heart consuming.
+
+### Odyss. IX.76–81
+
+<!-- grc: ἀλλ᾽ ὅτε δὴ τρίτον ἦμαρ ἐυπλόκαμος τέλεσ᾽ Ἠώς, -->
+but when indeed third day fair-tressed brought-to-completion Dawn,
+
+<!-- grc: ἱστοὺς στησάμενοι ἀνά θ᾽ ἱστία λεύκ᾽ ἐρύσαντες -->
+masts having-set-up, and-up white-sails having-hoisted,
+
+<!-- grc: ἥμεθα, τὰς δ᾽ ἄνεμός τε κυβερνῆταί τ᾽ ἴθυνον. -->
+we-sat, and-them both-wind and-helmsmen were-steering.
+
+<!-- grc: καί νύ κεν ἀσκηθὴς ἱκόμην ἐς πατρίδα γαῖαν: -->
+and now indeed unharmed I-would-have-reached fatherland:
+
+<!-- grc: ἀλλά με κῦμα ῥόος τε περιγνάμπτοντα Μάλειαν -->
+but me wave and-current, rounding Malea,
+
+<!-- grc: καὶ Βορέης ἀπέωσε, παρέπλαγξεν δὲ Κυθήρων. -->
+and North-wind drove-off, and-drove-astray past-Cythera.
+
+### Odyss. IX.82–90
+
+<!-- grc: ἔνθεν δ᾽ ἐννῆμαρ φερόμην ὀλοοῖς ἀνέμοισιν -->
+and-from-there for-nine-days I-was-borne by-destructive winds
+
+<!-- grc: πόντον ἐπ᾽ ἰχθυόεντα: ἀτὰρ δεκάτῃ ἐπέβημεν -->
+over fish-teeming sea: but on-tenth (day) we-landed
+
+<!-- grc: γαίης Λωτοφάγων, οἵ τ᾽ ἄνθινον εἶδαρ ἔδουσιν. -->
+on-land of-Lotus-eaters, who flowery food eat.
+
+<!-- grc: ἔνθα δ᾽ ἐπ᾽ ἠπείρου βῆμεν καὶ ἀφυσσάμεθ᾽ ὕδωρ, -->
+and-there onto mainland we-stepped and we-drew water,
+
+<!-- grc: αἶψα δὲ δεῖπνον ἕλοντο θοῇς παρὰ νηυσὶν ἑταῖροι. -->
+and-quickly meal took, beside swift ships, comrades.
+
+<!-- grc: αὐτὰρ ἐπεὶ σίτοιό τ᾽ ἐπασσάμεθ᾽ ἠδὲ ποτῆτος, -->
+but when of-food we-partook and of-drink,
+
+<!-- grc: δὴ τοτ᾽ ἐγὼν ἑτάρους προΐειν πεύθεσθαι ἰόντας, -->
+then indeed I comrades sent-forth to-inquire, going,
+
+<!-- grc: οἵ τινες ἀνέρες εἶεν ἐπὶ χθονὶ σῖτον ἔδοντες -->
+what-sort-of men might-be, upon this-land grain-eating
+
+<!-- grc: ἄνδρε δύω κρίνας, τρίτατον κήρυχ᾽ ἅμ᾽ ὀπάσσας. -->
+two-men having-chosen, as-third a-herald together having-sent-along.
+
+### Odyss. IX.91–104
+
+<!-- grc: οἱ δ᾽ αἶψ᾽ οἰχόμενοι μίγεν ἀνδράσι Λωτοφάγοισιν: -->
+and-they quickly having-gone mingled with-men Lotus-eaters:
+
+<!-- grc: οὐδ᾽ ἄρα Λωτοφάγοι μήδονθ᾽ ἑτάροισιν ὄλεθρον -->
+and-not indeed Lotus-eaters were-plotting for-comrades destruction
+
+<!-- grc: ἡμετέροις, ἀλλά σφι δόσαν λωτοῖο πάσασθαι. -->
+our, but to-them gave of-lotus to-taste.
+
+<!-- grc: τῶν δ᾽ ὅς τις λωτοῖο φάγοι μελιηδέα καρπόν, -->
+and-of-them whoever of-lotus might-eat honey-sweet fruit,
+
+<!-- grc: οὐκέτ᾽ ἀπαγγεῖλαι πάλιν ἤθελεν οὐδὲ νέεσθαι, -->
+no-longer to-report back wished, nor to-return,
+
+<!-- grc: ἀλλ᾽ αὐτοῦ βούλοντο μετ᾽ ἀνδράσι Λωτοφάγοισι -->
+but there wished, among men Lotus-eaters,
+
+<!-- grc: λωτὸν ἐρεπτόμενοι μενέμεν νόστου τε λαθέσθαι. -->
+lotus grazing-on, to-remain and of-return to-forget.
+
+<!-- grc: τοὺς μὲν ἐγὼν ἐπὶ νῆας ἄγον κλαίοντας ἀνάγκῃ, -->
+them indeed I to ships led, weeping, by-force,
+
+<!-- grc: νηυσὶ δ᾽ ἐνὶ γλαφυρῇσιν ὑπὸ ζυγὰ δῆσα ἐρύσσας. -->
+and-in hollow ships under benches I-bound, having-dragged.
+
+<!-- grc: αὐτὰρ τοὺς ἄλλους κελόμην ἐρίηρας ἑταίρους -->
+but the others I-urged, trusty comrades,
+
+<!-- grc: σπερχομένους νηῶν ἐπιβαινέμεν ὠκειάων, -->
+hastening, of-ships to-board, swift,
+
+<!-- grc: μή πώς τις λωτοῖο φαγὼν νόστοιο λάθηται. -->
+lest somehow anyone of-lotus having-eaten, of-return should-forget.
+
+<!-- grc: οἱ δ᾽ αἶψ᾽ εἴσβαινον καὶ ἐπὶ κληῖσι καθῖζον, -->
+and-they quickly were-boarding, and upon benches were-sitting,
+
+<!-- grc: ἑξῆς δ᾽ ἑζόμενοι πολιὴν ἅλα τύπτον ἐρετμοῖς. -->
+and-in-order seated, gray sea were-striking with-oars.
+
+### Odyss. IX.105–115
+
+<!-- grc: ἔνθεν δὲ προτέρω πλέομεν ἀκαχήμενοι ἦτορ: -->
+and-from-there onward we-sailed, grieving in-heart:
+
+<!-- grc: Κυκλώπων δ᾽ ἐς γαῖαν ὑπερφιάλων ἀθεμίστων -->
+and-to land of-Cyclopes, arrogant, lawless,
+
+<!-- grc: ἱκόμεθ᾽, οἵ ῥα θεοῖσι πεποιθότες ἀθανάτοισιν -->
+we-came, who indeed trusting in-immortal gods
+
+<!-- grc: οὔτε φυτεύουσιν χερσὶν φυτὸν οὔτ᾽ ἀρόωσιν, -->
+neither plant with-hands a-plant, nor plow,
+
+<!-- grc: ἀλλὰ τά γ᾽ ἄσπαρτα καὶ ἀνήροτα πάντα φύονται, -->
+but these, unsown and unplowed, all grow,
+
+<!-- grc: πυροὶ καὶ κριθαὶ ἠδ᾽ ἄμπελοι, αἵ τε φέρουσιν -->
+wheat and barley and vines, which bear
+
+<!-- grc: οἶνον ἐριστάφυλον, καί σφιν Διὸς ὄμβρος ἀέξει. -->
+wine rich-clustered, and for-them Zeus's rain makes-grow.
+
+<!-- grc: τοῖσιν δ᾽ οὔτ᾽ ἀγοραὶ βουληφόροι οὔτε θέμιστες, -->
+and-for-them neither counsel-bearing assemblies nor laws,
+
+<!-- grc: ἀλλ᾽ οἵ γ᾽ ὑψηλῶν ὀρέων ναίουσι κάρηνα -->
+but they, of-high mountains, inhabit peaks
+
+<!-- grc: ἐν σπέσσι γλαφυροῖσι, θεμιστεύει δὲ ἕκαστος -->
+in hollow caves, and-each-one lays-down-law
+
+<!-- grc: παίδων ἠδ᾽ ἀλόχων, οὐδ᾽ ἀλλήλων ἀλέγουσιν. -->
+over-children and wives, and-not for-one-another do-they-care.
+
+### Odyss. IX.116–129
+
+<!-- grc: νῆσος ἔπειτα λάχεια παρὲκ λιμένος τετάνυσται, -->
+an-island, moreover, wooded, alongside harbor stretches,
+
+<!-- grc: γαίης Κυκλώπων οὔτε σχεδὸν οὔτ᾽ ἀποτηλοῦ, -->
+of-land of-Cyclopes neither near nor far,
+
+<!-- grc: ὑλήεσσ᾽: ἐν δ᾽ αἶγες ἀπειρέσιαι γεγάασιν -->
+wooded: and-on-it goats countless live,
+
+<!-- grc: ἄγριαι: οὐ μὲν γὰρ πάτος ἀνθρώπων ἀπερύκει, -->
+wild: for indeed no path of-men keeps-away,
+
+<!-- grc: οὐδέ μιν εἰσοιχνεῦσι κυνηγέται, οἵ τε καθ᾽ ὕλην -->
+nor it do-visit hunters, who through woods
+
+<!-- grc: ἄλγεα πάσχουσιν κορυφὰς ὀρέων ἐφέποντες. -->
+sufferings endure, peaks of-mountains roaming-over.
+
+<!-- grc: οὔτ᾽ ἄρα ποίμνῃσιν καταΐσχεται οὔτ᾽ ἀρότοισιν, -->
+nor indeed with-flocks is-it-occupied nor with-plowed-fields,
+
+<!-- grc: ἀλλ᾽ ἥ γ᾽ ἄσπαρτος καὶ ἀνήροτος ἤματα πάντα -->
+but it, unsown and unplowed, always
+
+<!-- grc: ἀνδρῶν χηρεύει, βόσκει δέ τε μηκάδας αἶγας. -->
+of-men is-bereft, but-feeds bleating goats.
+
+<!-- grc: οὐ γὰρ Κυκλώπεσσι νέες πάρα μιλτοπάρῃοι, -->
+for not to-Cyclopes ships are-at-hand, red-painted,
+
+<!-- grc: οὐδ᾽ ἄνδρες νηῶν ἔνι τέκτονες, οἵ κε κάμοιεν -->
+nor men among-them ship-builders, who might-build
+
+<!-- grc: νῆας ἐυσσέλμους, αἵ κεν τελέοιεν ἕκαστα -->
+well-benched ships, which might-accomplish each-thing
+
+<!-- grc: ἄστε᾽ ἐπ᾽ ἀνθρώπων ἱκνεύμεναι, οἷά τε πολλὰ -->
+to-cities of-men reaching, such-as many
+
+<!-- grc: ἄνδρες ἐπ᾽ ἀλλήλους νηυσὶν περόωσι θάλασσαν: -->
+men to-one-another by-ships cross sea:
+
+<!-- grc: οἵ κέ σφιν καὶ νῆσον ἐυκτιμένην ἐκάμοντο. -->
+who would-have for-them island well-settled made.
+
+### Odyss. IX.130–145
+
+<!-- grc: οὐ μὲν γάρ τι κακή γε, φέροι δέ κεν ὥρια πάντα: -->
+for it-is not at-all bad, and-would-bear all seasonable-crops:
+
+<!-- grc: ἐν μὲν γὰρ λειμῶνες ἁλὸς πολιοῖο παρ᾽ ὄχθας -->
+for-on-it indeed meadows, of-gray sea along banks,
+
+<!-- grc: ὑδρηλοὶ μαλακοί: μάλα κ᾽ ἄφθιτοι ἄμπελοι εἶεν. -->
+well-watered, soft: very would-be unfailing vines.
+
+<!-- grc: ἐν δ᾽ ἄροσις λείη: μάλα κεν βαθὺ λήιον αἰεὶ -->
+and-in-it plowland smooth: very-would deep grain always
+
+<!-- grc: εἰς ὥρας ἀμῷεν, ἐπεὶ μάλα πῖαρ ὑπ᾽ οὖδας. -->
+in-due-season they-would-reap, since very rich beneath soil.
+
+<!-- grc: ἐν δὲ λιμὴν ἐύορμος, ἵν᾽ οὐ χρεὼ πείσματός ἐστιν, -->
+and-in-it harbor good-for-mooring, where there-is-no need of-hawser,
+
+<!-- grc: οὔτ᾽ εὐνὰς βαλέειν οὔτε πρυμνήσι᾽ ἀνάψαι, -->
+nor anchor-stones to-cast, nor stern-cables to-fasten,
+
+<!-- grc: ἀλλ᾽ ἐπικέλσαντας μεῖναι χρόνον εἰς ὅ κε ναυτέων -->
+but having-beached, to-wait for-time until of-sailors
+
+<!-- grc: θυμὸς ἐποτρύνῃ καὶ ἐπιπνεύσωσιν ἀῆται. -->
+heart urges, and blow winds.
+
+<!-- grc: αὐτὰρ ἐπὶ κρατὸς λιμένος ῥέει ἀγλαὸν ὕδωρ, -->
+but at head of-harbor flows bright water,
+
+<!-- grc: κρήνη ὑπὸ σπείους: περὶ δ᾽ αἴγειροι πεφύασιν. -->
+a-spring beneath cave: and-around poplars have-grown.
+
+<!-- grc: ἔνθα κατεπλέομεν, καί τις θεὸς ἡγεμόνευεν -->
+there we-sailed-in, and some god was-guiding
+
+<!-- grc: νύκτα δι᾽ ὀρφναίην, οὐδὲ προυφαίνετ᾽ ἰδέσθαι: -->
+through murky night, nor did-it-appear to-see:
+
+<!-- grc: ἀὴρ γὰρ περὶ νηυσὶ βαθεῖ᾽ ἦν, οὐδὲ σελήνη -->
+for mist around ships deep was, nor moon
+
+<!-- grc: οὐρανόθεν προύφαινε, κατείχετο δὲ νεφέεσσιν. -->
+from-heaven shone-forth, but-was-covered by-clouds.
+
+### Odyss. IX.146–160
+
+<!-- grc: ἔνθ᾽ οὔ τις τὴν νῆσον ἐσέδρακεν ὀφθαλμοῖσιν, -->
+there no-one the island saw with-eyes,
+
+<!-- grc: οὔτ᾽ οὖν κύματα μακρὰ κυλινδόμενα προτὶ χέρσον -->
+nor then long waves rolling toward shore
+
+<!-- grc: εἰσίδομεν, πρὶν νῆας ἐυσσέλμους ἐπικέλσαι. -->
+did-we-see, before well-benched ships to-run-aground.
+
+<!-- grc: κελσάσῃσι δὲ νηυσὶ καθείλομεν ἱστία πάντα, -->
+and-when-beached ships, we-took-down all sails,
+
+<!-- grc: ἐκ δὲ καὶ αὐτοὶ βῆμεν ἐπὶ ῥηγμῖνι θαλάσσης: -->
+and-out ourselves too we-stepped upon breaking-surf of-sea:
+
+<!-- grc: ἔνθα δ᾽ ἀποβρίξαντες ἐμείναμεν Ἠῶ δῖαν. -->
+and-there having-fallen-asleep, we-awaited divine Dawn.
+
+<!-- grc: ἦμος δ᾽ ἠριγένεια φάνη ῥοδοδάκτυλος Ἠώς, -->
+and-when early-born appeared rosy-fingered Dawn,
+
+<!-- grc: νῆσον θαυμάζοντες ἐδινεόμεσθα κατ᾽ αὐτήν. -->
+island marveling-at, we-roamed-about over it.
+
+<!-- grc: ὦρσαν δὲ νύμφαι, κοῦραι Διὸς αἰγιόχοιο, -->
+and-roused nymphs, daughters of-Zeus aegis-bearing,
+
+<!-- grc: αἶγας ὀρεσκῴους, ἵνα δειπνήσειαν ἑταῖροι. -->
+mountain-dwelling goats, so-that might-dine comrades.
+
+<!-- grc: αὐτίκα καμπύλα τόξα καὶ αἰγανέας δολιχαύλους -->
+at-once curved bows and long-shafted javelins
+
+<!-- grc: εἱλόμεθ᾽ ἐκ νηῶν, διὰ δὲ τρίχα κοσμηθέντες -->
+we-took from-ships, and-having-arranged-ourselves into-three-groups
+
+<!-- grc: βάλλομεν: αἶψα δ᾽ ἔδωκε θεὸς μενοεικέα θήρην. -->
+we-shot: and-quickly gave god satisfying game.
+
+<!-- grc: νῆες μέν μοι ἕποντο δυώδεκα, ἐς δὲ ἑκάστην -->
+ships indeed me followed, twelve, and-for each
+
+<!-- grc: ἐννέα λάγχανον αἶγες: ἐμοὶ δὲ δέκ᾽ ἔξελον οἴῳ. -->
+nine fell-as-share goats: but-to-me alone ten they-set-apart.
+
+### Odyss. IX.161–169
+
+<!-- grc: ὣς τότε μὲν πρόπαν ἦμαρ ἐς ἠέλιον καταδύντα -->
+so then the-whole day, until sun setting,
+
+<!-- grc: ἥμεθα δαινύμενοι κρέα τ᾽ ἄσπετα καὶ μέθυ ἡδύ: -->
+we-sat feasting on-meat abundant and wine sweet:
+
+<!-- grc: οὐ γάρ πω νηῶν ἐξέφθιτο οἶνος ἐρυθρός, -->
+for not-yet of-ships had-run-out wine red,
+
+<!-- grc: ἀλλ᾽ ἐνέην: πολλὸν γὰρ ἐν ἀμφιφορεῦσιν ἕκαστοι -->
+but there-was-in: for-much, in jars, each
+
+<!-- grc: ἠφύσαμεν Κικόνων. ἱερὸν πτολίεθρον ἑλόντες. -->
+we-had-drawn, of-Cicones, sacred citadel having-taken.
+
+<!-- grc: Κυκλώπων δ᾽ ἐς γαῖαν ἐλεύσσομεν ἐγγὺς ἐόντων, -->
+and-to land of-Cyclopes we-looked, being nearby,
+
+<!-- grc: καπνόν τ᾽ αὐτῶν τε φθογγὴν ὀίων τε καὶ αἰγῶν. -->
+and-their smoke and sound of-sheep and of-goats.
+
+<!-- grc: ἦμος δ᾽ ἠέλιος κατέδυ καὶ ἐπὶ κνέφας ἦλθε, -->
+and-when sun set and darkness came,
+
+<!-- grc: δὴ τότε κοιμήθημεν ἐπὶ ῥηγμῖνι θαλάσσης. -->
+then indeed we-lay-down-to-sleep on breaking-surf of-sea.
+
+### Odyss. IX.170–180
+
+<!-- grc: ἦμος δ᾽ ἠριγένεια φάνη ῥοδοδάκτυλος Ἠώς, -->
+and-when early-born appeared rosy-fingered Dawn,
+
+<!-- grc: καὶ τότ᾽ ἐγὼν ἀγορὴν θέμενος μετὰ πᾶσιν ἔειπον: -->
+and then I, assembly having-held, among all spoke:
+
+<!-- grc: ‘ἄλλοι μὲν νῦν μίμνετ᾽, ἐμοὶ ἐρίηρες ἑταῖροι: -->
+"the-rest now remain, my trusty comrades:
+
+<!-- grc: αὐτὰρ ἐγὼ σὺν νηί τ᾽ ἐμῇ καὶ ἐμοῖς ἑτάροισιν -->
+but I, with my-ship and my comrades,
+
+<!-- grc: ἐλθὼν τῶνδ᾽ ἀνδρῶν πειρήσομαι, οἵ τινές εἰσιν, -->
+having-gone, of-these men will-make-trial, who they-are,
+
+<!-- grc: ἤ ῥ᾽ οἵ γ᾽ ὑβρισταί τε καὶ ἄγριοι οὐδὲ δίκαιοι, -->
+whether they are-insolent and wild and-not just,
+
+<!-- grc: ἦε φιλόξεινοι, καί σφιν νόος ἐστὶ θεουδής. -->
+or hospitable, and-their mind is god-fearing."
+
+<!-- grc: ὣς εἰπὼν ἀνὰ νηὸς ἔβην, ἐκέλευσα δ᾽ ἑταίρους -->
+so having-spoken, aboard ship I-went, and-I-ordered comrades
+
+<!-- grc: αὐτούς τ᾽ ἀμβαίνειν ἀνά τε πρυμνήσια λῦσαι. -->
+themselves to-embark and stern-cables to-loose.
+
+<!-- grc: οἱ δ᾽ αἶψ᾽ εἴσβαινον καὶ ἐπὶ κληῖσι καθῖζον, -->
+and-they quickly were-boarding, and upon benches were-sitting,
+
+<!-- grc: ἑξῆς δ᾽ ἑζόμενοι πολιὴν ἅλα τύπτον ἐρετμοῖς. -->
+and-in-order seated, gray sea were-striking with-oars.
+
 ---
 
 ## Fitzgerald (reference only, not reproduced)
