@@ -12,7 +12,7 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: wikipedia-klitiki
@@ -21,7 +21,7 @@ sources:
   author: Wikipedia
 generated:
   by: human
-  at: '2026-09-21T15:29:39.069840+00:00'
+  at: '2026-09-23T10:29:28.546192+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -29,7 +29,7 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
@@ -38,7 +38,11 @@ verified:
     (proper names, elisions, accented enclitics and Koine forms aside)'
   - el.wikipedia 'Κλητική'
   - 'corpus: Νίκο and Γιώργο attested, Νίκε and Γιώργε not'
-  body_sha256: 57652fcd4572bc273300837ec88bb4063ff69a5a7006d020436cce1e5372a5b4
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 4140ee8319efb280d07a18fbab4e7f98a1a7cad3bbb0a960c949025dae124a54
 ---
 ## Addressing someone directly: no article, and -ος alone changes
 
@@ -50,5 +54,5 @@ The vocative addresses someone directly and never takes an article. For every ge
 
 Masculine nouns in **-ος** are the one class with a distinct vocative ending, **-ε**: **ο φίλος → φίλε!** -- though masculine given names in **-ος** usually take the accusative-like **-ο** instead: **Νίκο!**, **Γιώργο!**.[^livexp-grammar][^wikipedia-klitiki] Masculine nouns in **-ας** or **-ης** instead just drop the final **-ς**, the same pattern as their ordinary accusative: **ο Κώστας → Κώστα!**, **ο μαθητής → μαθητή!**.[^livexp-grammar] Any adjective modifying a vocative noun inflects to match it.[^livexp-grammar]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^wikipedia-klitiki]: Κλητική, Wikipedia (https://el.wikipedia.org/wiki/Κλητική)

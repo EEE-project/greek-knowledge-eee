@@ -12,7 +12,7 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-a
@@ -22,7 +22,7 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T15:29:38.326926+00:00'
+  at: '2026-09-23T10:29:28.198757+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -30,14 +30,18 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
     against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
   - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
     (proper names, elisions, accented enclitics and Koine forms aside)'
-  body_sha256: 7cbbfb9846a543ce8ba1cb50a8f27deb1b71b9db0a3d852bf81eee82ca3f32f1
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: a5941332cb7868dee7e62774add323d1bd5bfddf5b7eecb74c3dc2dc69847444
 ---
 ## The accusative's core jobs: direct objects, prepositions, and time spans
 
@@ -49,5 +53,5 @@ Clock time itself, by contrast, is expressed with **σε** + accusative rather t
 
 These uses are best learned attached to the governing verb or preposition itself, rather than by trying to map them onto a fixed, single "accusative = X" rule the way a Russian- or Latin-trained learner might expect.[^livexp-grammar]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 2, 6, 7, 8, 10)

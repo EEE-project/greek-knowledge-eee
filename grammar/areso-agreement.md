@@ -12,7 +12,7 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-a
@@ -22,7 +22,7 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T15:29:38.387836+00:00'
+  at: '2026-09-23T10:29:28.252971+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -30,14 +30,18 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
     against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
   - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
     (proper names, elisions, accented enclitics and Koine forms aside)'
-  body_sha256: f746086dbee4a1b329cd0c79ff13cae4b7da52a534850bb2a1ca87edcbb44a78
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 0f256e1fee0c5749bb5be8a626997cf09d7273ebcb4bb9ecee516dc1aed233fa
 ---
 ## What is pleasing agrees with αρέσει, not the person who likes it
 
@@ -53,5 +57,5 @@ To express liking an activity rather than a thing, **αρέσει** governs a **
 
 Two related impersonal constructions share the same genitive-clitic-plus-nominative-subject shape as **αρέσει** but cover a narrower, more concrete sense each. **μου πάει** "it suits me" judges how something looks on the wearer: **Σου πάει!** "It suits you!" **μου κάνει** "it fits/works for me" judges practical fit: **Δε μου κάνει.** "It doesn't fit me."[^ellinika-a]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 9, 16)

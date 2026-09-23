@@ -11,12 +11,12 @@ level:
 - advanced
 sources:
 - id: sophocles-1887
-  resource: analisys/sophocles-byzantine-morphology.md
+  resource: lectures/resources.md
   title: Greek Lexicon of the Roman and Byzantine Periods (1887)
   author: E. A. Sophocles
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-16T08:20:04.883085+00:00'
+  at: '2026-09-23T10:22:47.674022+00:00'
 periods_spanned:
   from: attic
   to: byzantine
@@ -36,4 +36,4 @@ Both of the verbs cited below are common Homeric verbs of coming/going and seein
 
 ἔρχομαι's later 3rd-plural aorist ἤλθοσαν occurs alongside classical ἦλθον[^sophocles-1887]
 
-[^sophocles-1887]: Greek Lexicon of the Roman and Byzantine Periods (1887), E. A. Sophocles (analisys/sophocles-byzantine-morphology.md)
+[^sophocles-1887]: Greek Lexicon of the Roman and Byzantine Periods (1887), E. A. Sophocles (lectures/resources.md)

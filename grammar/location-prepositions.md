@@ -12,7 +12,7 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-a
@@ -27,7 +27,7 @@ sources:
   author: Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis
 generated:
   by: human
-  at: '2026-09-21T15:29:38.744893+00:00'
+  at: '2026-09-23T10:29:28.390239+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -35,7 +35,7 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
@@ -44,7 +44,11 @@ verified:
     (proper names, elisions, accented enclitics and Koine forms aside)'
   - Ελληνικά Β΄ p. 53 (εδώ κοντά)
   - Ελληνικά Α΄ Unit 10 (Πάω στον Πειραιά)
-  body_sha256: 4a9df286f03a72ac9ba53c811add95689435b456191dddaff85c83ba49d9882f
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 8c201327ef0381b9b0eedf624e31fbc2bc5de4f7ee28ebafa12b338b7246e8b1
 ---
 ## General location: only σε, refined by adverbs when it needs to be specific
 
@@ -63,6 +67,6 @@ Before a noun, an adverb of place takes a following preposition (usually **σε*
 
 All of the above describes static location -- where something *is*. A destination is usually given with **σε** as well: **Πάω στον Πειραιά.** "I'm going to Piraeus."[^ellinika-a] The preposition **προς** "toward, in the direction of" names a direction of movement rather than a place reached: **Οδηγώ προς την Πάφο.** "I'm driving toward Paphos."[^livexp-grammar]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 2, 6, 10, 11)
 [^ellinika-b-ch3]: Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 3: p. 53, Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis (created_with_eee/modern_greek/ellinika_b/chapter_03/chapter_03_extracted_content.md)

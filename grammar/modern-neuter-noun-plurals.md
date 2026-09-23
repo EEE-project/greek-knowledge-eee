@@ -12,7 +12,7 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-a
@@ -22,7 +22,7 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T15:29:38.778206+00:00'
+  at: '2026-09-23T10:29:28.426351+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -30,7 +30,7 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
@@ -39,7 +39,11 @@ verified:
     (proper names, elisions, accented enclitics and Koine forms aside)'
   - 'LiveXP: the stress stays in most cases'
   - 'corpus: μαθήματα, προβλήματα, ονόματα attested'
-  body_sha256: 25371541f2a54a40f5fb7076bc75e830fa760c675d6734d6b5e6f78dd263756c
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 5668e37caa70f43b2a487cf597a47ebc4f0c35fa99f1996a540432b881592d26
 ---
 ## Neuter plurals: the article and the ending both move to -α
 
@@ -49,5 +53,5 @@ Loanwords borrowed into the neuter gender are often indeclinable and keep the sa
 
 A fourth pattern covers neuter nouns ending in **-ος** -- not to be confused with the *feminine* **-ος** class in [noun-declension-nom-acc-singular](noun-declension-nom-acc-singular.md) -- which form their plural in **-η** rather than **-α**: **το μέρος → τα μέρη** "place(s)" (**σε πολλά μέρη της Ελλάδας** "in many parts of Greece") and **το λάθος → τα λάθη** "mistake(s)" (**Διορθώνω τα λάθη.**).[^ellinika-a]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 8, 10, 13)

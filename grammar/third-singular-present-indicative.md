@@ -11,23 +11,23 @@ level:
 - beginner
 sources:
 - id: conspectus-i
-  resource: lectures/ancient_greek/CONSPECTVS GRAMMATICVS I_graecus.pdf
+  resource: lectures/resources.md
   title: CONSPECTVS GRAMMATICVS I
   author: Palaestra (Sodalitas Litterarum)
 - id: athenaze-ch1
-  resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 1'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T17:08:14.725171+00:00'
+  at: '2026-09-23T10:22:48.394259+00:00'
 periods_spanned:
   from: attic
   to: attic
 dialect:
 - attic
-status: draft
 verified: []
+status: draft
 ---
 ## Third person singular, present indicative
 
@@ -35,5 +35,5 @@ The present indicative's third-person-singular ending is **-ει**, added direct
 
 εἰμί's own paradigm preserves its prehistory: **εἰμί** itself goes back to *ἐσ-μί, **εἶ** "(you) are" to *ἐσ-σί, and the plural **εἰσί(ν)** "(they) are" to *σ-ενσί.[^conspectus-i]
 
-[^conspectus-i]: CONSPECTVS GRAMMATICVS I, Palaestra (Sodalitas Litterarum) (lectures/ancient_greek/CONSPECTVS GRAMMATICVS I_graecus.pdf)
-[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md)
+[^conspectus-i]: CONSPECTVS GRAMMATICVS I, Palaestra (Sodalitas Litterarum) (lectures/resources.md)
+[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)

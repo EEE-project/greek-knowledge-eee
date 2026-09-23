@@ -15,17 +15,16 @@ sources:
   title: History of the Peloponnesian War
   author: Thucydides
 - id: athenaze-ch1-ext
-  resource: lectures/Palaestra/ancient_greek.2026.summer/1. Athenaze. Vol. 1. Chpt.
-    1.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 1 (extended transcription)'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 - id: athenaze-ch1
-  resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 1'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-16T08:16:00.799951+00:00'
+  at: '2026-09-23T10:22:48.460487+00:00'
 related_words: []
 related_lessons:
 - ancient_greek/palaestra/athenaze-vol1/chapter-1
@@ -48,5 +47,5 @@ Athenian citizens were divided into four property classes. The *pentacosiomedimn
 Sources present farmers as the pillar of Athenian democracy — strong, hardworking, thrifty, plain, yet sensible people, often contrasted in Aristophanes's comedies against ambitious politicians, impoverished aristocrats, and grasping merchants.[^athenaze-ch1]
 
 [^thucydides-2-14]: History of the Peloponnesian War, Thucydides (Thucydides, History of the Peloponnesian War, II.14)
-[^athenaze-ch1-ext]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1 (extended transcription), M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/1. Athenaze. Vol. 1. Chpt. 1.md)
-[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md)
+[^athenaze-ch1-ext]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1 (extended transcription), M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)
+[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)

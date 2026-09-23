@@ -11,12 +11,12 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 generated:
   by: human
-  at: '2026-09-21T15:29:39.095753+00:00'
+  at: '2026-09-23T10:29:28.563296+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -24,14 +24,18 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
     against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
   - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
     (proper names, elisions, accented enclitics and Koine forms aside)'
-  body_sha256: a9522d8b23d48894c8b914b28e6a73179e6c1be07848a73225d3073c26102d59
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 984db61b024eb3971d1e493f810e1da25fd43075c4153f774dedc04b7353c9a4
 ---
 ## Clitics attach in opposite directions to a verb and to a noun
 
@@ -41,4 +45,4 @@ The weak accusative/object forms are **με, σε, τον, την, το, μας,
 
 The imperative reverses the ordinary verb-clitic order (the clitic attaches after an affirmative command) and follows its own separate rules -- see [imperative-mood-and-clitics](imperative-mood-and-clitics.md).[^livexp-grammar]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)

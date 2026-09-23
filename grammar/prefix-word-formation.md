@@ -12,12 +12,12 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 generated:
   by: human
-  at: '2026-09-21T15:29:38.928890+00:00'
+  at: '2026-09-23T10:29:28.497805+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -25,7 +25,7 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
@@ -34,7 +34,11 @@ verified:
     (proper names, elisions, accented enclitics and Koine forms aside)'
   - 'el.wiktionary: παρατρώω and παρακοιμάμαι exist'
   - 'corpus: the example words attested; εξάρτητος not'
-  body_sha256: 2b2f5504495606c0a2541e81b8ea74668c706956be782516b75d17f34d36d114
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 313466f3480e4a22f3dc6aefe770132aba5f832329901df2fca94efcca050dc8
 ---
 ## Prefixes shift a verb's meaning in regular, learnable ways
 
@@ -46,4 +50,4 @@ Spatial/directional: **ανα-** "up, again" (**βαίνω** go → **αναβα
 
 **ξανά-** is different from the rest: it comes from the adverb **ξανά** "again" and attaches directly to the verb (like English *re-*): **γράφω** write → **ξαναγράφω** write again.[^livexp-grammar]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)

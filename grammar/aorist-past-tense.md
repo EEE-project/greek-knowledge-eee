@@ -14,7 +14,7 @@ level:
 - B1
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-b-ch6
@@ -28,7 +28,7 @@ sources:
   author: Wikipedia
 generated:
   by: human
-  at: '2026-09-21T15:29:38.371040+00:00'
+  at: '2026-09-23T10:29:28.235351+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -36,7 +36,7 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
@@ -47,7 +47,11 @@ verified:
   - 'en.wikipedia ''Modern Greek grammar'': the augment rule'
   - 'Ελληνικά Β΄ p. 93: table of irregular aorists'
   - 'corpus: μιλήσανε attested and μίλησανε not; the deponent aorists attested'
-  body_sha256: 0ea5cba2f38a51930e3ae623cccd605c607016b93d6f80b3e8c5173a481b41dd
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 35ee5f578243471f0736cf343dd653b14f323e523e26e1fb1c7f13396da2e41b
 ---
 ## The aorist: built from the simple-future stem, not the present
 
@@ -59,6 +63,6 @@ A number of common, high-frequency verbs have an irregular aorist stem, in some 
 
 Most deponent/passive verbs in **-ομαι** and **-άμαι** form their aorist with **-στηκα**, **-θηκα** or **-τηκα** instead: **εργάζομαι → εργάστηκα**, **κοιμάμαι → κοιμήθηκα**, **σκέφτομαι → σκέφτηκα**, **θυμάμαι → θυμήθηκα**, **φοβάμαι → φοβήθηκα**.[^livexp-grammar]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-b-ch6]: Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 6: p. 93, Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis (created_with_eee/modern_greek/ellinika_b/chapter_06/chapter_06_extracted_content.md)
 [^wikipedia-mg-grammar]: Modern Greek grammar, Wikipedia (https://en.wikipedia.org/wiki/Modern_Greek_grammar)

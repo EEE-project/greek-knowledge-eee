@@ -13,7 +13,7 @@ level:
 - B1
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-b-ch8
@@ -28,7 +28,7 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T15:29:38.582093+00:00'
+  at: '2026-09-23T10:29:28.308472+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -36,7 +36,7 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
@@ -45,7 +45,11 @@ verified:
     (proper names, elisions, accented enclitics and Koine forms aside)'
   - LiveXP future-stem tables
   - 'corpus: αλλάξω, φωνάξω, γελάσω, ξεχάσω, κοιτάξω attested; αλλάσω, φωνάσω not'
-  body_sha256: 8f0091ead64636825a0aeeda02c8fa1c9beb8fa65557b05487663c83558dcec9
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: d78c4966ccd9551dbf29ebb683ca3a4c271032bf6c9c53cae6b1882023600c55
 ---
 ## θα distinguishes ongoing future from a single, bounded event
 
@@ -63,6 +67,6 @@ A handful of very common verbs use the identical form for both aspects: **είμ
 
 Common time markers for the future include **αύριο/μεθαύριο** "tomorrow/the day after tomorrow," **σε λίγο** "shortly," and **την επόμενη εβδομάδα** "next week": **Θα περάσω αύριο μετά τις 3:00.** "I'll drop by tomorrow after 3:00."[^ellinika-a]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-b-ch8]: Ελληνικά Β΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδο Β1 (Εκδόσεις Πατάκη, 2012), Chapter 8: p. 126-127, Eirini Pathiaki, Giorgos Simopoulos, Giorgos Tourlis (created_with_eee/modern_greek/ellinika_b/chapter_08/chapter_08_extracted_content.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 7, 9, 14, 15, 17)

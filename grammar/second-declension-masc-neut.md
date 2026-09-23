@@ -11,27 +11,27 @@ level:
 - beginner
 sources:
 - id: conspectus-i
-  resource: lectures/ancient_greek/CONSPECTVS GRAMMATICVS I_graecus.pdf
+  resource: lectures/resources.md
   title: CONSPECTVS GRAMMATICVS I
   author: Palaestra (Sodalitas Litterarum)
 - id: athenaze-ch1
-  resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 1'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 - id: athenaze-ch2
-  resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 2'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T17:08:14.723525+00:00'
+  at: '2026-09-23T10:22:48.339222+00:00'
 periods_spanned:
   from: attic
   to: attic
 dialect:
 - attic
-status: draft
 verified: []
+status: draft
 ---
 ## The 2nd declension (ὁ ἄνθρωπος / τὸ δένδρον-type nouns)
 
@@ -43,6 +43,6 @@ Athenaze's own first examples keep to the nominative and accusative singular —
 
 A handful of vocative peculiarities are worth noting early: θεός has no singular vocative in classical authors at all (the New Testament's ὦ θεέ is a later development); ἀδελφός more often takes ὦ ἄδελφε than the "regular" ὦ ἀδελφέ; and the vocative is sometimes replaced by the nominative outright, ὦ φίλος alongside ὦ φίλε.[^conspectus-i]
 
-[^conspectus-i]: CONSPECTVS GRAMMATICVS I, Palaestra (Sodalitas Litterarum) (lectures/ancient_greek/CONSPECTVS GRAMMATICVS I_graecus.pdf)
-[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md)
-[^athenaze-ch2]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt2.md)
+[^conspectus-i]: CONSPECTVS GRAMMATICVS I, Palaestra (Sodalitas Litterarum) (lectures/resources.md)
+[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)
+[^athenaze-ch2]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)

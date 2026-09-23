@@ -12,7 +12,7 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-a
@@ -26,7 +26,7 @@ sources:
   author: Wikipedia
 generated:
   by: human
-  at: '2026-09-21T15:29:38.912058+00:00'
+  at: '2026-09-23T10:29:28.482498+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -34,14 +34,18 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
     against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
   - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
     (proper names, elisions, accented enclitics and Koine forms aside)'
-  body_sha256: b9c37a52b9846cea62c859935def91c56d11b1780ac7c3f7b1af78bfc3291cb8
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: fc21bf90056b31c810938c34c7b4efb40ebb35cffb0dc3958837b381d8a6e76b
 ---
 ## Possessives follow the noun; δικός adds emphasis
 
@@ -53,6 +57,6 @@ In that last example, two different **τους** appear side by side: the first 
 
 Adding a weak possessive to a noun already accented on its antepenult (three syllables from the end) adds a second stress, on the noun's own final syllable, rather than moving the original one: **το νόημα** "the meaning" → **το νόημά του** "its meaning" -- the noun ends up carrying two accents at once, not one shifted accent.[^wikipedia-tonismos] The textbook applies the same second-accent rule to verbs before a weak pronoun (**Κοίταξέ με.**, **Διάβασέ την.**; see [imperative-mood-and-clitics](imperative-mood-and-clitics.md)).[^ellinika-a]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 2, 11, 17)
 [^wikipedia-tonismos]: Τονισμός, Wikipedia (https://el.wikipedia.org/wiki/Τονισμός)

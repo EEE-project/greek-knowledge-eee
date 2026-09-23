@@ -10,13 +10,12 @@ level:
 - beginner
 sources:
 - id: athenaze-ch1-ext
-  resource: lectures/Palaestra/ancient_greek.2026.summer/1. Athenaze. Vol. 1. Chpt.
-    1.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 1 (extended transcription)'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-16T08:16:00.794284+00:00'
+  at: '2026-09-23T10:22:48.469433+00:00'
 related_words: []
 related_lessons:
 - ancient_greek/palaestra/athenaze-vol1/chapter-1
@@ -39,4 +38,4 @@ status: draft
 
 **The Peloponnesian War:** war between Athens and the Peloponnesian League breaks out in 431 BC. Plague strikes Athens and Pericles dies, 430-429 BC. Aristophanes stages *Acharnians* in 425 BC. A fragile peace holds in 421 BC; the Sicilian expedition (415 BC) fails disastrously by 413 BC, reigniting the war outright, which ends with Athens's surrender in 404 BC. Thucydides writes his *History of the Peloponnesian War* covering these events.[^athenaze-ch1-ext]
 
-[^athenaze-ch1-ext]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1 (extended transcription), M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/1. Athenaze. Vol. 1. Chpt. 1.md)
+[^athenaze-ch1-ext]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1 (extended transcription), M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)

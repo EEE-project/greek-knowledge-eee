@@ -11,8 +11,7 @@ level:
 - beginner
 sources:
 - id: athenaze-ch2-ext
-  resource: lectures/Palaestra/ancient_greek.2026.summer/1. Athenaze. Vol. 1. Chpt.
-    2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 2 (extended transcription)'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 - id: pseudo-xenophon-ath-pol-1-10
@@ -20,12 +19,12 @@ sources:
   title: Constitution of the Athenians
   author: Pseudo-Xenophon
 - id: athenaze-ch2
-  resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 2'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T17:08:15.075857+00:00'
+  at: '2026-09-23T10:22:48.533396+00:00'
 related_words: []
 related_lessons:
 - ancient_greek/palaestra/athenaze-vol1/chapter-2
@@ -34,8 +33,8 @@ dialect:
 periods_spanned:
   from: attic
   to: attic
-status: draft
 verified: []
+status: draft
 ---
 ## Slavery in ancient Athens
 
@@ -49,6 +48,6 @@ Not all slaves were treated inhumanely. A 5th-century writer (Pseudo-Xenophon) r
 
 The slave in Athenaze's own story, **Ξανθίας** (Xanthias), takes his name from **ξανθός** "fair-haired, blond" — a typical name for a slave of Thracian or northern origin.[^athenaze-ch2]
 
-[^athenaze-ch2-ext]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2 (extended transcription), M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/1. Athenaze. Vol. 1. Chpt. 2.md)
+[^athenaze-ch2-ext]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2 (extended transcription), M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)
 [^pseudo-xenophon-ath-pol-1-10]: Constitution of the Athenians, Pseudo-Xenophon (Pseudo-Xenophon, Constitution of the Athenians, I.10)
-[^athenaze-ch2]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt2.md)
+[^athenaze-ch2]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)

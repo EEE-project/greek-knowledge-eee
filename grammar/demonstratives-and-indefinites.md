@@ -13,7 +13,7 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-a
@@ -23,7 +23,7 @@ sources:
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 generated:
   by: human
-  at: '2026-09-21T15:29:38.520419+00:00'
+  at: '2026-09-23T10:29:28.289115+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -31,14 +31,18 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
     against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
   - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
     (proper names, elisions, accented enclitics and Koine forms aside)'
-  body_sha256: e0ed3fdc32d6448bb5cd9d4affcebd8145ac1d7bb317abde8d41d3d077e17cb8
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 5396a98be62250b4d7984aae630b529db763b7e3f574e5f4d8d4f181eb19ef4c
 ---
 ## "This" and "that" keep the article: αυτός ο υπολογιστής
 
@@ -50,5 +54,5 @@ In the accusative singular the pronoun shows the same final **-ν** as the artic
 
 **κανένας, καμία/καμιά, κανένα** is already introduced in Unit 9; in a question it stands for "some/any," as in the textbook's suggestions **Πάμε να πιούμε κανέναν καφέ;** "Shall we go for a coffee?" and **Θέλετε να δούμε καμιά ταινία;** "Would you like us to see a film?" -- see [kanenas-tipota](kanenas-tipota.md) for the fuller picture, including its negative reading.[^ellinika-a]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητες 9, 16, 19)

@@ -20,12 +20,12 @@ sources:
     (Εκδόσεις Πατάκη, 2010)'
   author: Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 generated:
   by: human
-  at: '2026-09-21T15:29:38.641454+00:00'
+  at: '2026-09-23T10:29:28.345696+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -33,7 +33,7 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
@@ -42,7 +42,11 @@ verified:
     (proper names, elisions, accented enclitics and Koine forms aside)'
   - 'Ελληνικά Α΄ Unit 17: the printed elided forms Κλείσ'' τον, Γράψ'' τες, Στείλ''
     το'
-  body_sha256: d4744f5c61ba44706d4d6695aa68e9283969679e702163ab2b9f07b87df17694
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 7a6252fca19cb558b569d25be9d53f9a6e87e28258ab84b1d28a16a91e56f852
 ---
 ## The imperative: two endings, a negative built on the subjunctive, and a clitic that changes sides
 
@@ -53,4 +57,4 @@ A weak pronoun *follows* an affirmative imperative, the reverse of its usual pla
 A negative command is not a negated imperative: it is **μη(ν)** plus the subjunctive form, i.e. the **να**-clause with the **να** dropped -- the textbook sets **να μη διαβάσεις** equal to **μη διαβάσεις**, just as it sets **να διαβάσεις** equal to **διάβασε**.[^ellinika-a] The weak pronoun goes back in front of the verb here: **Περίμενέ με.** but **Μη με περιμένεις.**; **Τηλεφώνησέ μου.** but **Μη μου τηλεφωνήσεις.**[^ellinika-a] The verb after **μη(ν)** can also be in the present-tense form, as in **Μην κάνεις**, **Μην έρχεσαι**, **Μην περιμένεις**[^livexp-grammar] and the textbook's **μη μου γράφετε**.[^ellinika-a]
 
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητα 17)
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)

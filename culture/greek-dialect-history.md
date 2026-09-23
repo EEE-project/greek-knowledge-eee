@@ -11,12 +11,12 @@ level:
 - beginner
 sources:
 - id: athenaze-ch1
-  resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 1'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T17:08:15.067011+00:00'
+  at: '2026-09-23T10:22:48.508889+00:00'
 related_words: []
 related_lessons:
 - ancient_greek/palaestra/athenaze-vol1/chapter-1
@@ -24,8 +24,8 @@ dialect: []
 periods_spanned:
   from: homeric
   to: koine
-status: draft
 verified: []
+status: draft
 ---
 ## From Indo-European to Koine
 
@@ -35,4 +35,4 @@ Contact with earlier local languages and later historical events split what was 
 
 The Attic dialect of Periclean-era Athens (5th c. BC) earned its later prestige — studied today simply as "Ancient Greek" — from the literary achievements of its great prose writers: Plato, Thucydides, Xenophon. After Alexander the Great's conquests (he died 323 BC), a common Greek — **ἡ κοινὴ διάλεκτος**, koine — spread across the Mediterranean as a language of trade and culture: based on Attic, but shorn of its most narrowly local features. Byzantine and Modern Greek both developed, in essence, out of this koine — though a purist literary movement, Atticism, kept returning to the cleaner 5th-century Attic for centuries afterward.[^athenaze-ch1]
 
-[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md)
+[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)

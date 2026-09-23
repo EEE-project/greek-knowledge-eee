@@ -11,23 +11,23 @@ level:
 - beginner
 sources:
 - id: conspectus-iii
-  resource: lectures/ancient_greek/CONSPECTVS GRAMMATICVS III_graecus.pdf
+  resource: lectures/resources.md
   title: CONSPECTVS GRAMMATICVS III
   author: Palaestra (Sodalitas Litterarum)
 - id: athenaze-ch1
-  resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 1'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T17:08:14.730760+00:00'
+  at: '2026-09-23T10:22:47.646164+00:00'
 periods_spanned:
   from: attic
   to: attic
 dialect:
 - attic
-status: draft
 verified: []
+status: draft
 ---
 ## Adjective declension: 3-termination, 2-termination, and μέγας/πολύς
 
@@ -37,5 +37,5 @@ verified: []
 
 Articles and adjectives agree with the noun they modify in gender, number, and case: **ὁ καλὸς ἀγρός** (masculine singular nominative), **τὸν μικρὸν οἶκον** (masculine singular accusative) — the same rule that governs the predicate adjective after "to be," as in **Ὁ κλῆρός ἐστι μικρός**.[^athenaze-ch1]
 
-[^conspectus-iii]: CONSPECTVS GRAMMATICVS III, Palaestra (Sodalitas Litterarum) (lectures/ancient_greek/CONSPECTVS GRAMMATICVS III_graecus.pdf)
-[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt1-corrected-v2.md)
+[^conspectus-iii]: CONSPECTVS GRAMMATICVS III, Palaestra (Sodalitas Litterarum) (lectures/resources.md)
+[^athenaze-ch1]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 1, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)

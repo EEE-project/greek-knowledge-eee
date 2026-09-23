@@ -11,23 +11,23 @@ level:
 - beginner
 sources:
 - id: athenaze-ch2
-  resource: lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt2.md
+  resource: lectures/resources.md
   title: 'Athenaze: Introduzione al greco antico, Vol. I, Ch. 2'
   author: M. Balme, G. Lawall, L. Miraglia, T. F. Bórri
 - id: conspectus-ii
-  resource: lectures/Palaestra/ancient_greek.2026.summer/CONSPECTVS GRAMMATICVS II_graecus.pdf
+  resource: lectures/resources.md
   title: CONSPECTVS GRAMMATICVS II
   author: Palaestra (Sodalitas Litterarum)
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-15T17:08:14.728043+00:00'
+  at: '2026-09-23T10:22:48.302179+00:00'
 periods_spanned:
   from: attic
   to: attic
 dialect:
 - attic
-status: draft
 verified: []
+status: draft
 ---
 ## Present imperative active
 
@@ -37,5 +37,5 @@ Compound verbs built on εἰμί keep the same suppletive imperative but move t
 
 Negative commands use **μή**, not οὐ: **Μὴ λάμβανε τὸ ἄροτρον** "don't take the plow!," **Μὴ ἀργὸς ἴσθι** "don't be lazy!," **Μὴ καθεῦδε** "don't sleep!".[^athenaze-ch2]
 
-[^athenaze-ch2]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/Palaestra/ancient_greek.2026.summer/athenaze-vol1-chpt2.md)
-[^conspectus-ii]: CONSPECTVS GRAMMATICVS II, Palaestra (Sodalitas Litterarum) (lectures/Palaestra/ancient_greek.2026.summer/CONSPECTVS GRAMMATICVS II_graecus.pdf)
+[^athenaze-ch2]: Athenaze: Introduzione al greco antico, Vol. I, Ch. 2, M. Balme, G. Lawall, L. Miraglia, T. F. Bórri (lectures/resources.md)
+[^conspectus-ii]: CONSPECTVS GRAMMATICVS II, Palaestra (Sodalitas Litterarum) (lectures/resources.md)

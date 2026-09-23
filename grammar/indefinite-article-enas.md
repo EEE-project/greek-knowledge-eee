@@ -12,7 +12,7 @@ level:
 - A2
 sources:
 - id: livexp-grammar
-  resource: /home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md
+  resource: lectures/resources.md
   title: LiveXP Modern Greek grammar notes
   author: LiveXP course notes
 - id: ellinika-a
@@ -27,7 +27,7 @@ sources:
   author: Wikipedia
 generated:
   by: human
-  at: '2026-09-21T15:29:38.668423+00:00'
+  at: '2026-09-23T10:29:28.365169+00:00'
 periods_spanned:
   from: modern
   to: modern
@@ -35,14 +35,18 @@ dialect: []
 status: draft
 verified:
 - by: claude-sonnet-5 (AI review at the maintainer's request; not a human sign-off)
-  at: '2026-09-21'
+  at: '2026-09-23'
   against:
   - read in full, statement by statement
   - 'three independent AI reviews (ChatGPT, Perplexity, Gemini): every objection checked
     against the textbook pages, the source PDF, Wikipedia or the real-text corpus'
   - 'real-text corpus audit: every monotonic Greek word in the bold examples attested
     (proper names, elisions, accented enclitics and Koine forms aside)'
-  body_sha256: ef972162e1bd459f83f5468932e1a240d50f70234d85ef9ea22818c8bb12d83b
+  - 're-pinned after a mechanical resource-path refactor: diffed byte-for-byte against
+    the text this record was originally verified against, confirmed the only change
+    is the sources[].resource citation path (moved to lectures/resources.md), no prose/claim
+    change'
+  body_sha256: 70f787cc596deaca99b3fe43ba4f6de31c90bc703cc68f37dca128ef859b9d2a
 ---
 ## The indefinite article: forms of ένας
 
@@ -58,6 +62,6 @@ The textbook sets the three accusatives side by side: **Θέλω έναν χυμ
 
 The tables give the indefinite article in the singular only: a plural noun simply stands bare, as in the textbook's shopping phrase **Δύο χυμούς, τρεις σοκολάτες και τέσσερα παγωτά.**[^ellinika-a]
 
-[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (/home/sadov/work/greek/lectures/LiveXP/Γραμμστική.md)
+[^livexp-grammar]: LiveXP Modern Greek grammar notes, LiveXP course notes (lectures/resources.md)
 [^ellinika-a]: Ελληνικά Α΄: Μέθοδος εκμάθησης της ελληνικής ως ξένης γλώσσας, Επίπεδα Α1-Α2 (Εκδόσεις Πατάκη, 2010), Γιώργος Σιμόπουλος, Ειρήνη Παθιάκη, Ρίτα Κανελλοπούλου, Αγλαΐα Παυλοπούλου (Ελληνικά Α - Επίπεδα Α1-Α2 - 2015.pdf, Ενότητα 8)
 [^wikipedia-teliko-ni]: Τελικό νι (citing Φιλιππάκη-Warburton κ.ά., Γραμματική Ε΄ & ΣΤ΄ Δημοτικού, 2012, σ. 55), Wikipedia (https://el.wikipedia.org/wiki/Τελικό_νι)
