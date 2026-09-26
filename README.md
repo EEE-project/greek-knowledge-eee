@@ -251,6 +251,13 @@ usage; Cultural Context may additionally carry an optional `periods_spanned`
 additions. See [`okfbuild/okf.py`](okfbuild/okf.py) (added in section-02-okf-writer) for
 the exact schema.
 
+A concept file's own explanatory prose -- the narrative that states and
+supports a claim -- is plain English. Citations (author names, book/video
+titles, bibliographic entries) and quoted source texts (the actual Greek/
+Russian/etc. original-language material being analyzed, translated, or
+cited as a usage example) are exempt; that's also the only place
+non-English script is expected to appear outside a headword itself.
+
 
 ## Sources
 
