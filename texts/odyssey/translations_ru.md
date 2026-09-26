@@ -2,8 +2,8 @@
 type: Literary Translation
 title: Odyssey (I.1-21, IX.19-180) — ru translations
 description: 'ru translations of Odyssey I.1-21, IX.19-180: подстрочник, Жуковский,
-  Вересаев, plus a citation-only reference to G. Starikovsky''s 2025 translation
-  (taktovnik, not hexameter), which is in copyright -- not reproduced here.'
+  Вересаев, plus a citation-only reference to G. Starikovsky''s 2025 translation (taktovnik,
+  not hexameter), which is in copyright -- not reproduced here.'
 tags: []
 level: []
 sources:
@@ -21,7 +21,7 @@ sources:
   author: ed. A. T. Murray
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-09T05:50:24.837028+00:00'
+  at: '2026-09-26T14:50:31.074775+00:00'
 work: Odyssey
 passage: I.1-21, IX.19-180
 language: ru
@@ -108,7 +108,6 @@ status: draft
 
 <!-- grc: ἀντιθέῳ Ὀδυσῆι πάρος ἥν γαῖαν ἱκέσθαι. -->
 на богоравного Одиссея, пока он не прибыл на свою землю.
-
 
 ### Odyss. IX.19–24
 
@@ -699,7 +698,6 @@ status: draft
 
 <!-- grc: ἑξῆς δ᾽ ἑζόμενοι πολιὴν ἅλα τύπτον ἐρετμοῖς. -->
 и по порядку садясь, седое море стали бить веслами.
-
 
 ---
 

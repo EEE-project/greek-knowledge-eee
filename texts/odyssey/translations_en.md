@@ -1212,7 +1212,7 @@ whether they are-insolent and wild and-not just,
 <!-- grc: ἦε φιλόξεινοι, καί σφιν νόος ἐστὶ θεουδής. -->
 or hospitable, and-their mind is god-fearing."
 
-<!-- grc: ὣς εἰπὼν ἀνὰ νηὸς ἔβην, ἐκέλευσα δ᾽ ἑταίρους -->
+<!-- grc: ’ ὣς εἰπὼν ἀνὰ νηὸς ἔβην, ἐκέλευσα δ᾽ ἑταίρους -->
 so having-spoken, aboard ship I-went, and-I-ordered comrades
 
 <!-- grc: αὐτούς τ᾽ ἀμβαίνειν ἀνά τε πρυμνήσια λῦσαι. -->

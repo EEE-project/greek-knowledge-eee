@@ -92,7 +92,7 @@ def test_polylas_description_covers_both_editions():
 
     stanzas, descriptions = eee.parse_stanza_translations(body)
 
-    assert len(stanzas["Πολυλάς"]) == 8
+    assert len(stanzas["Πολυλάς"]) == 39  # 4 (I.1-21) + 35 (IX.19-180)
     assert "1875" in descriptions["Πολυλάς"]
     assert "1877" in descriptions["Πολυλάς"]
 
@@ -115,11 +115,33 @@ def test_pope_and_murray_each_cover_both_books():
     )
     stanzas, _ = eee.parse_stanza_translations(en_body, ref_prefix="### Odyss. ")
 
-    expected_refs = {"I.1–5", "I.6–10", "I.11–15", "I.16–21", "IX.19–24", "IX.25–28", "IX.29–33", "IX.34–38"}
-    assert len(stanzas["Pope"]) == 8
-    assert set(stanzas["Pope"]) == expected_refs
-    assert len(stanzas["Murray"]) == 8
-    assert set(stanzas["Murray"]) == expected_refs
+    # Pope groups IX.39-180 into 13 larger "(equivalent passage)" chunks
+    # (a loose poetic translation doesn't map 1:1 to the Greek line numbers).
+    pope_expected_refs = {
+        'I.11–15', 'I.16–21', 'I.1–5', 'I.6–10', 'IX.105–115 (equivalent passage)',
+        'IX.116–129 (equivalent passage)', 'IX.130–145 (equivalent passage)',
+        'IX.146–160 (equivalent passage)', 'IX.161–169 (equivalent passage)',
+        'IX.170–180 (equivalent passage)', 'IX.19–24', 'IX.25–28', 'IX.29–33',
+        'IX.34–38', 'IX.39–46 (equivalent passage)', 'IX.47–55 (equivalent passage)',
+        'IX.56–66 (equivalent passage)', 'IX.67–75 (equivalent passage)',
+        'IX.76–81 (equivalent passage)', 'IX.82–90 (equivalent passage)',
+        'IX.91–104 (equivalent passage)',
+    }
+    # Murray is line-precise even in the extension, so it gets many more,
+    # smaller stanzas instead.
+    murray_expected_refs = {
+        'I.11–15', 'I.16–21', 'I.1–5', 'I.6–10', 'IX.105–111', 'IX.112–115',
+        'IX.116–121', 'IX.122–124', 'IX.125–129', 'IX.130–133', 'IX.134–139',
+        'IX.140–141', 'IX.142–145', 'IX.146–151', 'IX.152–155', 'IX.156–160',
+        'IX.161–165', 'IX.166–169', 'IX.170–176', 'IX.177–180', 'IX.19–24',
+        'IX.25–28', 'IX.29–33', 'IX.34–38', 'IX.39–42', 'IX.43–46', 'IX.47–50',
+        'IX.51–55', 'IX.56–61', 'IX.62–66', 'IX.67–71', 'IX.72–75', 'IX.76–78',
+        'IX.79–81', 'IX.82–86', 'IX.87–90', 'IX.91–93', 'IX.94–97', 'IX.98–104',
+    }
+    assert len(stanzas["Pope"]) == 21
+    assert set(stanzas["Pope"]) == pope_expected_refs
+    assert len(stanzas["Murray"]) == 39
+    assert set(stanzas["Murray"]) == murray_expected_refs
 
 
 def test_interlinear_en_and_el_each_cover_both_books():
@@ -128,7 +150,13 @@ def test_interlinear_en_and_el_each_cover_both_books():
     handles them like any other translator; I.1-21 was the gap originally
     (only IX.19-38 existed, authored fresh 2026-09-14 to close it), the
     same class this test file already guards for Pope/Murray/подстрочник."""
-    expected_refs = {"I.1–5", "I.6–10", "I.11–15", "I.16–21", "IX.19–24", "IX.25–28", "IX.29–33", "IX.34–38"}
+    # Same grouping as Pope's IX.39-180 (both share the same 13-chunk split).
+    expected_refs = {
+        'I.11–15', 'I.16–21', 'I.1–5', 'I.6–10', 'IX.105–115', 'IX.116–129',
+        'IX.130–145', 'IX.146–160', 'IX.161–169', 'IX.170–180', 'IX.19–24',
+        'IX.25–28', 'IX.29–33', 'IX.34–38', 'IX.39–46', 'IX.47–55', 'IX.56–66',
+        'IX.67–75', 'IX.76–81', 'IX.82–90', 'IX.91–104',
+    }
 
     interlinear_en = script._INTERLINEAR_EN_I.rstrip("\n") + "\n\n" + script._strip_header(script._INTERLINEAR_EN_IX)
     en_stanzas, _ = eee.parse_stanza_translations(interlinear_en, ref_prefix="### Odyss. ")
@@ -156,16 +184,19 @@ def test_interlinear_grc_comment_strips_to_plain_gloss():
     assert "man to-me tell" in cleaned
 
 
-def test_podstrochnik_present_and_covers_both_books():
-    """подстрочник (RU's own literal interlinear rendering) was silently
-    dropped entirely when the KB corpus was first populated -- it's the
-    dropdown's *default* value in every consuming notebook, so its absence
-    is a regression (shows '-' by default), not just a missing option."""
+def test_interlinear_ru_present_and_covers_both_books():
+    """подстрочник (RU's own literal interlinear rendering, renamed to the
+    'interlinear_ru' heading 2026-09-26 to match interlinear_en/el's
+    convention -- still labeled "подстрочник" in the translators= metadata)
+    was silently dropped entirely when the KB corpus was first populated --
+    it's the dropdown's *default* value in every consuming notebook, so its
+    absence is a regression (shows '-' by default), not just a missing
+    option."""
     body = (
-        script._PODSTROCHNIK_I.rstrip("\n") + "\n\n" + script._strip_header(script._PODSTROCHNIK_IX)
+        script._INTERLINEAR_RU_I.rstrip("\n") + "\n\n" + script._strip_header(script._INTERLINEAR_RU_IX)
         + "\n"
     )
     stanzas, descriptions = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
 
-    assert len(stanzas["подстрочник"]) == 8
-    assert descriptions.get("подстрочник", "") == ""
+    assert len(stanzas["interlinear_ru"]) == 39  # 4 (I.1-21) + 35 (IX.19-180)
+    assert descriptions.get("interlinear_ru", "") == ""

@@ -22,6 +22,7 @@ def build(
     sources: list[Source],
     level: list[str] | None = None,
     tags: list[str] | None = None,
+    description: str | None = None,
 ) -> ConceptFile:
     """Assemble a Literary Translation entry.
 
@@ -29,11 +30,15 @@ def build(
     `## <translator>` sections, each with an optional `<!-- **desc** -->`
     line and `### <ref>` stanza headings -- unchanged from how
     created_with_eee's translations_{lang}.md files are already written.
+
+    `description` defaults to a plain auto-generated summary; pass one
+    explicitly when translators include citation-only (not reproduced)
+    entries that need their own copyright/attribution note.
     """
     return ConceptFile(
         type="Literary Translation",
         title=f"{work} ({passage}) — {language} translations",
-        description=f"{language} translations of {work} {passage}: {', '.join(translators)}.",
+        description=description or f"{language} translations of {work} {passage}: {', '.join(translators)}.",
         tags=tags or [],
         level=level or [],
         sources=sources,

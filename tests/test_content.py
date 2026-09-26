@@ -265,7 +265,7 @@ def test_odyssey_text_carries_exactly_the_greek_lines_echoed_beside_the_glosses(
     assert concept.type == "Literary Text"
     assert concept.extra_frontmatter["language"] == "grc"
     assert _verse_lines(concept.body) == echoed
-    assert len(echoed) == 41
+    assert len(echoed) == 183  # I.1-21 (21) + IX.19-180 (162)
 
 
 def test_imperative_rule_pairs_affirmative_and_negative_clitic_placement(repo_root):
