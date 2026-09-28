@@ -150,12 +150,23 @@ def test_interlinear_en_and_el_each_cover_both_books():
     handles them like any other translator; I.1-21 was the gap originally
     (only IX.19-38 existed, authored fresh 2026-09-14 to close it), the
     same class this test file already guards for Pope/Murray/подстрочник."""
-    # Same grouping as Pope's IX.39-180 (both share the same 13-chunk split).
+    # Fine-grained per-lesson stanza split, matching interlinear_ru (and
+    # every lesson's own greek.md) exactly -- re-split 2026-09-28 from the
+    # coarser 13-chunk grouping interlinear_en/el originally shared with
+    # Pope (a genuine "equivalent passage" translator, where that coarser
+    # grouping is correct; interlinear is a word-for-word crib, so a coarser
+    # match there means unrelated lines bleeding in from a neighboring
+    # stanza -- see eee-project's find_stanza_translation docstring).
     expected_refs = {
-        'I.11–15', 'I.16–21', 'I.1–5', 'I.6–10', 'IX.105–115', 'IX.116–129',
-        'IX.130–145', 'IX.146–160', 'IX.161–169', 'IX.170–180', 'IX.19–24',
-        'IX.25–28', 'IX.29–33', 'IX.34–38', 'IX.39–46', 'IX.47–55', 'IX.56–66',
-        'IX.67–75', 'IX.76–81', 'IX.82–90', 'IX.91–104',
+        'I.1–5', 'I.6–10', 'I.11–15', 'I.16–21',
+        'IX.19–24', 'IX.25–28', 'IX.29–33', 'IX.34–38',
+        'IX.39–42', 'IX.43–46', 'IX.47–50', 'IX.51–55', 'IX.56–61',
+        'IX.62–66', 'IX.67–71', 'IX.72–75', 'IX.76–78', 'IX.79–81',
+        'IX.82–86', 'IX.87–90', 'IX.91–93', 'IX.94–97', 'IX.98–104',
+        'IX.105–111', 'IX.112–115', 'IX.116–121', 'IX.122–124', 'IX.125–129',
+        'IX.130–133', 'IX.134–139', 'IX.140–141', 'IX.142–145', 'IX.146–151',
+        'IX.152–155', 'IX.156–160', 'IX.161–165', 'IX.166–169',
+        'IX.170–176', 'IX.177–180',
     }
 
     interlinear_en = script._INTERLINEAR_EN_I.rstrip("\n") + "\n\n" + script._strip_header(script._INTERLINEAR_EN_IX)
