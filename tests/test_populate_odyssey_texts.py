@@ -144,6 +144,21 @@ def test_pope_and_murray_each_cover_both_books():
     assert set(stanzas["Murray"]) == murray_expected_refs
 
 
+def test_murray_ix_39_42_is_a_single_line():
+    """IX.39-42 used to be transcribed across 2 physical lines splitting
+    mid-sentence ("...to the Cicones," / "to Ismarus. There I sacked...")
+    -- a leftover from IX.19-38's one-line-per-verse style that was never
+    carried through when IX.43 onward switched to one dense line per stanza
+    (the style every other Murray stanza from IX.43 on already uses).
+    parse_stanza_translations joins physical lines with a bare "\\n", and a
+    consuming notebook's display renders each resulting line as its own
+    block -- so the stray line break rendered as a visible gap splitting
+    the sentence in two. Fixed 2026-09-29 by joining onto one line, matching
+    every neighboring stanza; see this repo's CHANGELOG for the report."""
+    stanzas, _ = eee.parse_stanza_translations(script._MURRAY_IX, ref_prefix="### Odyss. ")
+    assert "\n" not in stanzas["Murray"]["IX.39–42"]
+
+
 def test_interlinear_en_and_el_each_cover_both_books():
     """interlinear_en/interlinear_el are folded into translations_{en,el}.md
     as ordinary ## sections (not separate files) -- parse_stanza_translations

@@ -382,8 +382,7 @@ which Zeus appointed for me as I came from Troy.
 
 ### Odyss. IX.39–42
 
-"From Ilios the wind bore me and brought me to the Cicones,
-to Ismarus. There I sacked the city and slew the men; and from the city we took their wives and great store of treasure, and divided them among us, that so far as lay in me no man might go defrauded of an equal share.
+"From Ilios the wind bore me and brought me to the Cicones, to Ismarus. There I sacked the city and slew the men; and from the city we took their wives and great store of treasure, and divided them among us, that so far as lay in me no man might go defrauded of an equal share.
 
 ### Odyss. IX.43–46
 
