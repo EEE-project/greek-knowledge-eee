@@ -30,7 +30,7 @@ status: draft
 ---
 ## interlinear_ru
 
-<!-- No source cited -- an uncredited, utilitarian word-order-preserving rendering, matching how texts/odyssey/'s own подстрочник sections carry no citation either. Copied verbatim from created_with_eee's modern_greek/b1greeklanguageandculture/kavafis_ithaki/{1,2,3-4}/translations.md, the same text already used in that course's own lessons. The course text stops at στ. 23; στ. 24-36 were authored for this entry in the same manner (a literal, line-by-line, word-order-preserving rendering of the Greek in text.md) and carry no separate citation either. -->
+<!-- No source cited -- an uncredited, utilitarian word-order-preserving rendering, matching how texts/odyssey/'s own подстрочник sections carry no citation either. Copied verbatim from created_with_eee's modern_greek/b1greeklanguageandculture/kavafis_ithaki/{1,2,3}/translations.md, the same text already used in that course's own lessons. The course text stops at στ. 23; στ. 24-36 were authored for this entry in the same manner (a literal, line-by-line, word-order-preserving rendering of the Greek in text.md) and carry no separate citation either. -->
 
 ### Ιθάκη, στ. 1–3
 

@@ -2,24 +2,26 @@
 
 Concept files for Cavafy's «Ithaka» (1911), which has 36 lines: `text.md`
 (a Literary Text -- the Greek original itself, complete), `translations_en.md`
-(interlinear_en, a freshly-authored interlinear gloss, complete), and `translations_ru.md`
+(interlinear_en, a freshly-authored interlinear gloss; literal, a freshly-authored literal rendering;
+Valassopoulo, the 1924 translation -- all complete), and `translations_ru.md`
 (interlinear_ru, a literal подстрочник, complete: στ. 1-23 are the kavafis_ithaki course's own text, στ. 24-36 were
 authored for this entry in the same manner).
 Each interlinear section echoes its Greek source line as an
 `<!-- el: ... -->` comment ahead of the plain word-by-word gloss, same
 convention [`texts/odyssey/`](../odyssey/index.md) uses with `<!-- grc: ... -->`.
 
-Named literary translations are known -- Valassopoulo (1924),
-Keeley/Sherrard (1975), Barnstone (2006) and Mendelsohn (2012) into English,
+Named literary translations are known -- Keeley/Sherrard (1975),
+Barnstone (2006) and Mendelsohn (2012) into English,
 and into Russian Шмаков/Бродский, Ильинская (1984), Величанский, Колесов,
 Якушева, Некляев/Вланес and Левитов -- but not reproduced in full: each is
-presumptively still under copyright except Valassopoulo (public domain, but
-no complete reliable text source was found). Each gets a "(reference only,
+presumptively still under copyright. Each gets a "(reference only,
 not reproduced)" `##` section instead: translator, citation, an archived
 link where one exists, and a one-line copyright-status note, no poem text --
 see the `{en,ru}.md` files' own reference sections.
+Valassopoulo (1924), the one named translation in the public domain in the US, is
+reproduced in full in `translations_en.md`.
 
-Two recorded readings of the poem (Greek, Grigoris Valtinos; English, Sean Connery)
+Seven recorded readings of the poem (two Greek, two English, three Russian) and a piece of music
 are linked from [[`culture/cavafy.md`](../../culture/cavafy.md)](../../culture/cavafy.md), not from here.
 
 Hand-authored directly (see [[`templates/literary-text.md`](../../templates/literary-text.md)](../../templates/literary-text.md),

@@ -8,7 +8,10 @@ Replaces that module (deleted when the build pipeline for these two
 concept types was retired -- see CHANGELOG).
 """
 
+import hashlib
 import re
+
+import pytest
 
 from okfbuild import okf
 from okfbuild.query import find_concepts
@@ -218,6 +221,26 @@ def test_cavafy_topic_cites_official_textbook_and_the_poem_text(repo_root):
     assert "aorist-3pl-osan" not in concept.body
 
 
+def test_cavafy_topic_lists_the_ithaka_readings_and_the_musical_piece(repo_root):
+    concept = _read_culture(repo_root, "cavafy")
+
+    urls = {s.id: s.resource for s in concept.sources if s.id.startswith(("ithaka-reading-", "ithaka-music-"))}
+    assert len([i for i in urls if i.startswith("ithaka-reading-")]) == 7
+    assert urls["ithaka-music-deep-pressed"] == "https://www.youtube.com/watch?v=4nHqjy65n6I"
+    # every listed recording is cited in the prose, and the sections say what they hold
+    assert all(f"[^{i}]" in concept.body for i in urls)
+    assert "Seven readings are on YouTube" in concept.body
+    assert "## Ithaka in music" in concept.body
+
+
+def test_kavafis_text_index_counts_the_recordings_of_the_cavafy_page(repo_root):
+    text = (repo_root / "texts" / "kavafis_ithaki" / "index.md").read_text(encoding="utf-8")
+
+    # regression guard: the index said "Two recorded readings" after culture/cavafy.md listed seven (see CHANGELOG).
+    assert "Seven recorded readings" in text
+    assert "Two recorded readings" not in text
+
+
 def test_article_rules_state_the_final_nu_rule_with_the_masculine_always_kept(repo_root):
     for rule_id in ("definite-articles-nom-acc", "indefinite-article-enas"):
         concept = _read_grammar(repo_root, rule_id)
@@ -343,3 +366,127 @@ def test_koine_to_modern_comparisons_are_advanced_not_beginner(repo_root):
 
     assert len(comparisons) == 8
     assert all(concept.level == ["advanced"] for concept in comparisons)
+
+
+_ITHAKA_EN_REFS = ["Ιθάκη, στ. 1–3", "Ιθάκη, στ. 4–12", "Ιθάκη, στ. 13–23", "Ιθάκη, στ. 24–30", "Ιθάκη, στ. 31–33", "Ιθάκη, στ. 34–36"]
+_ITHAKA_EN_SECTIONS = [
+    "interlinear_en",
+    "literal",
+    "Valassopoulo",
+    "Keeley/Sherrard (reference only, not reproduced)",
+    "Barnstone (reference only, not reproduced)",
+    "Mendelsohn (reference only, not reproduced)",
+]
+_VALASSOPOULO_WORDS = 263
+_VALASSOPOULO_SHA256 = "7d27649472fb9554d0d67cabfd1c774644d8657ecaed609d020c4eaecaa42f82"  # of the 36 text lines joined by "\n"
+
+
+def _ithaka_en_sections(body: str) -> dict:
+    """{`##` section name: its text} in file order, for the body of texts/kavafis_ithaki/translations_en.md."""
+    chunks = (chunk.partition("\n") for chunk in re.split(r"(?m)^## ", body)[1:])
+    return {name.strip(): rest for name, _, rest in chunks}
+
+
+def _ithaka_en_verse_pairs(section: str) -> list:
+    """[(ref, [(echoed Greek line, text line), ...], non-blank line count)] for each `###` block of a translation section."""
+    blocks = []
+    for block in re.split(r"(?m)^### ", section)[1:]:
+        ref, _, rest = block.partition("\n")
+        pairs = re.findall(r"(?m)^<!-- el: (.*) -->\n(.*)$", rest)
+        blocks.append((ref.strip(), pairs, len([line for line in rest.splitlines() if line.strip()])))
+    return blocks
+
+
+def _ithaka_en_problems(body: str, greek: list) -> list:
+    """What texts/kavafis_ithaki/translations_en.md must satisfy; [] when it does."""
+    problems = []
+    sections = _ithaka_en_sections(body)
+    if list(sections) != _ITHAKA_EN_SECTIONS:
+        problems.append(f"sections are {list(sections)}")
+    for name in ("interlinear_en", "literal", "Valassopoulo"):
+        blocks = _ithaka_en_verse_pairs(sections.get(name, ""))
+        if [ref for ref, _, _ in blocks] != _ITHAKA_EN_REFS:
+            problems.append(f"{name}: blocks are {[ref for ref, _, _ in blocks]}")
+        for ref, pairs, non_blank in blocks:
+            first, last = (int(n) for n in re.findall(r"\d+", ref))
+            # one echo line and one text line per verse and nothing else: a text line split in two adds a physical line
+            if len(pairs) != last - first + 1 or non_blank != 2 * len(pairs):
+                problems.append(f"{name} {ref}: {len(pairs)} pairs in {non_blank} non-blank lines")
+        pairs = [pair for _, block_pairs, _ in blocks for pair in block_pairs]
+        if [g for g, _ in pairs] != greek:
+            problems.append(f"{name}: echoed Greek lines differ from text.md")
+        if not all(text.strip() for _, text in pairs):
+            problems.append(f"{name}: empty text line")
+        if name == "Valassopoulo":
+            text = "\n".join(line for _, line in pairs)
+            words = re.findall(r"[a-z]+(?:'[a-z]+)?", text.lower())
+            if len(words) != _VALASSOPOULO_WORDS or hashlib.sha256(text.encode("utf-8")).hexdigest() != _VALASSOPOULO_SHA256:
+                problems.append("Valassopoulo: the text differs from the pinned 1924 text")
+    for name, section in sections.items():
+        if name.endswith("(reference only, not reproduced)"):
+            lines = [line for line in section.splitlines() if line.strip()]
+            if any(not (line.startswith("<!--") and line.endswith("-->")) and not (line.startswith("*(") and line.endswith(")*")) for line in lines):
+                problems.append(f"{name}: carries more than its citation comment and note")
+    return problems
+
+
+def _ithaka_en_variant(body: str, kind: str) -> str:
+    """A deliberately drifted copy of the real file body, built without retyping any poem text."""
+    if kind == "pasted_reference_lines":
+        return body.replace("(reference only, not reproduced)\n", "(reference only, not reproduced)\n\na pasted line of verse\n", 1)
+    if kind == "extra_keeley_section":
+        return body.rstrip("\n") + "\n\n## Keeley/Sherrard\n\n### Ιθάκη, στ. 1–3\n\n<!-- el: x -->\ny\n"
+    if kind == "missing_echo":
+        head, sep, tail = body.partition("\n## literal\n")
+        return head + sep + tail.replace("<!-- el:", "<!-- gr:", 1)
+    head, sep, rest = body.partition("\n## Valassopoulo\n")
+    section, keeley_sep, tail = rest.partition("\n## Keeley/Sherrard")
+    lines = section.split("\n")
+    first = next(n for n, line in enumerate(lines) if line.strip() and not line.startswith(("<!--", "###")))
+    words = lines[first].split()
+    lines[first] = {
+        "split_line": " ".join(words[:3]) + "\n" + " ".join(words[3:]),
+        "dropped_word": " ".join(words[1:]),
+        "swapped_words": " ".join([words[1], words[0], *words[2:]]),
+    }[kind]
+    return head + sep + "\n".join(lines) + keeley_sep + tail
+
+
+def test_ithaka_en_translations_are_line_for_line_with_the_greek(repo_root):
+    greek = _verse_lines(okf.read(repo_root / "texts" / "kavafis_ithaki" / "text.md").body)
+    body = okf.read(repo_root / "texts" / "kavafis_ithaki" / "translations_en.md").body
+
+    assert _ithaka_en_problems(body, greek) == []
+
+
+@pytest.mark.parametrize(
+    "kind", ["split_line", "dropped_word", "swapped_words", "pasted_reference_lines", "extra_keeley_section", "missing_echo"]
+)
+def test_ithaka_en_guard_rejects_drifted_copies(repo_root, kind):
+    greek = _verse_lines(okf.read(repo_root / "texts" / "kavafis_ithaki" / "text.md").body)
+    body = okf.read(repo_root / "texts" / "kavafis_ithaki" / "translations_en.md").body
+
+    assert _ithaka_en_problems(body, greek) == []
+    assert _ithaka_en_problems(_ithaka_en_variant(body, kind), greek) != []
+
+
+def test_ithaka_en_front_matter_lists_valassopoulo_as_reproduced(repo_root):
+    concept = okf.read(repo_root / "texts" / "kavafis_ithaki" / "translations_en.md")
+    valassopoulo = _ithaka_en_verse_pairs(_ithaka_en_sections(concept.body)["Valassopoulo"])
+
+    assert concept.extra_frontmatter["translators"][:3] == ["interlinear_en", "literal", "Valassopoulo"]
+    assert {"tr-valassopoulo1924", "tr-valassopoulo1924-wdtprs"} <= {s.id for s in concept.sources}
+    # regression guards: Valassopoulo's own opening and closing words
+    assert valassopoulo[0][1][0][1].startswith("When you start on the way to Ithaca")
+    assert valassopoulo[-1][1][-1][1].endswith("these Ithacas mean.")
+
+
+def test_ithaka_en_makes_no_unverifiable_provenance_or_jurisdiction_claims(repo_root):
+    folder = repo_root / "texts" / "kavafis_ithaki"
+    for name in ("translations_en.md", "index.md"):
+        # the KB's evidence for Valassopoulo is "public domain in the US as a pre-1929 publication": no claim beyond it
+        assert not re.search(r"public domain(?! in the US)", (folder / name).read_text(encoding="utf-8")), name
+    literal = _ithaka_en_sections(okf.read(folder / "translations_en.md").body)["literal"]
+
+    assert "written for this course from the Greek text" in literal
+    assert not re.search(r"not (copied|taken|adapted)|word-for-word", literal)

@@ -52,6 +52,10 @@ sources:
   resource: https://www.youtube.com/watch?v=IgbQAGAGQc0
   title: Κωνσταντίνος Καβάφης - Ιθάκη 1911 - Official Audio Release
   author: Ελληνική Ποίηση & Θέατρο (YouTube channel)
+- id: ithaka-music-deep-pressed
+  resource: https://www.youtube.com/watch?v=4nHqjy65n6I
+  title: Deep Pressed ft. 'Ελλη Λαμπέτη - Ιθάκη (Κ.Π.Καβάφης)
+  author: Deep Pressed (YouTube channel)
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
   at: '2026-09-22T08:35:13.835501+00:00'
@@ -60,7 +64,8 @@ related_words:
 related_lessons:
 - modern_greek/b1greeklanguageandculture/kavafis_ithaki/1
 - modern_greek/b1greeklanguageandculture/kavafis_ithaki/2
-- modern_greek/b1greeklanguageandculture/kavafis_ithaki/3-4
+- modern_greek/b1greeklanguageandculture/kavafis_ithaki/3
+- modern_greek/b1greeklanguageandculture/kavafis_ithaki/4
 dialect: []
 verified: []
 status: draft
@@ -109,6 +114,10 @@ None of this settles into a single, nameable dialect. Cavafy moves between an ar
 
 «Ithaka» has also been recorded by performers. Seven readings are on YouTube, linked here and not copied: two readings of the Greek text -- one credited in its title to Grigoris Valtinos (uploaded by the channel 1969anre in 2012),[^ithaka-reading-valtinos] the other an "Official Audio Release" from the channel Ελληνική Ποίηση & Θέατρο ("Greek Poetry & Theatre," 2019)[^ithaka-reading-greek-poetry-theatre] -- two English readings -- Sean Connery's (uploaded by the channel Upgrade Your Mindset in 2021)[^ithaka-reading-connery] and the SpokenVerse channel's, read by Tom O'Bedlam (2011)[^ithaka-reading-obedlam] -- and three Russian readings: Irina Kovalevskaya's audio reading (2023),[^ithaka-reading-kovalevskaya] actor and Vedogon Theatre founder Pavel Kurochkin's reading (2018, uploaded by Eugenia Kritsevskagia),[^ithaka-reading-kurochkin] and an episode of Chersonesos Taurica's «Мой Херсонес» poetry series (2021), which names its translation -- Ильинская's, already cited (reference-only) in [`texts/kavafis_ithaki/translations_ru.md`](../texts/kavafis_ithaki/translations_ru.md).[^ithaka-reading-chersonesos]
 
+## Ithaka in music
+
+«Ithaka» is also the text of a piece of music on YouTube, linked here and not copied: "Deep Pressed ft. 'Ελλη Λαμπέτη - Ιθάκη (Κ.Π.Καβάφης)", uploaded by the channel Deep Pressed in 2018 (4 min 52 s).[^ithaka-music-deep-pressed] Its description credits the poem to C.P. Kavafys, the vocals to Elli Lampeti, a guitar solo to Chronis Orfanos and the music to Deep Pressed; the video is tagged "electronica", "electro" and "remix".[^ithaka-music-deep-pressed]
+
 [^ebooks-edu-gr-ithaka]: Κείμενα Νεοελληνικής Λογοτεχνίας Α΄ Λυκείου (official Greek Ministry of Education literature textbook), Greek Institute of Educational Policy (ΙΕΠ) (https://ebooks.edu.gr/ebooks/v/html/8547/2700/Keimena-Neoellinikis-Logotechnias_A-Lykeiou_html-empl/indexG3_2.html)
 [^wikipedia]: Constantine P. Cavafy, Wikipedia (https://en.wikipedia.org/wiki/Constantine_P._Cavafy)
 [^cavafy-ithaka-text]: Kavafis, Ithaka (1-36) — original text (el), K. P. Cavafy ([texts/kavafis_ithaki/text.md](../texts/kavafis_ithaki/text.md))
@@ -119,3 +128,4 @@ None of this settles into a single, nameable dialect. Cavafy moves between an ar
 [^ithaka-reading-chersonesos]: 8 серия.  Итака.  Константинос Кавафис, Херсонес Таврический в Севастополе (YouTube channel) (https://www.youtube.com/watch?v=3xUIztEwrqQ)
 [^ithaka-reading-obedlam]: "Ithaka" by C P Cavafy (read by Tom O'Bedlam), SpokenVerse (YouTube channel) (https://www.youtube.com/watch?v=U4D06vLQf5o)
 [^ithaka-reading-greek-poetry-theatre]: Κωνσταντίνος Καβάφης - Ιθάκη 1911 - Official Audio Release, Ελληνική Ποίηση & Θέατρο (YouTube channel) (https://www.youtube.com/watch?v=IgbQAGAGQc0)
+[^ithaka-music-deep-pressed]: Deep Pressed ft. 'Ελλη Λαμπέτη - Ιθάκη (Κ.Π.Καβάφης), Deep Pressed (YouTube channel) (https://www.youtube.com/watch?v=4nHqjy65n6I)
