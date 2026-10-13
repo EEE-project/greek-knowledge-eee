@@ -369,10 +369,9 @@ def test_koine_to_modern_comparisons_are_advanced_not_beginner(repo_root):
 
 
 _ITHAKA_EN_REFS = ["Ιθάκη, στ. 1–3", "Ιθάκη, στ. 4–12", "Ιθάκη, στ. 13–23", "Ιθάκη, στ. 24–30", "Ιθάκη, στ. 31–33", "Ιθάκη, στ. 34–36"]
+_ITHAKA_EN_REPRODUCED = ["interlinear_en", "literal", "Valassopoulo"]  # the translations whose text the KB holds
 _ITHAKA_EN_SECTIONS = [
-    "interlinear_en",
-    "literal",
-    "Valassopoulo",
+    *_ITHAKA_EN_REPRODUCED,
     "Keeley/Sherrard (reference only, not reproduced)",
     "Barnstone (reference only, not reproduced)",
     "Mendelsohn (reference only, not reproduced)",
@@ -403,7 +402,7 @@ def _ithaka_en_problems(body: str, greek: list) -> list:
     sections = _ithaka_en_sections(body)
     if list(sections) != _ITHAKA_EN_SECTIONS:
         problems.append(f"sections are {list(sections)}")
-    for name in ("interlinear_en", "literal", "Valassopoulo"):
+    for name in _ITHAKA_EN_REPRODUCED:
         blocks = _ithaka_en_verse_pairs(sections.get(name, ""))
         if [ref for ref, _, _ in blocks] != _ITHAKA_EN_REFS:
             problems.append(f"{name}: blocks are {[ref for ref, _, _ in blocks]}")
@@ -474,7 +473,7 @@ def test_ithaka_en_front_matter_lists_valassopoulo_as_reproduced(repo_root):
     concept = okf.read(repo_root / "texts" / "kavafis_ithaki" / "translations_en.md")
     valassopoulo = _ithaka_en_verse_pairs(_ithaka_en_sections(concept.body)["Valassopoulo"])
 
-    assert concept.extra_frontmatter["translators"][:3] == ["interlinear_en", "literal", "Valassopoulo"]
+    assert concept.extra_frontmatter["translators"][:3] == _ITHAKA_EN_REPRODUCED
     assert {"tr-valassopoulo1924", "tr-valassopoulo1924-wdtprs"} <= {s.id for s in concept.sources}
     # regression guards: Valassopoulo's own opening and closing words
     assert valassopoulo[0][1][0][1].startswith("When you start on the way to Ithaca")
