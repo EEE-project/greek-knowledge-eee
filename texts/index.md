@@ -11,7 +11,7 @@ validate it.
 own one-off script (`scripts/populate_odyssey_texts.py`) with the text
 hardcoded as Python constants, not yet migrated to hand-authored files.
 
-- [odyssey/](odyssey/index.md) — Homer's Odyssey (I.1-21, IX.19-38)
+- [odyssey/](odyssey/index.md) — Homer's Odyssey (I.1-21, IX.19-180)
 - [kavafis_ithaki/](kavafis_ithaki/index.md) — Cavafy's «Ithaka» (the complete poem, 36 lines)
 
 ## Reading a work

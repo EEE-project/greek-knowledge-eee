@@ -22,7 +22,7 @@ status: draft
 ---
 ## Odyssey
 
-<!-- Homer, Odyssey I.1-21 and IX.19-38. Copied verbatim from the grc: echo comments of translations_en.md's interlinear_en section (identical to those in translations_el.md), which were taken from the Perseus Digital Library's text of A. T. Murray's edition. -->
+<!-- Homer, Odyssey I.1-21 and IX.19-180. Copied verbatim from the grc: echo comments of translations_en.md's interlinear_en section (identical to those in translations_el.md). The echo comments of I.1-21 and IX.19-38 were taken from the Perseus Digital Library's text of A. T. Murray's edition. -->
 
 ### Odyss. I.1–5
 

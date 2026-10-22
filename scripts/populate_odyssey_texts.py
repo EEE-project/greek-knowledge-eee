@@ -1,13 +1,16 @@
 """One-off (re-runnable) script that assembles texts/odyssey/*.md from
-hand-extracted translator sections. See docs in
-~/work/greek/EEE/plans/superpowers/specs/2026-09-07-odyssey-translations-corpus-design.md
-for why this content lives here rather than being live-queried.
+hand-extracted translator sections. There is no live source to query for a
+human translation, which is why this content lives here as constants rather
+than being live-queried.
 
-Each *_SECTION constant below is copied byte-for-byte from
-created_with_eee's abandoned `translations` branch via `git show` -- never
-retyped by hand. Re-run this script whenever a section needs updating;
-okf.write()'s idempotency means re-running with unchanged content is a
-harmless no-op.
+Most constants have a comment that says where their section comes from. Some
+sections were copied byte-for-byte from created_with_eee's `translations`
+branch via `git show`, never retyped by hand; that branch no longer exists.
+The comments next to other constants name sources such as Wikisource, Project
+Gutenberg and the Internet Archive; the I.1-21 interlinear_en and
+interlinear_el were written for this knowledge base. Re-run this script
+whenever a section needs updating; okf.write()'s idempotency means
+re-running with unchanged content is a harmless no-op.
 """
 
 from pathlib import Path
@@ -19,7 +22,7 @@ _REPO_ROOT = Path(__file__).parent.parent
 _TEXTS_DIR = _REPO_ROOT / "texts" / "odyssey"
 
 # Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#   git -C <created_with_eee checkout> \
 #     show translations:odyssey/2026_06_01/translations_en.md
 # -- the "## Pope" section only (up to, not including, "## Lattimore").
 _POPE_I = """\
@@ -339,7 +342,7 @@ Neptune's smooth face, and cleave the yielding deep.
 """
 
 # Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#   git -C <created_with_eee checkout> \
 #     show translations:odyssey/2026_06_15/translations_en.md
 # -- the "## Murray" section only (up to, not including, "## Lattimore").
 _MURRAY_IX = """\
@@ -764,7 +767,7 @@ def populate_translations_en() -> None:
 
 
 # Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#   git -C <created_with_eee checkout> \
 #     show translations:odyssey/2026_06_01/translations_ru.md
 # -- the "## Жуковский" section only (up to, not including, "## Вересаев").
 _ZHUKOVSKY_I = """\
@@ -809,7 +812,7 @@ _ZHUKOVSKY_I = """\
 """
 
 # Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#   git -C <created_with_eee checkout> \
 #     show translations:odyssey/2026_06_15/translations_ru.md
 # -- the "## Жуковский" section only (up to, not including, "## Вересаев").
 _ZHUKOVSKY_IX = """\
@@ -1092,7 +1095,7 @@ _ZHUKOVSKY_IX = """\
 """
 
 # Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#   git -C <created_with_eee checkout> \
 #     show translations:odyssey/2026_06_01/translations_ru.md
 # -- the "## Вересаев" section only (to end of file).
 _VERESAEV_I = """\
@@ -1136,7 +1139,7 @@ _VERESAEV_I = """\
 """
 
 # Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#   git -C <created_with_eee checkout> \
 #     show translations:odyssey/2026_06_15/translations_ru.md
 # -- the "## Вересаев" section only (to end of file).
 _VERESAEV_IX = """\
@@ -2136,7 +2139,7 @@ def populate_translations_ru() -> None:
 
 
 # Copied verbatim via:
-#   git -C ~/work/greek/git/codeberg.org/EEE-project/created_with_eee \
+#   git -C <created_with_eee checkout> \
 #     show translations:odyssey/2026_06_01/translations_el.md
 # -- the "## Πολυλάς" section only (up to, not including, "## Καζαντζάκης–Κακριδής").
 _POLYLAS_I = """\

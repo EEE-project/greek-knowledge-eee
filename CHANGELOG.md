@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-22
+
+- **The Odyssey index pages and the generator script describe the files as they are.** `texts/index.md` said the Odyssey covers I.1-21 and IX.19-38; it covers I.1-21 and IX.19-180, as `texts/odyssey/index.md` already said. `texts/odyssey/index.md` lists Chapman among the English translators (Pope, Murray, Chapman, interlinear_en). The provenance comment of `texts/odyssey/text.md` states the range of the whole file (I.1-21 and IX.19-180). The docstring of `scripts/populate_odyssey_texts.py` no longer says that every section was copied from the `translations` branch of `created_with_eee`: that branch no longer exists, some sections come from Wikisource, Project Gutenberg or the Internet Archive, and the I.1-21 `interlinear_en` and `interlinear_el` were written for this knowledge base. The provenance comments in the script name `<created_with_eee checkout>` instead of the path of a local checkout. Bumped to 0.9.1.
+  Full suite (`-m "not integration"`): 552 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean.
+
 ## 2026-10-06
 
 - **`culture/cavafy.md` lists a piece of music on «Ithaka» next to the seven recorded readings.** New section "Ithaka in music" and source `ithaka-music-deep-pressed`: «Deep Pressed ft. 'Ελλη Λαμπέτη - Ιθάκη (Κ.Π.Καβάφης)» (YouTube channel Deep Pressed, uploaded 2018, 4 min 52 s), linked and not copied. Only the video's own metadata is stated: its description credits the poem to C.P. Kavafys, the vocals to Elli Lampeti, a guitar solo to Chronis Orfanos and the music to Deep Pressed. `texts/kavafis_ithaki/index.md` still said «Two recorded readings of the poem (Greek, Grigoris Valtinos; English, Sean Connery) are linked from culture/cavafy.md» although the page lists seven; it now says so, and counts the music.
