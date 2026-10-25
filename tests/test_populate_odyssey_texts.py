@@ -2,6 +2,7 @@
 re-runnable script that assembles texts/odyssey/*.md from hand-extracted
 translator sections (see that module's own docstring)."""
 
+import re
 from pathlib import Path
 
 import yaml
@@ -86,8 +87,8 @@ def test_strip_header_strips_header_comments_and_blank_lines():
 def test_polylas_description_covers_both_editions():
     """_POLYLAS_I's description is the ONE surviving citation line for the
     merged Πολυλάς section (_strip_header drops _POLYLAS_IX's own header) --
-    it must name both the 1875 (I.1-21) and 1877 (IX.19-38) editions, since
-    4 of the merged section's 8 stanzas are actually from the 1877 edition."""
+    it must name both the 1875 (I.1-21) and 1877 (IX.19-180) editions, since
+    35 of the merged section's 39 stanzas are actually from the 1877 edition."""
     body = script._POLYLAS_I.rstrip("\n") + "\n\n" + script._strip_header(script._POLYLAS_IX) + "\n"
 
     stanzas, descriptions = eee.parse_stanza_translations(body)
@@ -95,6 +96,18 @@ def test_polylas_description_covers_both_editions():
     assert len(stanzas["Πολυλάς"]) == 39  # 4 (I.1-21) + 35 (IX.19-180)
     assert "1875" in descriptions["Πολυλάς"]
     assert "1877" in descriptions["Πολυλάς"]
+
+
+def test_polylas_description_names_the_ranges_the_section_holds():
+    """A lesson shows the description beside the translation: its I and IX ranges
+    must be the ranges of the stanzas the merged section really holds."""
+    body = script._POLYLAS_I.rstrip("\n") + "\n\n" + script._strip_header(script._POLYLAS_IX) + "\n"
+
+    stanzas, descriptions = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
+
+    for book in ("I", "IX"):
+        spans = [tuple(map(int, m.groups())) for ref in stanzas["Πολυλάς"] if (m := re.fullmatch(rf"{book}\.(\d+)–(\d+)", ref))]
+        assert f"{book}.{min(s for s, _ in spans)}-{max(e for _, e in spans)}" in descriptions["Πολυλάς"]
 
 
 # --- Regression: every EN/RU translator must cover both books, not just the one it started with ---

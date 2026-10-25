@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-25
+
+- **The Πολυλάς description in `texts/odyssey/translations_el.md` states the range the file holds.** It said `IX.19-38`; the file holds `IX.19-180`, and all 162 lines of `IX.19-180` equal the Project Gutenberg ebook #30614 text line for line. A lesson shows this description beside the translation and fetches the file from `main`, so the lessons show the right range without a change of their own. A new test keeps the I and IX ranges of the description equal to the stanzas of the section. The docstring of the existing Πολυλάς test no longer says `IX.19-38`. Bumped to 0.9.2.
+  Full suite (`-m "not integration"`): 553 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean.
+
 ## 2026-10-22
 
 - **The Odyssey index pages and the generator script describe the files as they are.** `texts/index.md` said the Odyssey covers I.1-21 and IX.19-38; it covers I.1-21 and IX.19-180, as `texts/odyssey/index.md` already said. `texts/odyssey/index.md` lists Chapman among the English translators (Pope, Murray, Chapman, interlinear_en). The provenance comment of `texts/odyssey/text.md` states the range of the whole file (I.1-21 and IX.19-180). The docstring of `scripts/populate_odyssey_texts.py` no longer says that every section was copied from the `translations` branch of `created_with_eee`: that branch no longer exists, some sections come from Wikisource, Project Gutenberg or the Internet Archive, and the I.1-21 `interlinear_en` and `interlinear_el` were written for this knowledge base. The provenance comments in the script name `<created_with_eee checkout>` instead of the path of a local checkout. Bumped to 0.9.1.

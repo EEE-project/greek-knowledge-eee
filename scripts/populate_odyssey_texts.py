@@ -2146,7 +2146,7 @@ _POLYLAS_I = """\
 ## Πολυλάς
 
 <!-- Πολυλάς Ι. Ὀδύσσεια. Ἀθήνα, 1875 · https://www.openbook.gr/omirou-odysseia-metafrasi/ -->
-<!-- **Πολυλάς, 1875/1877** · I.1-21 [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · IX.19-38 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) (archived 22.09.2026: https://web.archive.org/web/20260922111612/https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
+<!-- **Πολυλάς, 1875/1877** · I.1-21 [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · IX.19-180 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) (archived 22.09.2026: https://web.archive.org/web/20260922111612/https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
 
 ### Odyss. I.1–5
 
@@ -2188,7 +2188,8 @@ _POLYLAS_I = """\
 # https://www.gutenberg.org/files/30614/30614-0.txt -- cross-verified
 # word-for-word against users.sch.gr's independent transcription of the
 # same passage. Source-edition line-reference numbers stripped (not part
-# of the translated text).
+# of the translated text). IX.39-180 equal this same file line for line
+# (compared 2026-10-25).
 _POLYLAS_IX = """\
 ## Πολυλάς
 

@@ -21,7 +21,7 @@ sources:
   author: ed. A. T. Murray
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-09-28T18:28:50.048756+00:00'
+  at: '2026-10-25T09:30:12.762645+00:00'
 work: Odyssey
 passage: I.1-21, IX.19-180
 language: el
@@ -35,7 +35,7 @@ status: draft
 ## Πολυλάς
 
 <!-- Πολυλάς Ι. Ὀδύσσεια. Ἀθήνα, 1875 · https://www.openbook.gr/omirou-odysseia-metafrasi/ -->
-<!-- **Πολυλάς, 1875/1877** · I.1-21 [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · IX.19-38 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) (archived 22.09.2026: https://web.archive.org/web/20260922111612/https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
+<!-- **Πολυλάς, 1875/1877** · I.1-21 [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · IX.19-180 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) (archived 22.09.2026: https://web.archive.org/web/20260922111612/https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
 
 ### Odyss. I.1–5
 
