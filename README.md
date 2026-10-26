@@ -52,6 +52,7 @@ uv run greek-knowledge verify grammar/x.md --by NAME --against WHAT   # record t
 uv run python examples/lookup_word.py ὕδωρ    # same as `lookup`, as a script
 uv run python examples/build_one_concept.py ὕδωρ
 uv run python examples/query_knowledge.py --period koine --author Sophocles
+uv run python examples/wire_sources.py        # wire the real sources and say how many lemmas two of them hold
 ```
 `--level` on `query` matches whatever free-text value a concept file's
 `level` frontmatter happens to contain -- it is not a validated or fixed
