@@ -33,43 +33,43 @@ _POPE_I = """\
 
 ### Odyss. I.1–5
 
-The man, for wisdom's various arts renown'd,
-Long exercis'd in woes, O Muse! resound;
-Who, when his arms had wrought the destin'd fall
-Of sacred Troy, and raz'd her heav'n-built wall,
-Wand'ring from clime to clime, observant stray'd,
+The man for wisdom's various arts renown'd,
+Long exercised in woes, O Muse! resound;
+Who, when his arms had wrought the destined fall
+Of sacred Troy, and razed her heaven-built wall,
+Wandering from clime to clime, observant stray'd,
 Their manners noted, and their states survey'd,
 On stormy seas unnumber'd toils he bore,
-Safe with his friends to gain his natal shore.
+Safe with his friends to gain his natal shore:
 
 ### Odyss. I.6–10
 
-Vain toils! their impious folly dar'd to prey
+Vain toils! their impious folly dared to prey
 On herds devoted to the god of day;
-The god vindictive doom'd them then to die,
-For sacrilegious crimes — nor could his care
-Preserve from death a race of men so bold.
-Begin from hence, and all the truth unfold.
+The god vindictive doom'd them never more
+(Ah, men unbless'd!) to touch that natal shore.
+Oh, snatch some portion of these acts from fate,
+Celestial Muse! and to our world relate.
 
 ### Odyss. I.11–15
 
-Now all the rest who 'scap'd the cruel fate
-In safety reach'd their long-desir'd retreat.
-Him, yet alone from Ithaca detain'd,
-Calypso long in her soft arms contain'd;
-Who, in her grottoes, fond of him remain'd,
-Desiring, fain would make the hero stay.
+Now at their native realms the Greeks arrived;
+All who the wars of ten long years survived;
+And 'scaped the perils of the gulfy main.
+Ulysses, sole of all the victor train,
+An exile from his dear paternal coast,
+Deplored his absent queen and empire lost.
+Calypso in her caves constrain'd his stay,
+With sweet, reluctant, amorous delay;
 
 ### Odyss. I.16–21
 
-But when the years, by great Jove's sister's will,
-Had fill'd their number on the rolling year,
-When Ithaca at last was destin'd nigh,
-New toils await him, and new dangers nigh.
-The gods relent, and all except the god
-Of ocean, who relentless still pursu'd
-With hatred fierce divine Ulysses' way,
-Till safe he landed on his native shore.
+In vain-for now the circling years disclose
+The day predestined to reward his woes.
+At length his Ithaca is given by fate,
+Where yet new labours his arrival wait;
+At length their rage the hostile powers restrain,
+All but the ruthless monarch of the main.
 
 """
 
@@ -353,35 +353,19 @@ _MURRAY_IX = """\
 
 ### Odyss. IX.19–24
 
-I am Odysseus, son of Laertes, who am known among men
-for all manner of wiles, and my fame reaches unto heaven.
-And I dwell in clear-seen Ithaca, wherein is a mountain Neriton,
-with trembling leaves, conspicuous from afar;
-and round it lie many islands hard by one another,
-Dulichium and Same and wooded Zacynthus.
+I am Odysseus, son of Laertes, who am known among men for all manner of wiles, and my fame reaches unto heaven. But I dwell in clear-seen Ithaca, wherein is a mountain, Neriton, covered with waving forests, conspicuous from afar; and round it lie many isles hard by one another, Dulichium, and Same, and wooded Zacynthus.
 
 ### Odyss. IX.25–28
 
-Ithaca itself lies low, furthest up the sea toward the darkness,
-but those others lie apart toward the dawn and the sun —
-a rugged isle, but a good nurse of young men;
-and for myself I can see nothing sweeter than a man's own country.
+Ithaca itself lies close in to the mainland the furthest toward the gloom, but the others lie apart toward the Dawn and the sun—a rugged isle, but a good nurse of young men; and for myself no other thing can I see sweeter than one's own land.
 
 ### Odyss. IX.29–33
 
-Verily Calypso, the beautiful goddess, kept me with her in her hollow caves,
-yearning for me to be her husband;
-and likewise, too, Circe of Aeaea, the crafty,
-kept me in her halls, yearning for me to be her husband.
-But never did they persuade the heart in my breast.
+Of a truth Calypso, the beautiful goddess, sought to keep me by her in her hollow caves, yearning that I should be her husband; and in like manner Circe would fain have held me back in her halls, the guileful lady of Aeaea, yearning that I should be her husband; but they could never persuade the heart within my breast.
 
 ### Odyss. IX.34–38
 
-So true it is that nothing is sweeter than a man's own land and his parents,
-even though one dwell in a rich house in a foreign land,
-far from his parents.
-But come, let me tell you of my much-troubled homeward voyage,
-which Zeus appointed for me as I came from Troy.
+So true is it that naught is sweeter than a man's own land and his parents, even though it be in a rich house that he dwells afar in a foreign land away from his parents. But come, let me tell thee also of my woeful home-coming, which Zeus laid upon me as I came from Troy.
 
 ### Odyss. IX.39–42
 
@@ -600,7 +584,7 @@ _CHAPMAN = """\
 ## Chapman
 
 <!-- Chapman G. Homer's Odysses. London, 1614-1615 · https://www.gutenberg.org/ebooks/48895 -->
-<!-- **Chapman, 1614/15** · [gutenberg.org ↗](https://www.gutenberg.org/ebooks/48895) · eng., "fourteener" couplets (iambic heptameter) · Elizabethan/Jacobean idiom · first complete English Odyssey; public domain (d. 1634). Chapman's own line divisions don't correspond 1:1 to the Greek line numbers below -- headings mark the equivalent passage, not an exact line match; footnote markers from the Gutenberg edition are omitted. -->
+<!-- **Chapman, 1614/15** · [gutenberg.org ↗](https://www.gutenberg.org/ebooks/48895) (archived 21.04.2026: https://web.archive.org/web/20260421005400/https://gutenberg.org/ebooks/48895) · eng., "fourteener" couplets (iambic heptameter) · Elizabethan/Jacobean idiom · first complete English Odyssey; public domain (d. 1634). Chapman's own line divisions don't correspond 1:1 to the Greek line numbers below -- headings mark the equivalent passage, not an exact line match; footnote markers from the Gutenberg edition are omitted. -->
 
 ### Odyss. I.1–5 (equivalent passage)
 
@@ -745,6 +729,8 @@ def populate_translations_en() -> None:
                title="The Odyssey of Homer", author="Alexander Pope"),
         Source(id="tr-murray1919", resource="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0136",
                title="The Odyssey", author="A. T. Murray"),
+        Source(id="tr-murray1919-tei", resource="https://github.com/PerseusDL/canonical-greekLit/blob/master/data/tlg0012/tlg002/tlg0012.tlg002.perseus-eng3.xml",
+               title="The Odyssey (TEI file, English text only)", author="A. T. Murray"),
         _GRC_MURRAY1919_SOURCE,
         Source(id="tr-chapman1615", resource="https://www.gutenberg.org/ebooks/48895",
                title="The Odysseys of Homer", author="George Chapman"),
@@ -773,8 +759,8 @@ def populate_translations_en() -> None:
 _ZHUKOVSKY_I = """\
 ## Жуковский
 
-<!-- Жуковский В. А. Одиссея. СПб., 1849 · https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский) -->
-<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9)) · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
+<!-- Жуковский В. А. Одиссея. СПб., 1849 · https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский) · Собрание сочинений В. Жуковского, 6-е изд., СПб: Типография Императорской академии наук, 1869, Т. 5: Гомерова Одиссея, изд. 2-е -->
+<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9)) · рус., гекзаметр · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
 
 ### Odyss. I.1–5
 
@@ -818,8 +804,8 @@ _ZHUKOVSKY_I = """\
 _ZHUKOVSKY_IX = """\
 ## Жуковский
 
-<!-- Жуковский В. А. Одиссея. СПб., 1849 · https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский) -->
-<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9)) · рус., белый стих (пятистопный ямб) · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
+<!-- Жуковский В. А. Одиссея. СПб., 1849 · https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский) · Собрание сочинений В. Жуковского, 6-е изд., СПб: Типография Императорской академии наук, 1869, Т. 5: Гомерова Одиссея, изд. 2-е -->
+<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9)) · рус., гекзаметр · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
 
 ### Odyss. IX.19–24
 
@@ -848,11 +834,11 @@ _ZHUKOVSKY_IX = """\
 
 ### Odyss. IX.34–38
 
-Нет ничего нам дороже отчизны и ближних родных нам;
-пусть и в чужбине далёкой богатый имеешь ты кров свой
-меж чужаков вдалеке от родителей — всё же тоскуешь.
-Но расскажу о пути злополучном, что Зевс мне назначил,
-с той поры, как из Трои пустился я в путь.
+Сладостней нет ничего нам отчизны и сродников наших,
+Даже когда б и роскошно в богатой обители жили
+Мы на чужой стороне, далеко от родителей милых.
+Если, однако, велишь, то о странствии трудном, какое
+Зевс учредил мне, от Трои плывущему, все расскажу я.
 
 ### Odyss. IX.39–42
 
@@ -895,7 +881,7 @@ _ZHUKOVSKY_IX = """\
 
 ### Odyss. IX.62–66
 
-Далее поплыли мы в сокрушенье великом о милых
+Далее поплыли мы в сокрушеньи великом о милых
 Мертвых, но радуясь в сердце, что сами спаслися от смерти.
 Я ж не отвел кораблей легкоходных от брега, покуда
 Три раза не был по имени назван из наших несчастных
@@ -990,13 +976,13 @@ _ZHUKOVSKY_IX = """\
 Лоне морском, ни далеко, ни близко от брега циклопов,
 Лесом покрытый; в великом там множестве дикие козы
 Водятся; их никогда не тревожил шагов человека
-Шум; никогда не заглядывал к ним зверолов, за дичью
+Шум; никогда не заглядывал к ним звероловец, за дичью
 С тяжким трудом по горам крутобоким с псами бродящий;
 
 ### Odyss. IX.122–124
 
 Там не пасутся стада и земли не касаются плуги;
-Там ни в какие дни года не сеют, не пашут; людей там
+Там ни в какие дни года ни сеют, ни пашут; людей там
 Нет; без боязни там ходят одни тонконогие козы,
 
 ### Odyss. IX.125–129
@@ -1048,7 +1034,7 @@ _ZHUKOVSKY_IX = """\
 
 Вышла из мрака младая с перстами пурпурными Эос;
 Весь обошли с удивленьем великим мы остров пустынный;
-Нимфы же, дочери Зевса-эгидодержавца, пригнали
+Нимфы же, дочери Зевса эгидодержавца, пригнали
 Коз с обвеваемых ветрами гор, для богатой нам пищи
 
 ### Odyss. IX.156–160
@@ -1082,7 +1068,7 @@ _ZHUKOVSKY_IX = """\
 «Все вы, товарищи верные, здесь без меня оставайтесь;
 Я же, с моим кораблем и моими людьми удаляся,
 Сведать о том попытаюсь, какой там народ обитает.
-Дикий ли, нравом свирепый, не знающий правды,
+Дикий ли, нравом свирепый, не знающий веры и правды,
 Или приветливый, богобоязненный, гостеприимный?»
 
 ### Odyss. IX.177–180
@@ -1101,8 +1087,8 @@ _ZHUKOVSKY_IX = """\
 _VERESAEV_I = """\
 ## Вересаев
 
-<!-- Вересаев В. В. Одиссея. М., 1953 · http://az.lib.ru/g/gomer/text_0070.shtml -->
-<!-- **Вересаев, 1953** · [az.lib.ru ↗](http://az.lib.ru/g/gomer/text_0070.shtml) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110540/http://az.lib.ru/g/gomer/text_0070.shtml) · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод -->
+<!-- Вересаев В. В. Одиссея. М., Гос. изд-во худож. лит-ры, 1953 · http://az.lib.ru/g/gomer/text_0070.shtml · https://ancientrome.ru/antlitr/homer/index.htm -->
+<!-- **Вересаев, 1953** · [az.lib.ru ↗](http://az.lib.ru/g/gomer/text_0070.shtml) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110540/http://az.lib.ru/g/gomer/text_0070.shtml) · [ancientrome.ru ↗](https://ancientrome.ru/antlitr/homer/index.htm) (архивная копия от 01.07.2026: https://web.archive.org/web/20260701005606/https://ancientrome.ru/antlitr/homer/index.htm) · двуязычное издание, греческий текст Murray 1919 рядом с переводом · рус., гекзаметр · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод -->
 
 ### Odyss. I.1–5
 
@@ -1145,40 +1131,40 @@ _VERESAEV_I = """\
 _VERESAEV_IX = """\
 ## Вересаев
 
-<!-- Вересаев В. В. Одиссея. М., 1953 · http://az.lib.ru/g/gomer/text_0070.shtml -->
-<!-- **Вересаев, 1953** · [az.lib.ru ↗](http://az.lib.ru/g/gomer/text_0070.shtml) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110540/http://az.lib.ru/g/gomer/text_0070.shtml) · рус., проза · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод -->
+<!-- Вересаев В. В. Одиссея. М., Гос. изд-во худож. лит-ры, 1953 · http://az.lib.ru/g/gomer/text_0070.shtml · https://ancientrome.ru/antlitr/homer/index.htm -->
+<!-- **Вересаев, 1953** · [az.lib.ru ↗](http://az.lib.ru/g/gomer/text_0070.shtml) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110540/http://az.lib.ru/g/gomer/text_0070.shtml) · [ancientrome.ru ↗](https://ancientrome.ru/antlitr/homer/index.htm) (архивная копия от 01.07.2026: https://web.archive.org/web/20260701005606/https://ancientrome.ru/antlitr/homer/index.htm) · двуязычное издание, греческий текст Murray 1919 рядом с переводом · рус., гекзаметр · ясный современный язык · ориентирован на смысловую точность · стандартный учебный перевод -->
 
 ### Odyss. IX.19–24
 
-Я — Одиссей, сын Лаэрта. Среди всех людей
-прославлен я хитроумием, и слава о нём до небес достигает.
-Живу в ясно видимой Итаке. На ней гора Неритон
-с шумящими листьями, приметная. Вокруг острова
-многие лежат, близко одни к другим:
-Дулихий, и Сама, и покрытый лесами Закинф.
+Я - Одиссей Лаэртид. Измышленьями хитрыми славен
+Я между всеми людьми. До небес моя слава доходит.
+На издалека заметной Итаке живу я. Гора там
+Вверх выдается - Нерит, колеблющий листья. Немало
+Там и других островов, недалеких один от другого:
+Зам и Дулихий, покрытый лесами обильными Закинф.
 
 ### Odyss. IX.25–28
 
-Сама Итака низко лежит, всех дальше в море,
-к западу; те острова — вдали, к востоку и к солнцу.
-Суровая, но добрая кормилица юношей.
-Краше своей земли ничего не знаю.
+Плоская наша Итака лежит, обращенная к мраку,
+К западу, прочие все - на зарю и на солнце, к востоку.
+Почва ее камениста, но юношей крепких питает.
+Я же не знаю страны прекраснее милой Итаки.
 
 ### Odyss. IX.29–33
 
-Правда, там меня удерживала Калипсо, дивная между богинями,
-в глубоких пещерах, желая, чтобы я стал её мужем;
-точно так же в своих чертогах меня удерживала Кирка Айайская,
-коварная, желая, чтобы я стал её мужем.
-Но никогда они не могли убедить сердца в моей груди.
+Нимфа Калипсо меня у себя удержать порывалась
+В гроте глубоком, желая своим меня сделать супругом;
+Также старалась меня удержать чародейка Цирцея
+В дальней Ээе, желая своим меня сделать супругом:
+Духа, однако, в груди мне на это она не склонила.
 
 ### Odyss. IX.34–38
 
-Так ничто не бывает слаще родины и своих родителей,
-даже если и живёт кто-нибудь вдали в богатом доме
-на чужбине, вдали от родителей.
-Ну а теперь расскажу тебе о многострадальном возвращении своём,
-которое назначил мне Зевс на пути от Трои.
+Слаще нам нет ничего отчизны и сродников наших,
+Если бы даже в дому богатейшем вдали обитали
+Мы на чужой стороне, в отдаленьи от сродников наших.
+Ну, расскажу я тебе о печальном моем возвращеньи,
+Зевсом ниспосланном мне, когда Илион я покинул.
 
 ### Odyss. IX.39–42
 
@@ -1394,7 +1380,7 @@ _VERESAEV_IX = """\
 ### Odyss. IX.166–169
 
 Видели близко мы землю циклопов. С нее доходили
-Дым, голоса их самих, овечье и козье бленье.
+Дым, голоса их самих, овечье и козье блеянье.
 Солнце меж тем закатилось, и сумрак спустился на землю.
 Спать мы все улеглись у прибоем шумящего моря.
 
@@ -2122,6 +2108,8 @@ def populate_translations_ru() -> None:
                title="Одиссея", author="В. А. Жуковский"),
         Source(id="tr-veresaev1953", resource="http://az.lib.ru/g/gomer/text_0070.shtml",
                title="Одиссея", author="В. В. Вересаев"),
+        Source(id="tr-veresaev1953-ancientrome", resource="https://ancientrome.ru/antlitr/homer/index.htm",
+               title="Одиссея (bilingual page: the Greek text of Murray, 1919, beside the translation)", author="В. В. Вересаев"),
         _GRC_MURRAY1919_SOURCE,
     ]
     concept = build(
@@ -2145,41 +2133,41 @@ def populate_translations_ru() -> None:
 _POLYLAS_I = """\
 ## Πολυλάς
 
-<!-- Πολυλάς Ι. Ὀδύσσεια. Ἀθήνα, 1875 · https://www.openbook.gr/omirou-odysseia-metafrasi/ -->
-<!-- **Πολυλάς, 1875/1877** · I.1-21 [openbook.gr ↗](https://www.openbook.gr/omirou-odysseia-metafrasi/) · IX.19-180 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) (archived 22.09.2026: https://web.archive.org/web/20260922111612/https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
+<!-- Polylas I. Ομήρου Οδύσσεια, Τόμος Α΄ (Ραψωδίες Α–Ζ). Athens: Georgios D. Fexis (Project Gutenberg ebook #30613, transcr. Sophia Canoni) · https://www.gutenberg.org/files/30613/30613-0.txt -->
+<!-- **Πολυλάς, 1875/1877** · I.1-21 [gutenberg.org ↗](https://www.gutenberg.org/files/30613/30613-0.txt) (archived 15.01.2026: https://web.archive.org/web/20260115063413/https://www.gutenberg.org/files/30613/30613-0.txt) · IX.19-180 [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) (archived 22.09.2026: https://web.archive.org/web/20260922111612/https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., δημοτική με αρχαΐζοντα στοιχεία · κανονική νεοελληνική μετάφραση του 19ου αι. · κλασικό λογοτεχνικό ύφος -->
 
 ### Odyss. I.1–5
 
-Πες μου, θεά, τ' ἀνδρὸς τὸν πολύτροπον, ὅπου πλανήθη τόσο
-ἀφότου τῆς Τροίας τὸ ἱερὸ κάστρο χάλασε·
-πολλῶν ἀνθρώπων τὰ ἄστη εἶδε κι ἔγνωσε τὸν νοῦ τους,
-πολλὰ κι ἔπαθε στὴ θάλασσα ἀλγέα μέσα στὴν ψυχή του,
-παλεύοντας γιὰ τὴ ζωή του καὶ γιὰ τὸ νόστο τῶν ἑταίρων.
+Τον άνδρα, μούσα, λέγε μου, πολύτροπον, 'που εις μέρη
+πολλά επλανήθη, αφού έρριξε την ιερήν Τρωάδα•
+και ανθρώπων είδε αυτός πολλών ταις χώραις και την γνώμην
+έμαθε, και 'ς τα πέλαγα πολλά 'παθε ζητώντας
+με τους συντρόφους άβλαπτος να φθάση 'ς την πατρίδα.
 
 ### Odyss. I.6–10
 
-Μὰ μήτε ὡς τόσο τοὺς ἑταίρους του ἔσωσε, ποὺ τόσο φιλοτιμήθη·
-γιατὶ χάθηκαν ἀπὸ τὴ δική τους τὴν ἀτασθαλία,
-νήπιοι, ποὺ τοῦ Ἡλίου Ὑπερίωνα τοὺς βόες ἔφαγαν·
-κι αὐτὸς τοὺς ἀφαίρεσε τὴν ἡμέρα τοῦ γυρισμοῦ.
-Ἀπ' ὁπουδήποτε, θεά, κόρη τοῦ Δία, πές μας κι ἐμᾶς.
+αλλ' όμως δεν κατώρθωσε να σώση τους συντρόφους•
+ότι εχαθήκαν μόνοι τους απ' τ' ανομήματά τους•
+μωροί, 'που τ' Υπερίονα Ήλιου τα βώδια 'φάγαν,
+κ' εκείνος της επιστροφής τους πήρε την ημέρα.
+τούτα ειπέ κάπουθε κ' εμάς, θεά, κόρη του Δία.
 
 ### Odyss. I.11–15
 
-Ἐκεῖ οἱ ἄλλοι ὅλοι, ὅσοι γλύτωσαν τὸν αἰπὺν ὄλεθρο,
-ἦταν στὸ σπίτι, τὸν πόλεμο καὶ τὴ θάλασσα γλυτώσαντες·
-αὐτὸν μόνον, ποὺ λαχταροῦσε νόστο καὶ γυναίκα,
-νύμφη ἡ πότνια τὸν κρατοῦσε, ἡ Καλυψώ, θεία στὶς θεές,
-στὶς κοίλες σπηλιές, ποθώντας νὰ τὴν πάρει γιὰ ἄντρα της.
+Τότ' οι άλλοι, όσοι δεν χάθηκαν, 'ς τα σπίτια τους όλ' ήσαν,
+σωσμένοι από τον πόλεμο και απ' του πελάου τα βάθη•
+μόνον αυτόν, 'που του 'λειπε η πατρίδα και η συμβία,
+κρατούσ' η νύμφη Καλυψώ, σεπτή θεά, μεγάλη,
+'ς τα κοίλα σπήλαια και άνδρα της επόθει να τον κάμη.
 
 ### Odyss. I.16–21
 
-Μὰ ὅταν πέρασαν τὰ χρόνια κι ἦρθε ἐκεῖνο τὸ ἔτος,
-ποὺ οἱ θεοὶ τοῦ ἔκλωσαν νὰ γυρίσει στὸ σπίτι του,
-στὴν Ἰθάκη, μήτε ἐκεῖ γλύτωσε τοὺς ἄθλους
-μέσα στοὺς δικούς του. Οἱ θεοὶ τὸν λυπήθηκαν ὅλοι,
-ἐκτὸς ἀπὸ τὸν Ποσειδῶνα· αὐτὸς ἀδιάκοπα ὀργιζόταν
-στὸν ἰσόθεο Ὀδυσσέα, ὣς νὰ φτάσει στὴ γῆ του.
+αλλά 'ς τον κύκλο των καιρών ο χρόνος όταν ήλθε,
+'που 'ς την Ιθάκη του οι θεοί να γύρη είχαν ορίσει,
+και τότε ακόμη εστέναζε μακράν των ποθητών του•
+και όλ' οι θεοί λυπιόνταν τον, αλλ' όχι ο Ποσειδώνας•
+κ' εμίσ' αυτός θανάσιμα τον θείον Οδυσσέα
+πριν φθάση 'ς την πατρίδα του. αλλ' είχε τότ' εκείνος
 
 """
 
@@ -2194,7 +2182,7 @@ _POLYLAS_IX = """\
 ## Πολυλάς
 
 <!-- Polylas I. Ομήρου Οδύσσεια, Τόμος Β΄ (Ραψωδίες Η–Μ). Athens: Georgios D. Fexis, 1877 (Project Gutenberg ebook #30614, transcr. Sophia Canoni) · https://www.gutenberg.org/files/30614/30614-0.txt -->
-<!-- **Πολυλάς, 1877** · [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., Καθαρεύουσα · line-for-line verse rendering · cross-verified against an independent second transcription (users.sch.gr), word-for-word match -->
+<!-- **Πολυλάς, 1877** · [gutenberg.org ↗](https://www.gutenberg.org/files/30614/30614-0.txt) · ν.ε., δημοτική με αρχαΐζοντα στοιχεία · line-for-line verse rendering · cross-verified against an independent second transcription (users.sch.gr), word-for-word match -->
 
 ### Odyss. IX.19–24
 
@@ -2472,7 +2460,7 @@ def populate_translations_el() -> None:
     kazantzakis_ref = _KAZANTZAKIS_REF.rstrip("\n")
     body = polylas + "\n\n---\n\n" + interlinear + "\n\n---\n\n" + kazantzakis_ref + "\n"
     sources = [
-        Source(id="tr-polylas1875", resource="https://www.openbook.gr/omirou-odysseia-metafrasi/",
+        Source(id="tr-polylas1875", resource="https://www.gutenberg.org/files/30613/30613-0.txt",
                title="Ομήρου Οδύσσεια, Τόμος Α΄", author="Ιάκωβος Πολυλάς"),
         Source(id="tr-polylas1877", resource="https://www.gutenberg.org/files/30614/30614-0.txt",
                title="Ομήρου Οδύσσεια, Τόμος Β΄", author="Ιάκωβος Πολυλάς"),

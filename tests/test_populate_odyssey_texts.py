@@ -5,6 +5,7 @@ translator sections (see that module's own docstring)."""
 import re
 from pathlib import Path
 
+import pytest
 import yaml
 
 import eee_project as eee
@@ -239,3 +240,29 @@ def test_interlinear_ru_present_and_covers_both_books():
 
     assert len(stanzas["interlinear_ru"]) == 39  # 4 (I.1-21) + 35 (IX.19-180)
     assert descriptions.get("interlinear_ru", "") == ""
+
+
+# --- Regression: the first two passages hold each translator's own text ---
+# Each anchor is a line (Murray: a whole stanza) of the translator's primary text: Project Gutenberg #30613 (Polylas),
+# en.wikisource (Pope), Perseus (Murray), ru.wikisource (Zhukovsky) and az.lib.ru (Veresaev). Earlier these stanzas held
+# invented or reworded lines under the translators' names, and the regeneration test could not see it.
+
+_OWN_TEXT_ANCHORS = [
+    ('translations_el.md', 'Πολυλάς', 'I.1–5', "Τον άνδρα, μούσα, λέγε μου, πολύτροπον, 'που εις μέρη"),
+    ('translations_en.md', 'Pope', 'I.6–10', "(Ah, men unbless'd!) to touch that natal shore."),
+    ('translations_en.md', 'Murray', 'IX.19–24', 'I am Odysseus, son of Laertes, who am known among men for all manner of wiles, and my fame reaches unto heaven. But I dwell in clear-seen Ithaca, wherein is a mountain, Neriton, covered with waving forests, conspicuous from afar; and round it lie many isles hard by one another, Dulichium, and Same, and wooded Zacynthus.'),
+    ('translations_ru.md', 'Жуковский', 'IX.34–38', 'Сладостней нет ничего нам отчизны и сродников наших,'),
+    ('translations_ru.md', 'Вересаев', 'IX.19–24', 'Я - Одиссей Лаэртид. Измышленьями хитрыми славен'),
+    ('translations_ru.md', 'Жуковский', 'IX.170–176', 'Дикий ли, нравом свирепый, не знающий веры и правды,'),
+    ('translations_ru.md', 'Жуковский', 'IX.116–121', 'Шум; никогда не заглядывал к ним звероловец, за дичью'),
+    ('translations_ru.md', 'Вересаев', 'IX.166–169', 'Дым, голоса их самих, овечье и козье блеянье.'),
+]
+
+
+@pytest.mark.parametrize(("file", "translator", "ref", "line"), _OWN_TEXT_ANCHORS)
+def test_first_passages_hold_each_translators_own_text(file, translator, ref, line):
+    _, body = _split(script._TEXTS_DIR / file)
+
+    stanzas, _ = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
+
+    assert line in stanzas[translator][ref]
