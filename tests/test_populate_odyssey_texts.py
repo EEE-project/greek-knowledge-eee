@@ -256,6 +256,13 @@ _OWN_TEXT_ANCHORS = [
     ('translations_ru.md', 'Жуковский', 'IX.170–176', 'Дикий ли, нравом свирепый, не знающий веры и правды,'),
     ('translations_ru.md', 'Жуковский', 'IX.116–121', 'Шум; никогда не заглядывал к ним звероловец, за дичью'),
     ('translations_ru.md', 'Вересаев', 'IX.166–169', 'Дым, голоса их самих, овечье и козье блеянье.'),
+    # Σπανούδης: the print edition, as transcribed by the maintainer; the three Latin-v words are the corrected ones
+    ('translations_el.md', 'Σπανούδης', 'I.1–5', 'Μούσα, τον πολλοπάητον άντραν να τραγουδήσεις,'),
+    ('translations_el.md', 'Σπανούδης', 'IX.19–24', "Εγιώ 'μαι του Λαέρτη γιος τζαι φτάνν' η πονηριά μου"),
+    ('translations_el.md', 'Σπανούδης', 'IX.62–66', "τους φίλους που εππέσασιν νεκρούς ν' αθθυμηθούμεν."),
+    ('translations_el.md', 'Σπανούδης', 'IX.72–75', 'Να μεν πνιούμεν τα πανιά χαμαί κάτω τραβούμεν'),
+    ('translations_el.md', 'Σπανούδης', 'IX.76–78', 'πίσω στα σπίθκια μας γεροί τζι όλα θα ήταν θάμμαν.'),
+    ('translations_el.md', 'Σπανούδης', 'IX.177–180', 'Στους πάγκους τους εκάτσασιν τζαι τα σιοινιά κρατούσιν,'),
 ]
 
 
@@ -266,3 +273,137 @@ def test_first_passages_hold_each_translators_own_text(file, translator, ref, li
     stanzas, _ = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
 
     assert line in stanzas[translator][ref]
+
+
+# --- Σπανούδης: fragments of a Cypriot-dialect translation that is in copyright ---
+# The section holds fragments only (the translator's permission covers fragments), assigned by sense to the lessons'
+# stanzas. The edition has no online copy to compare against, so these tests pin the shape: the stanza split, the
+# verse ranges, clean text, and that a gloss sits right after the verse it explains.
+
+_SPANOUDIS_FRAGMENTS = {"Α'": (1, 30), "Ι'": (19, 166)}  # verses of the edition's own numbering the section may hold
+_SPANOUDIS_WORK_VERSES = 11076
+_SPANOUDIS_DRIFTS = {
+    "footnote_mark": ("Μούσα, τον πολλοπάητον άντραν", "Μούσα, τον πολλοπάητον[^a1] άντραν"),
+    "verse_number": ("Μούσα, τον πολλοπάητον άντραν", "1. Μούσα, τον πολλοπάητον άντραν"),
+    "book_marker": ("τούτος καμπόσους τόπους,", "τούτος καμπόσους τόπους, *(5)*"),
+    "latin_v": ("χαμαί κάτω τραβούμεν", "χαμαί κάτω τραβούμεv"),
+    "cyrillic_letter": ("Εγιώ 'μαι του Λαέρτη", "Εгιώ 'μαι του Λαέρτη"),
+    "extra_verse": ("πάντα πρασινισμένος.\n", "πάντα πρασινισμένος.\nμια στίχος που δεν υπάρχει\n"),
+    "gap": ("στ. 25–28 -->", "στ. 26–28 -->"),
+    "divided_couplet": ("<!-- Ραψωδία Ι' στ. 29–30 -->", "<!-- Ραψωδία Ι' στ. 29–29 -->"),
+    "gloss_on_wrong_verse": ("<!-- gloss: πολλοπάητον — ", "<!-- gloss: αλλοπάητον — "),
+    "gloss_without_meaning": ("<!-- gloss: άβλαβος — άνευ βλάβης -->", "<!-- gloss: άβλαβος -->"),
+    "no_range_comment": ("<!-- Ραψωδία Α' στ. 1–8 -->\n", ""),
+}
+
+
+def _spanoudis_section(text: str) -> str:
+    """The `## Σπανούδης` section of a translations_el.md body, up to its closing `---`."""
+    return re.search(r"(?ms)^## Σπανούδης\n.*?(?=^---$)", text).group(0)
+
+
+def _spanoudis_problems(section: str) -> list:
+    """What the Σπανούδης section must satisfy; [] when it does."""
+    problems = []
+    spans = {rhapsody: [] for rhapsody in _SPANOUDIS_FRAGMENTS}
+    verse_total = 0
+    for block in re.split(r"(?m)^### Odyss\. ", section)[1:]:
+        ref, _, text = block.partition("\n")
+        match = re.search(r"(?m)^<!-- Ραψωδία (Α'|Ι') στ\. (\d+)–(\d+) -->$", text)
+        if not match:
+            problems.append(f"{ref}: no verse-range comment")
+            continue
+        rhapsody, first, last = match.group(1), int(match.group(2)), int(match.group(3))
+        spans[rhapsody].append((first, last))
+        lines = [line for line in text.splitlines() if line.strip()]
+        verses = eee.strip_comment_lines("\n".join(lines)).splitlines()
+        verse_total += len(verses)
+        if len(verses) != last - first + 1:
+            problems.append(f"{ref}: {len(verses)} verse lines for στ. {first}–{last}")
+        if first % 2 == 0 or last % 2 == 1:  # a rhymed couplet is an odd verse and the even verse after it
+            problems.append(f"{ref}: στ. {first}–{last} divides a couplet")
+        for verse in verses:
+            if re.match(r"\d+\.", verse) or "*(" in verse or "[^" in verse or "####" in verse:
+                problems.append(f"{ref}: edition markup left in {verse!r}")
+            if re.search(r"[A-Za-zЀ-ӿ]", verse):
+                problems.append(f"{ref}: Latin or Cyrillic letter in {verse!r}")
+        for before, line in zip(lines, lines[1:]):
+            if not line.startswith("<!-- gloss:"):
+                continue
+            match = re.fullmatch(r"<!-- gloss: (.+) -->", line)
+            for part in match.group(1).split(" · ") if match else []:
+                word, _, meaning = part.partition(" — ")
+                if not meaning.strip() or word not in before:
+                    problems.append(f"{ref}: gloss {part!r} lacks a meaning, or its word is not in the verse above")
+            if not match or before.startswith("<!--"):
+                problems.append(f"{ref}: malformed gloss line {line!r}")
+    for rhapsody, (start, end) in _SPANOUDIS_FRAGMENTS.items():
+        found = spans[rhapsody]
+        if not found or found[0][0] != start or found[-1][1] != end:
+            problems.append(f"{rhapsody}: blocks do not run from στ. {start} to στ. {end}")
+        for (_, previous_last), (next_first, _) in zip(found, found[1:]):
+            if next_first != previous_last + 1:
+                problems.append(f"{rhapsody}: στ. {previous_last} is followed by στ. {next_first}")
+    if verse_total > 0.02 * _SPANOUDIS_WORK_VERSES:  # fragments only: the permission does not cover the work
+        problems.append(f"{verse_total} verses is more than fragments of an {_SPANOUDIS_WORK_VERSES}-verse work")
+    return problems
+
+
+def _spanoudis_el_file():
+    frontmatter, body = _split(script._TEXTS_DIR / "translations_el.md")
+    return frontmatter, body
+
+
+def test_spanoudis_follows_the_lessons_stanza_split():
+    """Every lesson stanza (the split interlinear_el already matches, from each lesson's greek.md) is an exact key:
+    lessons 2026_06_01 and 2026_06_15 look a stanza up with a plain d.get(ref), with no containing-range fallback."""
+    _, body = _spanoudis_el_file()
+
+    stanzas, _ = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
+
+    assert list(stanzas["Σπανούδης"]) == list(stanzas["interlinear_el"])
+    assert len(stanzas["Σπανούδης"]) == 39  # 4 (I.1-21) + 35 (IX.19-180)
+
+
+def test_spanoudis_section_meets_its_shape_rules():
+    _, body = _spanoudis_el_file()
+
+    assert _spanoudis_problems(_spanoudis_section(body)) == []
+    assert _spanoudis_problems(script._SPANOUDIS) == []
+
+
+@pytest.mark.parametrize("kind", sorted(_SPANOUDIS_DRIFTS))
+def test_spanoudis_guard_rejects_drifted_copies(kind):
+    old, new = _SPANOUDIS_DRIFTS[kind]
+    section = script._SPANOUDIS
+    assert section.count(old) == 1, f"{kind}: the drift anchor must occur once"
+
+    assert _spanoudis_problems(section.replace(old, new)) != []
+
+
+def test_spanoudis_gloss_strips_away_and_is_kept_in_the_raw_text():
+    """The edition's margin glossary is data, not verse: strip_comment_lines (what the lessons apply) removes it."""
+    _, body = _spanoudis_el_file()
+    stanzas, _ = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
+
+    raw = stanzas["Σπανούδης"]["I.1–5"]
+    assert "<!-- gloss: πολλοπάητον — παμπόνηρος, πανέξυπνος -->" in raw
+    assert "gloss" not in eee.strip_comment_lines(raw)
+    assert "<!--" not in eee.strip_comment_lines(raw)
+
+
+def test_spanoudis_description_and_provenance_state_what_was_reproduced():
+    """A lesson shows the description beside the text; the provenance comment is where a reader learns that the
+    translation is in copyright, that these are fragments, who vouches for the permission, and how they were cut."""
+    frontmatter, body = _spanoudis_el_file()
+    stanzas, descriptions = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
+
+    assert "κυπριακή διάλεκτος" in descriptions["Σπανούδης"]
+    assert "Α' στ. 1-30" in descriptions["Σπανούδης"] and "Ι' στ. 19-166" in descriptions["Σπανούδης"]
+    provenance = _spanoudis_section(body).splitlines()[2]
+    assert provenance.startswith("<!-- Άκης Σπανούδης, Ομήρου Οδύσσεια")
+    for phrase in ("In copyright", "the maintainer states that the translator permitted the use of fragments in the maintainer's demo",
+                   "the rest of the translation is NOT reproduced", "a couplet is never divided"):
+        assert phrase in provenance
+    assert frontmatter["translators"] == ["Πολυλάς", "Σπανούδης", "interlinear_el", "Καζαντζάκης/Κακριδής (reference only)"]
+    assert "tr-spanoudis2021" in {source["id"] for source in frontmatter["sources"]}
