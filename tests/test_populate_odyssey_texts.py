@@ -264,7 +264,12 @@ _OWN_TEXT_ANCHORS = [
     ('translations_el.md', 'Σπανούδης', 'IX.25–28', 'Πιο κάτω χαμηλόττερα, Ιθάκη έν\' το νησίν μου,'),
     ('translations_el.md', 'Σπανούδης', 'IX.62–66', "τους φίλους που εππέσασιν νεκρούς ν'αθθυμηθούμεν."),
     ('translations_el.md', 'Σπανούδης', 'IX.72–75', 'Να μεν πνιούμεν τα πανιά χαμαί κάτω τραβούμεν'),
-    ('translations_el.md', 'Σπανούδης', 'IX.76–78', 'πίσω στα σπίθκια μας γεροί τζι όλα θα ήταν θάμμαν.'),
+    ('translations_el.md', 'Σπανούδης', 'IX.76–78', "τ'άσπρα πανιά σηκώννουμεν, αφό'μπην το κατάρτιν."),
+    # verses that sit beside the Greek lines they render (a block can begin or end mid-couplet)
+    ('translations_el.md', 'Σπανούδης', 'IX.34–38', "Από την Τροίαν πο'φευκα ο Ζεύς με καταράστην,"),
+    ('translations_el.md', 'Σπανούδης', 'IX.79–81', 'πίσω στα σπίθκια μας γεροί τζι όλα θα ήταν θάμμαν.'),
+    ('translations_el.md', 'Σπανούδης', 'IX.140–141', 'πάνω στα σιείλη του γιαλού γλυτζιύν νερόν θα τρέξει.'),
+    ('translations_el.md', 'Σπανούδης', 'IX.146–151', 'μήτε νησίν θωρούμεντε, μήτε τζαι πού πατούμεν.'),
     ('translations_el.md', 'Σπανούδης', 'IX.146–151', 'σωρώβκουμεν* τζειαμαί πανιά τα πλοία να δηθούσιν.'),
     ('translations_el.md', 'Σπανούδης', 'IX.177–180', 'Στους πάγκους τους εκάτσασιν τζαι τα σιοιννιά κρατούσιν,'),
 ]
@@ -285,6 +290,23 @@ def test_first_passages_hold_each_translators_own_text(file, translator, ref, li
 # verse ranges, clean text, and that a gloss sits right after the verse it explains.
 
 _SPANOUDIS_FRAGMENTS = {"Α'": (1, 30), "Ι'": (19, 166)}  # verses of the edition's own numbering the section may hold
+# The verses of the edition that each lesson stanza holds, assigned by sense (checked line by line against the Greek and
+# against an independent review): a block holds the consecutive verses that render its Greek lines, so a rhymed couplet is
+# split where its two verses render different stanzas (Ι' 35|36, 39|40, 69|70, 73|74, 81|82, 85|86, 99|100, 121|122,
+# 125|126, 131|132, 135|136). IX.29-33 has two verses only: the Calypso lines have no counterpart.
+_SPANOUDIS_RANGES = {
+    "I.1–5": ("Α'", 1, 8), "I.6–10": ("Α'", 9, 16), "I.11–15": ("Α'", 17, 24), "I.16–21": ("Α'", 25, 30),
+    "IX.19–24": ("Ι'", 19, 24), "IX.25–28": ("Ι'", 25, 28), "IX.29–33": ("Ι'", 29, 30), "IX.34–38": ("Ι'", 31, 35),
+    "IX.39–42": ("Ι'", 36, 39), "IX.43–46": ("Ι'", 40, 42), "IX.47–50": ("Ι'", 43, 46), "IX.51–55": ("Ι'", 47, 50),
+    "IX.56–61": ("Ι'", 51, 56), "IX.62–66": ("Ι'", 57, 62), "IX.67–71": ("Ι'", 63, 66), "IX.72–75": ("Ι'", 67, 69),
+    "IX.76–78": ("Ι'", 70, 73), "IX.79–81": ("Ι'", 74, 76), "IX.82–86": ("Ι'", 77, 81), "IX.87–90": ("Ι'", 82, 85),
+    "IX.91–93": ("Ι'", 86, 88), "IX.94–97": ("Ι'", 89, 92), "IX.98–104": ("Ι'", 93, 99), "IX.105–111": ("Ι'", 100, 106),
+    "IX.112–115": ("Ι'", 107, 110), "IX.116–121": ("Ι'", 111, 116), "IX.122–124": ("Ι'", 117, 118),
+    "IX.125–129": ("Ι'", 119, 121), "IX.130–133": ("Ι'", 122, 125), "IX.134–139": ("Ι'", 126, 131),
+    "IX.140–141": ("Ι'", 132, 132), "IX.142–145": ("Ι'", 133, 135), "IX.146–151": ("Ι'", 136, 140),
+    "IX.152–155": ("Ι'", 141, 144), "IX.156–160": ("Ι'", 145, 148), "IX.161–165": ("Ι'", 149, 152),
+    "IX.166–169": ("Ι'", 153, 156), "IX.170–176": ("Ι'", 157, 162), "IX.177–180": ("Ι'", 163, 166),
+}
 _SPANOUDIS_WORK_VERSES = 11076
 _SPANOUDIS_DRIFTS = {
     "footnote_mark": ("Μούσα, τον πολλοπάητον* άντραν", "Μούσα, τον πολλοπάητον*[^a1] άντραν"),
@@ -298,7 +320,7 @@ _SPANOUDIS_DRIFTS = {
     "cyrillic_letter": ("Εγιώ 'μαι του Λαέρτη", "Εгιώ 'μαι του Λαέρτη"),
     "extra_verse": ("πάντα πρασινισμένος.\n", "πάντα πρασινισμένος.\nμια στίχος που δεν υπάρχει\n"),
     "gap": ("στ. 25–28 -->", "στ. 26–28 -->"),
-    "divided_couplet": ("<!-- Ραψωδία Ι' στ. 29–30 -->", "<!-- Ραψωδία Ι' στ. 29–29 -->"),
+    "range_shorter_than_text": ("<!-- Ραψωδία Ι' στ. 29–30 -->", "<!-- Ραψωδία Ι' στ. 29–29 -->"),
     "gloss_on_wrong_verse": ("<!-- gloss: πολλοπάητον — ", "<!-- gloss: αλλοπάητον — "),
     "gloss_without_meaning": ("<!-- gloss: άβλαος — άνευ βλάβης -->", "<!-- gloss: άβλαος -->"),
     "no_range_comment": ("<!-- Ραψωδία Α' στ. 1–8 -->\n", ""),
@@ -328,8 +350,8 @@ def _spanoudis_problems(section: str) -> list:
         verse_total += len(verses)
         if len(verses) != last - first + 1:
             problems.append(f"{ref}: {len(verses)} verse lines for στ. {first}–{last}")
-        if first % 2 == 0 or last % 2 == 1:  # a rhymed couplet is an odd verse and the even verse after it
-            problems.append(f"{ref}: στ. {first}–{last} divides a couplet")
+        if _SPANOUDIS_RANGES.get(ref) != (rhapsody, first, last):
+            problems.append(f"{ref}: στ. {first}–{last} of {rhapsody}, expected {_SPANOUDIS_RANGES.get(ref)}")
         for verse in verses:
             if re.match(r"\d+\.", verse) or "*(" in verse or "[^" in verse or "####" in verse:
                 problems.append(f"{ref}: edition markup left in {verse!r}")
@@ -426,7 +448,9 @@ def test_spanoudis_description_and_provenance_state_what_was_reproduced():
     provenance = _spanoudis_section(body).splitlines()[2]
     assert provenance.startswith("<!-- Άκης Σπανούδης, Ομήρου Οδύσσεια")
     for phrase in ("In copyright", "the maintainer states that the translator permitted the use of fragments in the maintainer's demo",
-                   "the rest of the translation is NOT reproduced", "a couplet is never divided"):
+                   "the rest of the translation is NOT reproduced", "by sense, verse by verse",
+                   "a rhymed couplet is split where its two verses render different stanzas",
+                   "the Calypso lines IX.29-30 and IX.33 have no counterpart", "153 «Κίκονες» where the Greek has the Cyclopes"):
         assert phrase in provenance
     # the edition's data come from its imprint: 2nd edition, Larnaca 2020 (an earlier draft said Nicosia 2021)
     for phrase in ("Β' έκδοση", "Λάρνακα", "2020", "ISBN 978-9963-2489-1-9", "γλωσσική επιμέλεια: Κώστας Κατσώνης",

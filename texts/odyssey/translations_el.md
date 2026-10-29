@@ -28,7 +28,7 @@ sources:
   author: ed. A. T. Murray
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-10-29T10:04:12.626263+00:00'
+  at: '2026-10-29T11:04:30.413652+00:00'
 work: Odyssey
 passage: I.1-21, IX.19-180
 language: el
@@ -349,7 +349,7 @@ status: draft
 
 ## Σπανούδης
 
-<!-- Άκης Σπανούδης, Ομήρου Οδύσσεια στην κυπριακή διάλεκτο (the title on the imprint), in the Cypriot dialect (κυπριακή διάλεκτος / ντοπιολαλιά): a free rendering in rhymed couplets of fifteen-syllable verse, 11,076 verses in all; the preface says it was made from a Modern Greek version, not from the ancient text. The imprint names the author as Μιχαλάκης (Άκης) Σπανούδης: Β' έκδοση, Λάρνακα: Χαβιαράς & Φιλίππου ΔΕΠΕ, 2020, ISBN 978-9963-2489-1-9; γλωσσική επιμέλεια: Κώστας Κατσώνης. Print edition; no online copy was found. In copyright (the imprint forbids any reproduction without the creator's written permission): only fragments are reproduced here -- Ραψωδία Α' στ. 1-30 and Ι' στ. 19-166 of the edition's own numbering, 178 of 11,076 verses (1.6%) -- and the maintainer states that the translator permitted the use of fragments in the maintainer's demo; the rest of the translation is NOT reproduced. The text follows photographs of the printed pages that the maintainer supplied; the transcription first supplied differed from the book in many Cypriot spellings and in a few words, and the book is followed letter for letter, also where it looks like a slip (Ι' στ. 71 «εννοιες», 90 «με στους», 103 «Με σπέρνουν»). The one liberty is a space after the comma in a margin note that prints none (Α' στ. 1). The edition's verse numbers are dropped (each block's "Ραψωδία … στ. …" comment names its verses); its asterisks on glossed words are kept, and the margin notes that translate each starred Cypriot word into standard Greek are kept as "gloss" comment lines right after the verse. The verses were assigned to the stanzas by sense in this repository and a couplet is never divided, so a block can begin or end one line before or after its Greek lines. -->
+<!-- Άκης Σπανούδης, Ομήρου Οδύσσεια στην κυπριακή διάλεκτο (the title on the imprint), in the Cypriot dialect (κυπριακή διάλεκτος / ντοπιολαλιά): a free rendering in rhymed couplets of fifteen-syllable verse, 11,076 verses in all; the preface says it was made from a Modern Greek version, not from the ancient text. The imprint names the author as Μιχαλάκης (Άκης) Σπανούδης: Β' έκδοση, Λάρνακα: Χαβιαράς & Φιλίππου ΔΕΠΕ, 2020, ISBN 978-9963-2489-1-9; γλωσσική επιμέλεια: Κώστας Κατσώνης. Print edition; no online copy was found. In copyright (the imprint forbids any reproduction without the creator's written permission): only fragments are reproduced here -- Ραψωδία Α' στ. 1-30 and Ι' στ. 19-166 of the edition's own numbering, 178 of 11,076 verses (1.6%) -- and the maintainer states that the translator permitted the use of fragments in the maintainer's demo; the rest of the translation is NOT reproduced. The text follows photographs of the printed pages that the maintainer supplied; the transcription first supplied differed from the book in many Cypriot spellings and in a few words, and the book is followed letter for letter, also where it looks like a slip (Ι' στ. 71 «εννοιες», 90 «με στους», 103 «Με σπέρνουν», 153 «Κίκονες» where the Greek has the Cyclopes). The one liberty is a space after the comma in a margin note that prints none (Α' στ. 1). The edition's verse numbers are dropped (each block's "Ραψωδία … στ. …" comment names its verses); its asterisks on glossed words are kept, and the margin notes that translate each starred Cypriot word into standard Greek are kept as "gloss" comment lines right after the verse. The verses were assigned to the stanzas by sense, verse by verse, in this repository: a block holds the consecutive verses that render the Greek lines of its stanza, so it can begin or end a verse before or after them, and a rhymed couplet is split where its two verses render different stanzas. The rendering is free and condenses or reorders: IX.29-33 has two verses only (Ι' 29-30, which render the Circe lines IX.31-32; the Calypso lines IX.29-30 and IX.33 have no counterpart), and Ι' 71 renders IX.75 but follows the verse that renders IX.76. -->
 <!-- **Σπανούδης, 2020** · κυπριακή διάλεκτος (ντοπιολαλιά) · έμμετρη, ελεύθερη απόδοση σε δεκαπεντασύλλαβους με ζευγαρωτή ομοιοκαταληξία, κατά τον πρόλογο από μετάφραση στη δημοτική και όχι από το αρχαίο κείμενο · Β' έκδοση, Λάρνακα: Χαβιαράς & Φιλίππου ΔΕΠΕ · γλωσσική επιμέλεια Κ. Κατσώνης · αποσπάσματα (Α' στ. 1-30, Ι' στ. 19-166) με την άδεια του μεταφραστή · οι στίχοι μοιράζονται στις στροφές κατά το νόημα, όχι ένας προς έναν -->
 
 ### Odyss. I.1–5
@@ -429,26 +429,26 @@ status: draft
 
 ### Odyss. IX.34–38
 
-<!-- Ραψωδία Ι' στ. 31–34 -->
+<!-- Ραψωδία Ι' στ. 31–35 -->
 γιατ'εν έσιει καλλύττερον τόπον που τον δικόν σου,
 ούτε τζι αν σ'έχουν βασιλιάν έν' σαν το σπιτικόν σου.
 Μέσα στην μαύρην ξενιθκιάν, μακρά που τον γονιόν μου,
 ν'ακούσετε τα βάσανα που'βρα στον γυρισμόν μου.
+Από την Τροίαν πο'φευκα ο Ζεύς με καταράστην,
 
 ### Odyss. IX.39–42
 
-<!-- Ραψωδία Ι' στ. 35–38 -->
-Από την Τροίαν πο'φευκα ο Ζεύς με καταράστην,
+<!-- Ραψωδία Ι' στ. 36–39 -->
 στους Κίκονες ο άνεμος επέταξεν με ράστην*,
 <!-- gloss: ράστην — επακριβώς -->
 στην Ίσμαρον πο κάμαμεν πλιάτσικον* στα χωρκά τους
 <!-- gloss: πλιάτσικον — κουρσέψαμε -->
 τζι επιάμεν τες γεναίτζιες τους μακρά που τα παιδκιά τους.
+Τζι εστήνναν ίσια μοιρασιάν, να'ν ευκαριστημένοι,
 
 ### Odyss. IX.43–46
 
-<!-- Ραψωδία Ι' στ. 39–42 -->
-Τζι εστήνναν ίσια μοιρασιάν, να'ν ευκαριστημένοι,
+<!-- Ραψωδία Ι' στ. 40–42 -->
 να φεύκουν γλήορα μακρά, 'να'ν απομακρυσμένοι.
 Μ'αν δεν μ'ακούσαν οι στραβοί τζαι κάτω στ'ακρογιάλια
 μεθκιούν τζαι σφάζουσιν αρνιά, μα τζαι πασιά δαμάλια,
@@ -501,49 +501,49 @@ status: draft
 
 ### Odyss. IX.72–75
 
-<!-- Ραψωδία Ι' στ. 67–70 -->
+<!-- Ραψωδία Ι' στ. 67–69 -->
 Να μεν πνιούμεν τα πανιά χαμαί κάτω τραβούμεν
 τζαι παραλίαν πιάννουμεν άμαν χαμαί πατούμεν.
 Τζαι δκυο μερόνυχτα σωστά εκρύψαμεν τζιει πέρα
-τζι έφεξεν η χρυσή αυκή την τρίτην την ημέραν.
 
 ### Odyss. IX.76–78
 
-<!-- Ραψωδία Ι' στ. 71–74 -->
+<!-- Ραψωδία Ι' στ. 70–73 -->
+τζι έφεξεν η χρυσή αυκή την τρίτην την ημέραν.
 Οι εννοιες τζαι το βάσανον μες στην ψυσιήν μας θά'ρτει,
 τ'άσπρα πανιά σηκώννουμεν, αφό'μπην το κατάρτιν.
 Με τον τζαιρόν για οδηγόν τζι οι καπετάνι'αντάμα,
-πίσω στα σπίθκια μας γεροί τζι όλα θα ήταν θάμμαν.
 
 ### Odyss. IX.79–81
 
-<!-- Ραψωδία Ι' στ. 75–76 -->
+<!-- Ραψωδία Ι' στ. 74–76 -->
+πίσω στα σπίθκια μας γεροί τζι όλα θα ήταν θάμμαν.
 Άμαν επέρνουν τον Μαλιάν, το τζύμμαν θα μ'αφήσει
 τζαι ο βορκάς στα Κύθηρα έξω'ννά με βουννήσει.
 
 ### Odyss. IX.82–86
 
-<!-- Ραψωδία Ι' στ. 77–82 -->
+<!-- Ραψωδία Ι' στ. 77–81 -->
 Εννιά μερόνυχτα σωστά, με τους ανέμους τάρκα*,
 <!-- gloss: τάρκα — ενάντια -->
 η θάλασσα αχτύπαν μου τούτη που τρέφει ψάρκα.
 Στες δέκα μέρες το λοιπόν στους λωτοφάγους πάμεν,
 τούτοι που τρέφουνται μ'ανθούς, νάκκον νερόν να πιάμεν.
 Εσάσασιν οι ναύτες μου τραπέζιν για να φάμεν
-τζι άμαν εποσπαστήκαμεν, απόφασην θα πιάμεν,
 
 ### Odyss. IX.87–90
 
-<!-- Ραψωδία Ι' στ. 83–86 -->
+<!-- Ραψωδία Ι' στ. 82–85 -->
+τζι άμαν εποσπαστήκαμεν, απόφασην θα πιάμεν,
 κάποιοι που τους αδρώπους μου να πά' ν'αναορέψουν*
 <!-- gloss: αναορέψουν — ψάξουν -->
 ποιοι έν' πο ζιούσασιν τζειαμαί, χαπάριν να μου πέψουν.
 Δκιαλέω δκυο που τους καλούς αλλά τζι έναν τελλάλην
-τζι όπως πααίννουν βουρητοί τζαι λάμνουσιν καπάλιν,
 
 ### Odyss. IX.91–93
 
-<!-- Ραψωδία Ι' στ. 87–88 -->
+<!-- Ραψωδία Ι' στ. 86–88 -->
+τζι όπως πααίννουν βουρητοί τζαι λάμνουσιν καπάλιν,
 τους λωτοφάγους βρίσκουσιν τζαι τζιείνοι τους καλιούσιν,
 εδώσαν τους να φαν λωτούς, να ευκαριστηθούσιν.
 
@@ -558,7 +558,7 @@ status: draft
 
 ### Odyss. IX.98–104
 
-<!-- Ραψωδία Ι' στ. 93–100 -->
+<!-- Ραψωδία Ι' στ. 93–99 -->
 Με το στανιόν ι-στρέφω τους τζι ας κλαίσιν στα παλάθκια
 τζι έδηννά τους αξάγκωνα* τζι έριβκά τους στ'αμπάρκα.
 <!-- gloss: αξάγκωνα — οπισθάγγονα, έριχνα -->
@@ -567,11 +567,11 @@ status: draft
 μεν δοτζιημάσουν τους λωτούς γιατ'εννά λησμονήσουν
 τον τόπον, την πατρίδαν τους τζι αμέσως θα καθήσουν.
 Με τα κουπιά αρκέψασιν για να κωπηλατούσιν
-τζι έτσι με μαύρην την καρκιάν τζαι όπως προχωρούσιν,
 
 ### Odyss. IX.105–111
 
-<!-- Ραψωδία Ι' στ. 101–106 -->
+<!-- Ραψωδία Ι' στ. 100–106 -->
+τζι έτσι με μαύρην την καρκιάν τζαι όπως προχωρούσιν,
 επήαμεν στους Κύκλωπες εκτός νόμου που ήσαν,
 πως έχουν δύναμην θεού, έτσι το ενομίσαν.
 Με σπέρνουν, με θερίζουσιν, μήτε τζαι αλετρίζουν*
@@ -608,47 +608,47 @@ status: draft
 
 ### Odyss. IX.125–129
 
-<!-- Ραψωδία Ι' στ. 119–122 -->
+<!-- Ραψωδία Ι' στ. 119–121 -->
 Μήτε τζαι πλοία έχουσιν αλλού για να σαλπάρουν,
 σε άλλους τόπους διπλανούς, να δώσουν ή να πάρουν,
 όπως οι άλλοι θέλασιν αλλού να ταξιδέψουν,
-να φέρουν κόσμον στο νησίν, μιτά τους να δουλέψουν.
 
 ### Odyss. IX.130–133
 
-<!-- Ραψωδία Ι' στ. 123–126 -->
+<!-- Ραψωδία Ι' στ. 122–125 -->
+να φέρουν κόσμον στο νησίν, μιτά τους να δουλέψουν.
 Αφούς έννεν ξερότοπος εννά πολλοκαρπίσει,
 καρπόν πολλύν ολόγρονα ο τόπος θα γιωρκήσει.
 Πάνω στα καλοχώματα τ'αμπέλια μπορ'απλώσουν.
-Όμορφη γη, πασιόχωμαν σίουρα εννά δώσουν
 
 ### Odyss. IX.134–139
 
-<!-- Ραψωδία Ι' στ. 127–130 -->
+<!-- Ραψωδία Ι' στ. 126–131 -->
+Όμορφη γη, πασιόχωμαν σίουρα εννά δώσουν
 πολλύν καρπόν στον θερισμόν, εννά βρουν να σωρέψουν.
 Τζαι σε λιμάνιν ήσυχον τα πλοία να πεζέψουν,
 μήτ'άγκυρες, μήτε σιοιννιά θα γρειαστεί να δήσεις
 τζαι μπόρεις ανεπάπουλλα* τζαιρόν για να καθήσεις.
 <!-- gloss: ανεπάπουλλα — απροσδόκητα, χωρίς σκοτούρες -->
+Τζι άμαν φυσήσει άνεμος, το πλοίον θ'αρκινέψει,
 
 ### Odyss. IX.140–141
 
-<!-- Ραψωδία Ι' στ. 131–132 -->
-Τζι άμαν φυσήσει άνεμος, το πλοίον θ'αρκινέψει,
+<!-- Ραψωδία Ι' στ. 132–132 -->
 πάνω στα σιείλη του γιαλού γλυτζιύν νερόν θα τρέξει.
 
 ### Odyss. IX.142–145
 
-<!-- Ραψωδία Ι' στ. 133–136 -->
+<!-- Ραψωδία Ι' στ. 133–135 -->
 Πάμεν τζειαμαί τζι ένας θεός εννά μας οδηγήσει,
 μήτε φεγγάριν έφεγγεν να δει πού θα πατήσει.
 Μέσα στην λειψοφεγγαρκάν πισσούρκα*, προχωρούμεν,
 <!-- gloss: πισσούρκα — βαθιά σκοτάδια -->
-μήτε νησίν θωρούμεντε, μήτε τζαι πού πατούμεν.
 
 ### Odyss. IX.146–151
 
-<!-- Ραψωδία Ι' στ. 137–140 -->
+<!-- Ραψωδία Ι' στ. 136–140 -->
+μήτε νησίν θωρούμεντε, μήτε τζαι πού πατούμεν.
 Με τζύμμαν, με ακρογιαλιές τα πλοία που πατούσιν,
 σωρώβκουμεν* τζειαμαί πανιά τα πλοία να δηθούσιν.
 <!-- gloss: σωρώβκουμεν — μαζεύουμε -->
