@@ -293,20 +293,22 @@ _SPANOUDIS_FRAGMENTS = {"Α'": (1, 30), "Ι'": (19, 166)}  # verses of the editi
 # The verses of the edition that each lesson stanza holds, assigned by sense (checked line by line against the Greek and
 # against an independent review): a block holds the consecutive verses that render its Greek lines, so a rhymed couplet is
 # split where its two verses render different stanzas (Ι' 35|36, 39|40, 69|70, 73|74, 81|82, 85|86, 99|100, 121|122,
-# 125|126, 131|132, 135|136). IX.29-33 has two verses only: the Calypso lines have no counterpart.
+# 125|126, 131|132, 135|136), and a verse that renders Greek lines of two stanzas stands in both blocks (the overlaps
+# below). IX.29-33 has two verses only: the Calypso lines have no counterpart.
 _SPANOUDIS_RANGES = {
     "I.1–5": ("Α'", 1, 8), "I.6–10": ("Α'", 9, 16), "I.11–15": ("Α'", 17, 24), "I.16–21": ("Α'", 25, 30),
     "IX.19–24": ("Ι'", 19, 24), "IX.25–28": ("Ι'", 25, 28), "IX.29–33": ("Ι'", 29, 30), "IX.34–38": ("Ι'", 31, 35),
-    "IX.39–42": ("Ι'", 36, 39), "IX.43–46": ("Ι'", 40, 42), "IX.47–50": ("Ι'", 43, 46), "IX.51–55": ("Ι'", 47, 50),
-    "IX.56–61": ("Ι'", 51, 56), "IX.62–66": ("Ι'", 57, 62), "IX.67–71": ("Ι'", 63, 66), "IX.72–75": ("Ι'", 67, 69),
+    "IX.39–42": ("Ι'", 35, 39), "IX.43–46": ("Ι'", 40, 42), "IX.47–50": ("Ι'", 43, 46), "IX.51–55": ("Ι'", 47, 50),
+    "IX.56–61": ("Ι'", 51, 56), "IX.62–66": ("Ι'", 57, 62), "IX.67–71": ("Ι'", 63, 66), "IX.72–75": ("Ι'", 67, 71),
     "IX.76–78": ("Ι'", 70, 73), "IX.79–81": ("Ι'", 74, 76), "IX.82–86": ("Ι'", 77, 81), "IX.87–90": ("Ι'", 82, 85),
     "IX.91–93": ("Ι'", 86, 88), "IX.94–97": ("Ι'", 89, 92), "IX.98–104": ("Ι'", 93, 99), "IX.105–111": ("Ι'", 100, 106),
-    "IX.112–115": ("Ι'", 107, 110), "IX.116–121": ("Ι'", 111, 116), "IX.122–124": ("Ι'", 117, 118),
+    "IX.112–115": ("Ι'", 107, 110), "IX.116–121": ("Ι'", 111, 117), "IX.122–124": ("Ι'", 117, 118),
     "IX.125–129": ("Ι'", 119, 121), "IX.130–133": ("Ι'", 122, 125), "IX.134–139": ("Ι'", 126, 131),
-    "IX.140–141": ("Ι'", 132, 132), "IX.142–145": ("Ι'", 133, 135), "IX.146–151": ("Ι'", 136, 140),
+    "IX.140–141": ("Ι'", 132, 132), "IX.142–145": ("Ι'", 133, 136), "IX.146–151": ("Ι'", 136, 140),
     "IX.152–155": ("Ι'", 141, 144), "IX.156–160": ("Ι'", 145, 148), "IX.161–165": ("Ι'", 149, 152),
     "IX.166–169": ("Ι'", 153, 156), "IX.170–176": ("Ι'", 157, 162), "IX.177–180": ("Ι'", 163, 166),
 }
+_SPANOUDIS_REPEATED = {("Ι'", 35), ("Ι'", 70), ("Ι'", 71), ("Ι'", 117), ("Ι'", 136)}  # verses that stand in two blocks
 _SPANOUDIS_WORK_VERSES = 11076
 _SPANOUDIS_DRIFTS = {
     "footnote_mark": ("Μούσα, τον πολλοπάητον* άντραν", "Μούσα, τον πολλοπάητον*[^a1] άντραν"),
@@ -383,9 +385,9 @@ def _spanoudis_problems(section: str) -> list:
         found = spans[rhapsody]
         if not found or found[0][0] != start or found[-1][1] != end:
             problems.append(f"{rhapsody}: blocks do not run from στ. {start} to στ. {end}")
-        for (_, previous_last), (next_first, _) in zip(found, found[1:]):
-            if next_first != previous_last + 1:
-                problems.append(f"{rhapsody}: στ. {previous_last} is followed by στ. {next_first}")
+        for (previous_first, previous_last), (next_first, next_last) in zip(found, found[1:]):
+            if not previous_first <= next_first <= previous_last + 1 or next_last < previous_last:
+                problems.append(f"{rhapsody}: στ. {previous_first}–{previous_last} is followed by στ. {next_first}–{next_last}")
     if verse_total > 0.02 * _SPANOUDIS_WORK_VERSES:  # fragments only: the permission does not cover the work
         problems.append(f"{verse_total} verses is more than fragments of an {_SPANOUDIS_WORK_VERSES}-verse work")
     return problems
@@ -423,6 +425,22 @@ def test_spanoudis_guard_rejects_drifted_copies(kind):
     assert _spanoudis_problems(section.replace(old, new)) != []
 
 
+def test_spanoudis_repeats_only_the_verses_that_render_two_stanzas():
+    """Overlaps are deliberate: a verse that renders Greek lines of two stanzas stands in both blocks, and nothing else is
+    repeated; the 178 verses of the fragments are all there (183 verse lines)."""
+    _, body = _spanoudis_el_file()
+    counts = {}
+    for ref, (rhapsody, first, last) in _SPANOUDIS_RANGES.items():
+        for number in range(first, last + 1):
+            counts[(rhapsody, number)] = counts.get((rhapsody, number), 0) + 1
+    assert {verse for verse, count in counts.items() if count > 1} == _SPANOUDIS_REPEATED
+    assert all(count <= 2 for count in counts.values())
+    assert len(counts) == 178 and sum(counts.values()) == 183
+    stanzas, _ = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
+    shown = [line for ref in stanzas["Σπανούδης"] for line in eee.strip_comment_lines(stanzas["Σπανούδης"][ref]).splitlines()]
+    assert len(shown) == 183 and len(set(shown)) == 178
+
+
 def test_spanoudis_gloss_strips_away_and_is_kept_in_the_raw_text():
     """The edition's margin notes (Cypriot word -> standard Greek) are data, not verse: strip_comment_lines removes
     them, so a lesson reads them from the raw text first; the asterisk on the starred word stays in the verse."""
@@ -450,6 +468,7 @@ def test_spanoudis_description_and_provenance_state_what_was_reproduced():
     for phrase in ("In copyright", "the maintainer states that the translator permitted the use of fragments in the maintainer's demo",
                    "the rest of the translation is NOT reproduced", "by sense, verse by verse",
                    "a rhymed couplet is split where its two verses render different stanzas",
+                   "a verse that renders Greek lines of two stanzas is repeated in both blocks",
                    "the Calypso lines IX.29-30 and IX.33 have no counterpart", "153 «Κίκονες» where the Greek has the Cyclopes"):
         assert phrase in provenance
     # the edition's data come from its imprint: 2nd edition, Larnaca 2020 (an earlier draft said Nicosia 2021)

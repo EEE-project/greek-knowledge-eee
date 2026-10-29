@@ -28,7 +28,7 @@ sources:
   author: ed. A. T. Murray
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-10-29T11:04:30.413652+00:00'
+  at: '2026-10-29T11:11:06.703773+00:00'
 work: Odyssey
 passage: I.1-21, IX.19-180
 language: el
@@ -349,7 +349,7 @@ status: draft
 
 ## Σπανούδης
 
-<!-- Άκης Σπανούδης, Ομήρου Οδύσσεια στην κυπριακή διάλεκτο (the title on the imprint), in the Cypriot dialect (κυπριακή διάλεκτος / ντοπιολαλιά): a free rendering in rhymed couplets of fifteen-syllable verse, 11,076 verses in all; the preface says it was made from a Modern Greek version, not from the ancient text. The imprint names the author as Μιχαλάκης (Άκης) Σπανούδης: Β' έκδοση, Λάρνακα: Χαβιαράς & Φιλίππου ΔΕΠΕ, 2020, ISBN 978-9963-2489-1-9; γλωσσική επιμέλεια: Κώστας Κατσώνης. Print edition; no online copy was found. In copyright (the imprint forbids any reproduction without the creator's written permission): only fragments are reproduced here -- Ραψωδία Α' στ. 1-30 and Ι' στ. 19-166 of the edition's own numbering, 178 of 11,076 verses (1.6%) -- and the maintainer states that the translator permitted the use of fragments in the maintainer's demo; the rest of the translation is NOT reproduced. The text follows photographs of the printed pages that the maintainer supplied; the transcription first supplied differed from the book in many Cypriot spellings and in a few words, and the book is followed letter for letter, also where it looks like a slip (Ι' στ. 71 «εννοιες», 90 «με στους», 103 «Με σπέρνουν», 153 «Κίκονες» where the Greek has the Cyclopes). The one liberty is a space after the comma in a margin note that prints none (Α' στ. 1). The edition's verse numbers are dropped (each block's "Ραψωδία … στ. …" comment names its verses); its asterisks on glossed words are kept, and the margin notes that translate each starred Cypriot word into standard Greek are kept as "gloss" comment lines right after the verse. The verses were assigned to the stanzas by sense, verse by verse, in this repository: a block holds the consecutive verses that render the Greek lines of its stanza, so it can begin or end a verse before or after them, and a rhymed couplet is split where its two verses render different stanzas. The rendering is free and condenses or reorders: IX.29-33 has two verses only (Ι' 29-30, which render the Circe lines IX.31-32; the Calypso lines IX.29-30 and IX.33 have no counterpart), and Ι' 71 renders IX.75 but follows the verse that renders IX.76. -->
+<!-- Άκης Σπανούδης, Ομήρου Οδύσσεια στην κυπριακή διάλεκτο (the title on the imprint), in the Cypriot dialect (κυπριακή διάλεκτος / ντοπιολαλιά): a free rendering in rhymed couplets of fifteen-syllable verse, 11,076 verses in all; the preface says it was made from a Modern Greek version, not from the ancient text. The imprint names the author as Μιχαλάκης (Άκης) Σπανούδης: Β' έκδοση, Λάρνακα: Χαβιαράς & Φιλίππου ΔΕΠΕ, 2020, ISBN 978-9963-2489-1-9; γλωσσική επιμέλεια: Κώστας Κατσώνης. Print edition; no online copy was found. In copyright (the imprint forbids any reproduction without the creator's written permission): only fragments are reproduced here -- Ραψωδία Α' στ. 1-30 and Ι' στ. 19-166 of the edition's own numbering, 178 of 11,076 verses (1.6%) -- and the maintainer states that the translator permitted the use of fragments in the maintainer's demo; the rest of the translation is NOT reproduced. The text follows photographs of the printed pages that the maintainer supplied; the transcription first supplied differed from the book in many Cypriot spellings and in a few words, and the book is followed letter for letter, also where it looks like a slip (Ι' στ. 71 «εννοιες», 90 «με στους», 103 «Με σπέρνουν», 153 «Κίκονες» where the Greek has the Cyclopes). The one liberty is a space after the comma in a margin note that prints none (Α' στ. 1). The edition's verse numbers are dropped (each block's "Ραψωδία … στ. …" comment names its verses); its asterisks on glossed words are kept, and the margin notes that translate each starred Cypriot word into standard Greek are kept as "gloss" comment lines right after the verse. The verses were assigned to the stanzas by sense, verse by verse, in this repository: a block holds the consecutive verses that render the Greek lines of its stanza, so it can begin or end a verse before or after them; a rhymed couplet is split where its two verses render different stanzas, and a verse that renders Greek lines of two stanzas is repeated in both blocks (Ι' 35, 70, 71, 117 and 136: the 178 verses make 183 verse lines). The rendering is free and condenses or reorders: IX.29-33 has two verses only (Ι' 29-30, which render the Circe lines IX.31-32; the Calypso lines IX.29-30 and IX.33 have no counterpart), and Ι' 71 renders IX.75 but follows the verse that renders IX.76 (so Ι' 70-71 stand in both IX.72-75 and IX.76-78). -->
 <!-- **Σπανούδης, 2020** · κυπριακή διάλεκτος (ντοπιολαλιά) · έμμετρη, ελεύθερη απόδοση σε δεκαπεντασύλλαβους με ζευγαρωτή ομοιοκαταληξία, κατά τον πρόλογο από μετάφραση στη δημοτική και όχι από το αρχαίο κείμενο · Β' έκδοση, Λάρνακα: Χαβιαράς & Φιλίππου ΔΕΠΕ · γλωσσική επιμέλεια Κ. Κατσώνης · αποσπάσματα (Α' στ. 1-30, Ι' στ. 19-166) με την άδεια του μεταφραστή · οι στίχοι μοιράζονται στις στροφές κατά το νόημα, όχι ένας προς έναν -->
 
 ### Odyss. I.1–5
@@ -438,7 +438,8 @@ status: draft
 
 ### Odyss. IX.39–42
 
-<!-- Ραψωδία Ι' στ. 36–39 -->
+<!-- Ραψωδία Ι' στ. 35–39 -->
+Από την Τροίαν πο'φευκα ο Ζεύς με καταράστην,
 στους Κίκονες ο άνεμος επέταξεν με ράστην*,
 <!-- gloss: ράστην — επακριβώς -->
 στην Ίσμαρον πο κάμαμεν πλιάτσικον* στα χωρκά τους
@@ -501,10 +502,12 @@ status: draft
 
 ### Odyss. IX.72–75
 
-<!-- Ραψωδία Ι' στ. 67–69 -->
+<!-- Ραψωδία Ι' στ. 67–71 -->
 Να μεν πνιούμεν τα πανιά χαμαί κάτω τραβούμεν
 τζαι παραλίαν πιάννουμεν άμαν χαμαί πατούμεν.
 Τζαι δκυο μερόνυχτα σωστά εκρύψαμεν τζιει πέρα
+τζι έφεξεν η χρυσή αυκή την τρίτην την ημέραν.
+Οι εννοιες τζαι το βάσανον μες στην ψυσιήν μας θά'ρτει,
 
 ### Odyss. IX.76–78
 
@@ -591,7 +594,7 @@ status: draft
 
 ### Odyss. IX.116–121
 
-<!-- Ραψωδία Ι' στ. 111–116 -->
+<!-- Ραψωδία Ι' στ. 111–117 -->
 Τζιειαμαί κοντά στους Κύκλωπες, δίπλα στο λιμανούιν,
 έναν νησίν τέλεια κοντά πολλά μιτσικουρούιν*,
 <!-- gloss: μιτσικουρούιν — μικρό -->
@@ -599,6 +602,7 @@ status: draft
 να βόσσιουν οι αρκόαιγες, γιατί στα μονοπάθκια
 κανένας εν τα πάτησεν για να τα φοητσιάσουν,
 μήτε τζαι πάσιν τζυνηοί τάχα για να τα πιάσουν.
+Πάνω στες μούττες των βουνών πόδιν έθθα πατήσει,
 
 ### Odyss. IX.122–124
 
@@ -639,11 +643,12 @@ status: draft
 
 ### Odyss. IX.142–145
 
-<!-- Ραψωδία Ι' στ. 133–135 -->
+<!-- Ραψωδία Ι' στ. 133–136 -->
 Πάμεν τζειαμαί τζι ένας θεός εννά μας οδηγήσει,
 μήτε φεγγάριν έφεγγεν να δει πού θα πατήσει.
 Μέσα στην λειψοφεγγαρκάν πισσούρκα*, προχωρούμεν,
 <!-- gloss: πισσούρκα — βαθιά σκοτάδια -->
+μήτε νησίν θωρούμεντε, μήτε τζαι πού πατούμεν.
 
 ### Odyss. IX.146–151
 
