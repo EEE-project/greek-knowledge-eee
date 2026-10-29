@@ -256,13 +256,17 @@ _OWN_TEXT_ANCHORS = [
     ('translations_ru.md', 'Жуковский', 'IX.170–176', 'Дикий ли, нравом свирепый, не знающий веры и правды,'),
     ('translations_ru.md', 'Жуковский', 'IX.116–121', 'Шум; никогда не заглядывал к ним звероловец, за дичью'),
     ('translations_ru.md', 'Вересаев', 'IX.166–169', 'Дым, голоса их самих, овечье и козье блеянье.'),
-    # Σπανούδης: the print edition, as transcribed by the maintainer; the three Latin-v words are the corrected ones
-    ('translations_el.md', 'Σπανούδης', 'I.1–5', 'Μούσα, τον πολλοπάητον* άντραν να τραγουδήσεις,'),
-    ('translations_el.md', 'Σπανούδης', 'IX.19–24', "Εγιώ 'μαι του Λαέρτη γιος τζαι φτάνν' η πονηριά μου"),
-    ('translations_el.md', 'Σπανούδης', 'IX.62–66', "τους φίλους που εππέσασιν νεκρούς ν' αθθυμηθούμεν."),
+    # Σπανούδης: the print edition, as read from photographs of its pages (the first transcription differed from the book
+    # in many spellings -- g-dropped πααίννει, πελάη, τραουδήσεις; the doubled χαμηλόττερα; the unspaced ν'αθθυμηθούμεν)
+    ('translations_el.md', 'Σπανούδης', 'I.1–5', 'Μούσα, τον πολλοπάητον* άντραν να τραουδήσεις,'),
+    ('translations_el.md', 'Σπανούδης', 'IX.19–24', "Εγιώ 'μαι του Λαέρτη γιος τζαι φτάνν'η πονηρκά μου"),
+    ('translations_el.md', 'Σπανούδης', 'IX.19–24', "που δαχαμ'ως τον ουρανόν, πααίννει τζι αρτηρά μου"),
+    ('translations_el.md', 'Σπανούδης', 'IX.25–28', 'Πιο κάτω χαμηλόττερα, Ιθάκη έν\' το νησίν μου,'),
+    ('translations_el.md', 'Σπανούδης', 'IX.62–66', "τους φίλους που εππέσασιν νεκρούς ν'αθθυμηθούμεν."),
     ('translations_el.md', 'Σπανούδης', 'IX.72–75', 'Να μεν πνιούμεν τα πανιά χαμαί κάτω τραβούμεν'),
     ('translations_el.md', 'Σπανούδης', 'IX.76–78', 'πίσω στα σπίθκια μας γεροί τζι όλα θα ήταν θάμμαν.'),
-    ('translations_el.md', 'Σπανούδης', 'IX.177–180', 'Στους πάγκους τους εκάτσασιν τζαι τα σιοινιά κρατούσιν,'),
+    ('translations_el.md', 'Σπανούδης', 'IX.146–151', 'σωρώβκουμεν* τζειαμαί πανιά τα πλοία να δηθούσιν.'),
+    ('translations_el.md', 'Σπανούδης', 'IX.177–180', 'Στους πάγκους τους εκάτσασιν τζαι τα σιοιννιά κρατούσιν,'),
 ]
 
 
@@ -285,10 +289,10 @@ _SPANOUDIS_WORK_VERSES = 11076
 _SPANOUDIS_DRIFTS = {
     "footnote_mark": ("Μούσα, τον πολλοπάητον* άντραν", "Μούσα, τον πολλοπάητον*[^a1] άντραν"),
     "verse_number": ("Μούσα, τον πολλοπάητον* άντραν", "1. Μούσα, τον πολλοπάητον* άντραν"),
-    "star_without_note": ("τα όσα είδεν τζαι έπαθεν", "τα όσα* είδεν τζαι έπαθεν"),
+    "star_without_note": ("τα όσα είδεν τζι έπαθεν", "τα όσα* είδεν τζι έπαθεν"),
     "note_without_star": ("Μούσα, τον πολλοπάητον* άντραν", "Μούσα, τον πολλοπάητον άντραν"),
     "star_on_another_word": ("Μούσα, τον πολλοπάητον* άντραν", "Μούσα, τον* πολλοπάητον άντραν"),
-    "meaning_not_greek": ("<!-- gloss: άβλαβος — άνευ βλάβης -->", "<!-- gloss: άβλαβος — harmless -->"),
+    "meaning_not_greek": ("<!-- gloss: άβλαος — άνευ βλάβης -->", "<!-- gloss: άβλαος — harmless -->"),
     "book_marker": ("τούτος καμπόσους τόπους,", "τούτος καμπόσους τόπους, *(5)*"),
     "latin_v": ("χαμαί κάτω τραβούμεν", "χαμαί κάτω τραβούμεv"),
     "cyrillic_letter": ("Εγιώ 'μαι του Λαέρτη", "Εгιώ 'μαι του Λαέρτη"),
@@ -296,7 +300,7 @@ _SPANOUDIS_DRIFTS = {
     "gap": ("στ. 25–28 -->", "στ. 26–28 -->"),
     "divided_couplet": ("<!-- Ραψωδία Ι' στ. 29–30 -->", "<!-- Ραψωδία Ι' στ. 29–29 -->"),
     "gloss_on_wrong_verse": ("<!-- gloss: πολλοπάητον — ", "<!-- gloss: αλλοπάητον — "),
-    "gloss_without_meaning": ("<!-- gloss: άβλαβος — άνευ βλάβης -->", "<!-- gloss: άβλαβος -->"),
+    "gloss_without_meaning": ("<!-- gloss: άβλαος — άνευ βλάβης -->", "<!-- gloss: άβλαος -->"),
     "no_range_comment": ("<!-- Ραψωδία Α' στ. 1–8 -->\n", ""),
 }
 
@@ -405,7 +409,7 @@ def test_spanoudis_gloss_strips_away_and_is_kept_in_the_raw_text():
 
     raw = stanzas["Σπανούδης"]["I.1–5"]
     assert "Μούσα, τον πολλοπάητον* άντραν" in raw
-    assert "<!-- gloss: πολλοπάητον — παμπόνηρος, πανέξυπνος -->" in raw
+    assert "<!-- gloss: πολλοπάητον — παμπόνηρος, πανέξυπνος -->" in raw  # the book prints no space after the comma
     shown = eee.strip_comment_lines(raw)
     assert "πολλοπάητον*" in shown  # the star is part of the verse; only the note is a comment
     assert "gloss" not in shown and "<!--" not in shown
@@ -424,5 +428,14 @@ def test_spanoudis_description_and_provenance_state_what_was_reproduced():
     for phrase in ("In copyright", "the maintainer states that the translator permitted the use of fragments in the maintainer's demo",
                    "the rest of the translation is NOT reproduced", "a couplet is never divided"):
         assert phrase in provenance
+    # the edition's data come from its imprint: 2nd edition, Larnaca 2020 (an earlier draft said Nicosia 2021)
+    for phrase in ("Β' έκδοση", "Λάρνακα", "2020", "ISBN 978-9963-2489-1-9", "γλωσσική επιμέλεια: Κώστας Κατσώνης",
+                   "the imprint forbids any reproduction without the creator's written permission"):
+        assert phrase in provenance
+    assert "Λευκωσία" not in provenance and "2021" not in provenance
+    assert "2020" in descriptions["Σπανούδης"] and "Λάρνακα" in descriptions["Σπανούδης"]
     assert frontmatter["translators"] == ["Πολυλάς", "Σπανούδης", "interlinear_el", "Καζαντζάκης/Κακριδής (reference only)"]
-    assert "tr-spanoudis2021" in {source["id"] for source in frontmatter["sources"]}
+    sources = {source["id"]: source for source in frontmatter["sources"]}
+    assert "tr-spanoudis2020" in sources and "tr-spanoudis2021" not in sources
+    assert "ISBN 978-9963-2489-1-9" in sources["tr-spanoudis2020"]["resource"]
+    assert "2020" in frontmatter["description"] and "2021" not in frontmatter["description"]
