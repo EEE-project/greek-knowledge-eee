@@ -257,7 +257,7 @@ _OWN_TEXT_ANCHORS = [
     ('translations_ru.md', 'Жуковский', 'IX.116–121', 'Шум; никогда не заглядывал к ним звероловец, за дичью'),
     ('translations_ru.md', 'Вересаев', 'IX.166–169', 'Дым, голоса их самих, овечье и козье блеянье.'),
     # Σπανούδης: the print edition, as transcribed by the maintainer; the three Latin-v words are the corrected ones
-    ('translations_el.md', 'Σπανούδης', 'I.1–5', 'Μούσα, τον πολλοπάητον άντραν να τραγουδήσεις,'),
+    ('translations_el.md', 'Σπανούδης', 'I.1–5', 'Μούσα, τον πολλοπάητον* άντραν να τραγουδήσεις,'),
     ('translations_el.md', 'Σπανούδης', 'IX.19–24', "Εγιώ 'μαι του Λαέρτη γιος τζαι φτάνν' η πονηριά μου"),
     ('translations_el.md', 'Σπανούδης', 'IX.62–66', "τους φίλους που εππέσασιν νεκρούς ν' αθθυμηθούμεν."),
     ('translations_el.md', 'Σπανούδης', 'IX.72–75', 'Να μεν πνιούμεν τα πανιά χαμαί κάτω τραβούμεν'),
@@ -283,8 +283,12 @@ def test_first_passages_hold_each_translators_own_text(file, translator, ref, li
 _SPANOUDIS_FRAGMENTS = {"Α'": (1, 30), "Ι'": (19, 166)}  # verses of the edition's own numbering the section may hold
 _SPANOUDIS_WORK_VERSES = 11076
 _SPANOUDIS_DRIFTS = {
-    "footnote_mark": ("Μούσα, τον πολλοπάητον άντραν", "Μούσα, τον πολλοπάητον[^a1] άντραν"),
-    "verse_number": ("Μούσα, τον πολλοπάητον άντραν", "1. Μούσα, τον πολλοπάητον άντραν"),
+    "footnote_mark": ("Μούσα, τον πολλοπάητον* άντραν", "Μούσα, τον πολλοπάητον*[^a1] άντραν"),
+    "verse_number": ("Μούσα, τον πολλοπάητον* άντραν", "1. Μούσα, τον πολλοπάητον* άντραν"),
+    "star_without_note": ("τα όσα είδεν τζαι έπαθεν", "τα όσα* είδεν τζαι έπαθεν"),
+    "note_without_star": ("Μούσα, τον πολλοπάητον* άντραν", "Μούσα, τον πολλοπάητον άντραν"),
+    "star_on_another_word": ("Μούσα, τον πολλοπάητον* άντραν", "Μούσα, τον* πολλοπάητον άντραν"),
+    "meaning_not_greek": ("<!-- gloss: άβλαβος — άνευ βλάβης -->", "<!-- gloss: άβλαβος — harmless -->"),
     "book_marker": ("τούτος καμπόσους τόπους,", "τούτος καμπόσους τόπους, *(5)*"),
     "latin_v": ("χαμαί κάτω τραβούμεν", "χαμαί κάτω τραβούμεv"),
     "cyrillic_letter": ("Εγιώ 'μαι του Λαέρτη", "Εгιώ 'μαι του Λαέρτη"),
@@ -327,16 +331,28 @@ def _spanoudis_problems(section: str) -> list:
                 problems.append(f"{ref}: edition markup left in {verse!r}")
             if re.search(r"[A-Za-zЀ-ӿ]", verse):
                 problems.append(f"{ref}: Latin or Cyrillic letter in {verse!r}")
-        for before, line in zip(lines, lines[1:]):
-            if not line.startswith("<!-- gloss:"):
+        for position, verse in enumerate(lines):
+            if verse.startswith("<!--"):
                 continue
-            match = re.fullmatch(r"<!-- gloss: (.+) -->", line)
-            for part in match.group(1).split(" · ") if match else []:
+            following = lines[position + 1] if position + 1 < len(lines) else ""
+            parts = []
+            if following.startswith("<!-- gloss:"):
+                match = re.fullmatch(r"<!-- gloss: (.+) -->", following)
+                if match:
+                    parts = match.group(1).split(" · ")
+                else:
+                    problems.append(f"{ref}: malformed gloss line {following!r}")
+            for part in parts:
                 word, _, meaning = part.partition(" — ")
-                if not meaning.strip() or word not in before:
-                    problems.append(f"{ref}: gloss {part!r} lacks a meaning, or its word is not in the verse above")
-            if not match or before.startswith("<!--"):
-                problems.append(f"{ref}: malformed gloss line {line!r}")
+                if not re.search(rf"(?<!\w){re.escape(word)}\*", verse):
+                    problems.append(f"{ref}: gloss {part!r}: its word is not starred in the verse above")
+                if not re.search(r"[α-ωά-ώ]", meaning) or re.search(r"[A-Za-z]", meaning):
+                    problems.append(f"{ref}: gloss {part!r} has no meaning in Greek letters")
+            if verse.count("*") != len(parts):  # a star without a note, or a note without a star
+                problems.append(f"{ref}: {verse.count('*')} asterisk(s) but {len(parts)} margin note(s) in {verse!r}")
+        for before, line in zip(lines, lines[1:]):
+            if line.startswith("<!-- gloss:") and before.startswith("<!--"):
+                problems.append(f"{ref}: gloss line {line!r} does not follow a verse")
     for rhapsody, (start, end) in _SPANOUDIS_FRAGMENTS.items():
         found = spans[rhapsody]
         if not found or found[0][0] != start or found[-1][1] != end:
@@ -382,14 +398,17 @@ def test_spanoudis_guard_rejects_drifted_copies(kind):
 
 
 def test_spanoudis_gloss_strips_away_and_is_kept_in_the_raw_text():
-    """The edition's margin glossary is data, not verse: strip_comment_lines (what the lessons apply) removes it."""
+    """The edition's margin notes (Cypriot word -> standard Greek) are data, not verse: strip_comment_lines removes
+    them, so a lesson reads them from the raw text first; the asterisk on the starred word stays in the verse."""
     _, body = _spanoudis_el_file()
     stanzas, _ = eee.parse_stanza_translations(body, ref_prefix="### Odyss. ")
 
     raw = stanzas["Σπανούδης"]["I.1–5"]
+    assert "Μούσα, τον πολλοπάητον* άντραν" in raw
     assert "<!-- gloss: πολλοπάητον — παμπόνηρος, πανέξυπνος -->" in raw
-    assert "gloss" not in eee.strip_comment_lines(raw)
-    assert "<!--" not in eee.strip_comment_lines(raw)
+    shown = eee.strip_comment_lines(raw)
+    assert "πολλοπάητον*" in shown  # the star is part of the verse; only the note is a comment
+    assert "gloss" not in shown and "<!--" not in shown
 
 
 def test_spanoudis_description_and_provenance_state_what_was_reproduced():
