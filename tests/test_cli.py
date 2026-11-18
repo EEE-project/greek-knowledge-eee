@@ -4,6 +4,7 @@ are mocked -- this module tests dispatch and output formatting only, not
 real source data (see tests/test_wiring.py / tests/test_lookup.py for that)."""
 
 import sys
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
@@ -389,3 +390,43 @@ def test_cli_check_can_be_scoped_to_one_file(monkeypatch, capsys, tmp_path):
     with pytest.raises(SystemExit):
         _run_cli(monkeypatch, tmp_path, "check", str(broken))
     assert "ghost" in capsys.readouterr().out
+
+
+_CLLG = Path(__file__).parent / "fixtures" / "sources" / "cllg"
+
+
+def test_cli_cllg_prints_a_citation_and_the_places_of_a_phrase(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["greek-knowledge", "cllg", "tlg0012.tlg002", "9.157", "--corpus", str(_CLLG)])
+    cli.main()
+    line = capsys.readouterr().out.strip()
+    assert f">{line}</l>" in (_CLLG / "data/tlg0012/tlg002/tlg0012.tlg002.cllg-grc1.xml").read_text(encoding="utf-8")
+
+    monkeypatch.setattr(sys, "argv", ["greek-knowledge", "cllg", "tlg0012.tlg002", "--find", line.split()[-1], "--corpus", str(_CLLG)])
+    cli.main()
+    out = capsys.readouterr().out.splitlines()
+    assert out[0].startswith("9.157  ") and out[-1] == "1 place(s)"
+
+
+@pytest.mark.parametrize(
+    ("args", "code", "message"),
+    [
+        (["tlg0012.tlg002", "1.1"], 1, "data/cllg/README.md"),  # the text is not fetched
+        (["tlg0012.tlg002"], 2, "not both"),  # neither a citation nor --find
+        (["tlg0012.tlg002", "1.1", "--find", "x"], 2, "not both"),
+        (["Odyssey", "1.1"], 1, "not a CLLG text id"),
+    ],
+)
+def test_cli_cllg_refuses_with_a_reason(monkeypatch, capsys, tmp_path, args, code, message):
+    monkeypatch.setattr(sys, "argv", ["greek-knowledge", "cllg", *args, "--corpus", str(tmp_path)])
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main()
+    assert exc_info.value.code == code
+    assert message in capsys.readouterr().err
+
+
+def test_cli_cllg_names_a_citation_the_text_lacks(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["greek-knowledge", "cllg", "tlg0012.tlg002", "9.999", "--corpus", str(_CLLG)])
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main()
+    assert exc_info.value.code == 1
+    assert "'9.999' is not a citation of tlg0012.tlg002.cllg-grc1.xml" in capsys.readouterr().err

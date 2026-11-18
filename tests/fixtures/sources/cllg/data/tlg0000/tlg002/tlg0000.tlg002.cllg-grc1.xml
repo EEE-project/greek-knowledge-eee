@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt><title>Odyssey I.1-5 as prose, cited by the pages of an edition; an uncited volume milestone</title></titleStmt>
+      <publicationStmt><p>A test fixture of tests/test_cllg.py in the shape of a CLLG file. Its Greek is Homer's Odyssey from texts/odyssey/text.md (Murray's text, Perseus), not CLLG text.</p></publicationStmt>
+      <sourceDesc><p>texts/odyssey/text.md</p></sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <refsDecl n="default">
+        <citeStructure match="/TEI/text/body//pb[@ed='Stallbaum']" use="@n" unit="page"/>
+      </refsDecl>
+    </encodingDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <milestone ed="Stallbaum" unit="volume" n="2"/>
+      <pb ed="Stallbaum" n="1"/>
+      <p>Ἄνδρα μοι ἔννεπε, μοῦσα, πολύτροπον, ὃς μάλα πολλὰ πλάγχθη, ἐπεὶ Τροίης ἱερὸν πτολίεθρον ἔπερσεν·</p>
+      <pb ed="Stallbaum" n="2"/>
+      <p>πολλῶν δ' ἀνθρώπων ἴδεν ἄστεα καὶ νόον ἔγνω, πολλὰ δ' ὅ γ' ἐν πόντῳ πάθεν ἄλγεα ὃν κατὰ θυμόν, ἀρνύμενος ἥν τε ψυχὴν καὶ νόστον ἑταίρων.</p>
+    </body>
+  </text>
+</TEI>

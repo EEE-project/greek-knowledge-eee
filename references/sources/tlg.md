@@ -7,12 +7,19 @@ the citation standard used throughout classical scholarship.
 
 **Status: not integrated, and not a source this KB reads full text
 from.** Full-text access is primarily via institutional/individual
-subscription — there is no open bulk-download or free REST API, unlike
+subscription — the current TLG has no open bulk download or free REST API, unlike
 this KB's other sources (LSJ/Wiktextract are openly licensed downloads,
 Morpheus is a free REST service). See
 [[`references/sources/patrologia-graeca.md`](patrologia-graeca.md)](patrologia-graeca.md) for a
 corpus built specifically to cover PG volumes TLG lacks (late-antique/
 Byzantine texts) — a coverage gap independent of the access question.
+
+**Its older texts are open now: CLLG.** The TLG E texts (the corpus that the
+TLG once distributed on CD-ROM) are released as TEI files, the texts under
+CC0, by the Corpus Liberatum Linguae Graecae. This KB reads them as an
+opt-in, local-only source: see
+[[`references/sources/cllg.md`](cllg.md)](cllg.md). The current TLG, with
+more works and newer editions, stays subscription-only.
 
 TLG's canonical author/work *numbering convention* (not the service
 itself) is used internally as a join key by

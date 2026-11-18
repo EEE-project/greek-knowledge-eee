@@ -1,4 +1,4 @@
-"""Source clients: EEE engine, Morpheus, Byzantine lexicon, Wiktextract, LSJ, Wikipedia, IE-CoR."""
+"""Source clients: EEE engine, Morpheus, Byzantine lexicon, Wiktextract, LSJ, Wikipedia, IE-CoR; CLLG (cllg.py) is opt-in, not in SourceBundle."""
 
 from dataclasses import dataclass
 from types import ModuleType

@@ -49,6 +49,8 @@ uv run greek-knowledge regenerate --write     # the ONLY command that regenerate
 uv run greek-knowledge check                  # validate words/grammar/culture/texts (--fix to auto-repair)
 uv run greek-knowledge check culture/cavafy.md  # or scope it to one file/directory
 uv run greek-knowledge verify grammar/x.md --by NAME --against WHAT   # record that a rule was checked (see "Verified rules")
+uv run greek-knowledge cllg tlg0012.tlg002 10.510   # opt-in: one line of the TLG Odyssey, from the local CLLG corpus (data/cllg/README.md)
+uv run greek-knowledge cllg tlg0012.tlg002 --find "ρηγμινα βαθειαν"   # every place of a phrase; case, accents and breathings ignored
 uv run python examples/lookup_word.py ὕδωρ    # same as `lookup`, as a script
 uv run python examples/build_one_concept.py ὕδωρ
 uv run python examples/query_knowledge.py --period koine --author Sophocles
@@ -271,7 +273,8 @@ non-English script is expected to appear outside a headword itself.
 | Wiktextract (kaikki.org) | Modern + Ancient Greek dictionary data | [[`references/sources/wiktextract.md`](references/sources/wiktextract.md)](references/sources/wiktextract.md) |
 | Wikipedia | Cultural/biographical context | [[`references/sources/wikipedia.md`](references/sources/wikipedia.md)](references/sources/wikipedia.md) |
 | Beekes' EDG | Indo-European etymology, word families (hand-curated, no bulk access) | [[`references/sources/beekes.md`](references/sources/beekes.md)](references/sources/beekes.md) |
-| Thesaurus Linguae Graecae (TLG) | Canonical Greek text library, Homer–Byzantine (subscription-only, not integrated) | [[`references/sources/tlg.md`](references/sources/tlg.md)](references/sources/tlg.md) |
+| Thesaurus Linguae Graecae (TLG) | Canonical Greek text library, Homer–Byzantine (subscription-only, not integrated; its older E texts are open through CLLG, next row) | [[`references/sources/tlg.md`](references/sources/tlg.md)](references/sources/tlg.md) |
+| CLLG (Corpus Liberatum Linguae Graecae) | The TLG E texts as TEI files, texts CC0, citation structure CC-BY 4.0 (opt-in and local-only: `greek-knowledge cllg`, no text committed) | [[`references/sources/cllg.md`](references/sources/cllg.md)](references/sources/cllg.md) |
 | Patrologia Graeca corpus (GREgORI/Calfa) | Late-antique/Byzantine Greek text, ~6M words, ~1% CER (not yet integrated) | [[`references/sources/patrologia-graeca.md`](references/sources/patrologia-graeca.md)](references/sources/patrologia-graeca.md) |
 | ancientrome.ru | Greek author index + Dvoretsky Greek-Russian dictionary listing (finding aid); hosts V. V. Veresaev's Russian Odyssey as a bilingual page (Greek of Murray, 1919, beside it), the second host of the Veresaev text in `texts/odyssey/translations_ru.md` | [[`references/sources/ancientrome-ru.md`](references/sources/ancientrome-ru.md)](references/sources/ancientrome-ru.md) |
 | Digital Encyclopedia of Atticism (DEA) | Atticist lexica — prescriptive "correct Attic usage" commentary (not integrated) | [[`references/sources/atticism-eu.md`](references/sources/atticism-eu.md)](references/sources/atticism-eu.md) |
@@ -293,6 +296,7 @@ non-English script is expected to appear outside a headword itself.
 | European Language Grid catalogue | Meta-catalog of language resources/tools (discovery tool, not integrated) | [[`references/sources/european-language-grid.md`](references/sources/european-language-grid.md)](references/sources/european-language-grid.md) |
 | Greek For Euclid (Calvert) | 26-lesson course on mathematical Greek for reading Euclid's *Elements* (legacy SPIonic font, not integrated) | [[`references/sources/greek-for-euclid.md`](references/sources/greek-for-euclid.md)](references/sources/greek-for-euclid.md) |
 | Textkit | Open CC BY-SA library of 180+ public-domain Ancient Greek/Latin textbooks (PDFs, not integrated) | [[`references/sources/textkit.md`](references/sources/textkit.md)](references/sources/textkit.md) |
+| Links Galore (free scans of classical text series) | Index of free scans (Internet Archive, HathiTrust, Google Books) of the Loeb, Teubner, Oxford and Budé volumes and more, incl. Murray's Loeb Odyssey and Allen's Oxford text (links only, not integrated) | [[`references/sources/links-galore.md`](references/sources/links-galore.md)](references/sources/links-galore.md) |
 | Irby (2017), scientific-Greek reading anthology | Annotated Greek passages across 8+ scientific disciplines incl. an Euclid excerpt, CC BY 3.0 (not integrated) | [[`references/sources/irby-scientific-greek.md`](references/sources/irby-scientific-greek.md)](references/sources/irby-scientific-greek.md) |
 | Ancient-author abbreviation lists (LSJ, OCD) | Citation-abbreviation convention for ancient authors and works; the OCD list is reachable only via the Wayback Machine (reference lists, not integrated) | [[`references/sources/author-abbreviations.md`](references/sources/author-abbreviations.md)](references/sources/author-abbreviations.md) |
 | arXiv Complete Corpus (Hugging Face) | Snapshot of ~3.1M arXiv papers (metadata, LaTeX, PDFs; ~16 TB, per-paper licences; not Greek-specific, not integrated) | [[`references/sources/arxiv-complete-corpus.md`](references/sources/arxiv-complete-corpus.md)](references/sources/arxiv-complete-corpus.md) |

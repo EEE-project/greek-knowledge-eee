@@ -1,6 +1,6 @@
 """Command-line entry point (`greek-knowledge`, see pyproject.toml's
-[project.scripts]) for this KB's sources -- lookup, build and query are
-read-only exploration. regenerate is the one subcommand that generates
+[project.scripts]) for this KB's sources -- lookup, build, query and cllg
+are read-only exploration. regenerate is the one subcommand that generates
 this repo's tracked words/ content, and only with an explicit --write
 flag (see _cmd_regenerate's docstring for why that matters); check
 validates any committed concept file (words/, grammar/, culture/, texts/)
@@ -82,6 +82,32 @@ def _cmd_query(args: argparse.Namespace) -> None:
             print(concept.body)
         else:
             print(f"{path.relative_to(_repo_root())}  —  {concept.title}")
+
+
+def _cmd_cllg(args: argparse.Namespace) -> None:
+    """Reads one text of the local CLLG corpus (opt-in, fetched by hand, see
+    data/cllg/README.md): the text of one citation, or with --find every
+    place of a phrase with its citation."""
+    from okfbuild.sources import cllg
+
+    if bool(args.ref) == bool(args.find):
+        print("give a citation (e.g. 10.510) or --find PHRASE, not both", file=sys.stderr)
+        raise SystemExit(2)
+    corpus = Path(args.corpus) if args.corpus else _repo_root() / "data" / "cllg" / "freed-corpus"
+    try:
+        path = cllg.text_path(corpus, args.text_id)
+        if not path.is_file():
+            raise FileNotFoundError(f"{path} is missing: fetch the text first (see data/cllg/README.md)")
+        if args.ref:
+            print(cllg.passage(path, args.ref))
+            return
+        hits = cllg.find(path, args.find)
+    except (ValueError, KeyError, FileNotFoundError) as exc:
+        print(exc.args[0], file=sys.stderr)
+        raise SystemExit(1) from None
+    for hit in hits:
+        print(f"{hit.ref}  {hit.text}")
+    print(f"{len(hits)} place(s)")
 
 
 def _report_issues(issues: list, repo_root: Path) -> None:
@@ -216,6 +242,15 @@ def main() -> None:
     add_filter_arguments(query_parser)
     query_parser.add_argument("--full", action="store_true", help="print full bodies instead of just paths+titles")
     query_parser.set_defaults(func=_cmd_query)
+
+    cllg_parser = subparsers.add_parser(
+        "cllg", help="read a TLG text of the local CLLG corpus (opt-in, see data/cllg/README.md): one citation, or --find a phrase"
+    )
+    cllg_parser.add_argument("text_id", help="e.g. tlg0012.tlg002 (the Odyssey); the ids are on the corpus index page")
+    cllg_parser.add_argument("ref", nargs="?", help="a citation: 10.510 (book 10, line 510), 10 (all of book 10), 209 (a page)")
+    cllg_parser.add_argument("--find", metavar="PHRASE", help="every place of PHRASE, with its citation; case, accents and breathings are ignored")
+    cllg_parser.add_argument("--corpus", help="the sparse clone of the corpus (default: data/cllg/freed-corpus)")
+    cllg_parser.set_defaults(func=_cmd_cllg)
 
     args = parser.parse_args()
     args.func(args)
