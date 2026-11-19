@@ -676,7 +676,7 @@ in caves hollow, longing husband to-be.
 <!-- grc: ἀλλ' ὅτε δὴ ἔτος ἦλθε περιπλομένων ἐνιαυτῶν, -->
 but when indeed the-year came, the-seasons revolving,
 
-<!-- grc: τῷ οἱ ἐπεκλώσαντο θεοὶ οἰκόνδε νέεσθαι -->
+<!-- grc: τῷ οἱ ἐπεκλώσαντο θεοὶ οἶκόνδε νέεσθαι -->
 in-which for-him ordained the-gods homeward to-return,
 
 <!-- grc: εἰς Ἰθάκην, οὐδ' ἔνθα πεφυγμένος ἦεν ἀέθλων -->
@@ -688,12 +688,12 @@ even among his-own friends. the-gods and pitied all,
 <!-- grc: νόσφι Ποσειδάωνος· ὁ δ' ἀσπερχὲς μενέαινεν -->
 except Poseidon; he but ceaselessly raged
 
-<!-- grc: ἀντιθέῳ Ὀδυσῆι πάρος ἥν γαῖαν ἱκέσθαι. -->
+<!-- grc: ἀντιθέῳ Ὀδυσῆι πάρος ἣν γαῖαν ἱκέσθαι. -->
 at-godlike Odysseus, before his-own land he-reached.
 
 ### Odyss. IX.19–24
 
-<!-- grc: εἶμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν -->
+<!-- grc: εἴμ' Ὀδυσεὺς Λαερτιάδης, ὃς πᾶσι δόλοισιν -->
 I-am Odysseus Laertiades, who with-all wiles
 
 <!-- grc: ἀνθρώποισι μέλω, καί μευ κλέος οὐρανὸν ἵκει. -->
