@@ -30,5 +30,6 @@ choices of its editor. So this repo commits no CLLG text and no cache of passage
 made from `texts/odyssey/text.md`.
 
 **Editions.** The texts are those of the TLG E disk. They are often older than the current critical editions. The
-CLLG Odyssey is von der Mühll's edition (Basel, 1962); `texts/odyssey/text.md` is Murray's (1919). A CLLG passage
+CLLG Odyssey is von der Mühll's edition (Basel, 1962); `texts/odyssey/text.md` is Murray's (1919), as the Perseus Digital Library gives it, except three lines that follow the Odyssey
+lessons (its description names them). A CLLG passage
 shows what the TLG edition prints, not the latest reading.

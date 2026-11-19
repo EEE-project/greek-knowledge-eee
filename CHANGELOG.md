@@ -1,6 +1,11 @@
 # Changelog
 
-## 2026-11-19
+## 2026-11-19 (2)
+
+- **`texts/odyssey/text.md` now has the punctuation and accents of Murray's text as the Perseus Digital Library gives it, and its description says which three lines follow the lessons.** 23 lines had an ASCII colon where the text has the raised dot (Beta Code writes the raised dot as a colon), IX.88 had lost the accent of an elided word, and IX.172 and IX.177 held stray quotation marks; all came from the Perseus website. The same lines are corrected in the Greek echoes of `translations_el.md`, `translations_en.md` and `translations_ru.md` and in `scripts/populate_odyssey_texts.py`. Against the Perseus TEI (`tlg0012.tlg002.perseus-grc2`) the file now differs only in I.1 and I.11 (a capital, as in the printed Loeb) and IX.21 (the spelling of Allen's Oxford text, as in the lessons); the description, the source comment and `references/sources/cllg.md` say so. New test: no Greek line of `text.md` holds a colon. Bumped to 0.11.2.
+  Full suite (`-m "not integration"`): 640 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean.
+
+## 2026-11-19 (1)
 
 - **`texts/odyssey/text.md`: verse IX.130 now opens its own section, and three accent errors are corrected.** The section `IX.116–129` held 15 lines: its last line was verse 130, and `IX.130–145` began with verse 131, so every verse of `IX.130–145` stood one place too early. Verse 130 now opens `IX.130–145`; the translation files had it right. The accents: I.17 now reads οἶκόνδε, I.21 ἣν (a grave before the next word) and IX.19 εἴμ' ("I am", not "I shall go"), as Murray's Loeb and Allen's Oxford text print them; the same three lines are corrected where `translations_el.md`, `translations_en.md` and `translations_ru.md` repeat the Greek beside the interlinear gloss, and in `scripts/populate_odyssey_texts.py`, which writes those files. New `tests/test_odyssey_text.py`: every section of `text.md` holds the verses its heading names, and every Greek echo of the interlinear translations equals the `text.md` line of the same verse (both fail on the old file). Bumped to 0.11.1.
   Full suite (`-m "not integration"`): 639 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean.

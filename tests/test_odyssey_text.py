@@ -41,6 +41,11 @@ def test_section_holds_the_verses_of_its_heading(heading, first, last, verses):
     assert len(verses) == last - first + 1
 
 
+def test_greek_lines_hold_no_colon():
+    # Beta Code writes the raised dot as a colon; a colon in a Greek line is a leftover of a conversion.
+    assert [line for _, _, _, verses in _SECTIONS for line in verses if ":" in line] == []
+
+
 @pytest.mark.parametrize("lang", ["el", "en", "ru"])
 def test_interlinear_echoes_equal_the_text(lang):
     text = {}
