@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-25
+
+- **The links to the archived pages in the translator notes of Pope and Zhukovsky open again.** Each note held the web.archive.org address as plain text, and the address ends with `)`. The lesson page leaves that last `)` out of the link, so both links answered 404. The address is now a Markdown link, `web.archive.org ↗`, in `texts/odyssey/translations_en.md`, `translations_ru.md` and `scripts/populate_odyssey_texts.py`. New test: no translator note holds a plain address with a bracket. Bumped to 0.11.3.
+  Full suite (`-m "not integration"`): 643 passed, 5 deselected; `ruff check` clean; `greek-knowledge check` clean.
+
 ## 2026-11-19 (2)
 
 - **`texts/odyssey/text.md` now has the punctuation and accents of Murray's text as the Perseus Digital Library gives it, and its description says which three lines follow the lessons.** 23 lines had an ASCII colon where the text has the raised dot (Beta Code writes the raised dot as a colon), IX.88 had lost the accent of an elided word, and IX.172 and IX.177 held stray quotation marks; all came from the Perseus website. The same lines are corrected in the Greek echoes of `translations_el.md`, `translations_en.md` and `translations_ru.md` and in `scripts/populate_odyssey_texts.py`. Against the Perseus TEI (`tlg0012.tlg002.perseus-grc2`) the file now differs only in I.1 and I.11 (a capital, as in the printed Loeb) and IX.21 (the spelling of Allen's Oxford text, as in the lessons); the description, the source comment and `references/sources/cllg.md` say so. New test: no Greek line of `text.md` holds a colon. Bumped to 0.11.2.

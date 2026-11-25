@@ -30,7 +30,7 @@ sources:
   author: George Chapman
 generated:
   by: process:greek-knowledge-eee-builder/0.2.0
-  at: '2026-10-26T10:03:37.912189+00:00'
+  at: '2026-11-25T13:55:29.489580+00:00'
 work: Odyssey
 passage: I.1-21, IX.19-180
 language: en
@@ -48,7 +48,7 @@ status: draft
 ## Pope
 
 <!-- Pope A. The Odyssey of Homer. London, 1725–1726 · https://en.wikisource.org/wiki/Odyssey_(Pope) -->
-<!-- **Pope, 1725–26** · [wikisource.org ↗](https://en.wikisource.org/wiki/Odyssey_(Pope)) (archived 22.09.2026: https://web.archive.org/web/20260922110929/https://en.wikisource.org/wiki/Odyssey_(Pope)) · eng., heroic couplets · elegant 18th-c. rhetorical style · poetic adaptation; long considered the standard English version -->
+<!-- **Pope, 1725–26** · [wikisource.org ↗](https://en.wikisource.org/wiki/Odyssey_(Pope)) (archived 22.09.2026: [web.archive.org ↗](https://web.archive.org/web/20260922110929/https://en.wikisource.org/wiki/Odyssey_(Pope))) · eng., heroic couplets · elegant 18th-c. rhetorical style · poetic adaptation; long considered the standard English version -->
 
 ### Odyss. I.1–5
 

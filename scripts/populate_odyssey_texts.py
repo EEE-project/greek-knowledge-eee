@@ -29,7 +29,7 @@ _POPE_I = """\
 ## Pope
 
 <!-- Pope A. The Odyssey of Homer. London, 1725–1726 · https://en.wikisource.org/wiki/Odyssey_(Pope) -->
-<!-- **Pope, 1725–26** · [wikisource.org ↗](https://en.wikisource.org/wiki/Odyssey_(Pope)) (archived 22.09.2026: https://web.archive.org/web/20260922110929/https://en.wikisource.org/wiki/Odyssey_(Pope)) · eng., heroic couplets · elegant 18th-c. rhetorical style · poetic adaptation; long considered the standard English version -->
+<!-- **Pope, 1725–26** · [wikisource.org ↗](https://en.wikisource.org/wiki/Odyssey_(Pope)) (archived 22.09.2026: [web.archive.org ↗](https://web.archive.org/web/20260922110929/https://en.wikisource.org/wiki/Odyssey_(Pope))) · eng., heroic couplets · elegant 18th-c. rhetorical style · poetic adaptation; long considered the standard English version -->
 
 ### Odyss. I.1–5
 
@@ -760,7 +760,7 @@ _ZHUKOVSKY_I = """\
 ## Жуковский
 
 <!-- Жуковский В. А. Одиссея. СПб., 1849 · https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский) · Собрание сочинений В. Жуковского, 6-е изд., СПб: Типография Императорской академии наук, 1869, Т. 5: Гомерова Одиссея, изд. 2-е -->
-<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9)) · рус., гекзаметр · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
+<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: [web.archive.org ↗](https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9))) · рус., гекзаметр · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
 
 ### Odyss. I.1–5
 
@@ -805,7 +805,7 @@ _ZHUKOVSKY_IX = """\
 ## Жуковский
 
 <!-- Жуковский В. А. Одиссея. СПб., 1849 · https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский) · Собрание сочинений В. Жуковского, 6-е изд., СПб: Типография Императорской академии наук, 1869, Т. 5: Гомерова Одиссея, изд. 2-е -->
-<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9)) · рус., гекзаметр · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
+<!-- **Жуковский, 1849** · [wikisource.org ↗](https://ru.wikisource.org/wiki/Одиссея_(Гомер;_Жуковский)) (архивная копия от 22.09.2026: [web.archive.org ↗](https://web.archive.org/web/20260922110724/https://ru.wikisource.org/wiki/%D0%9E%D0%B4%D0%B8%D1%81%D1%81%D0%B5%D1%8F_(%D0%93%D0%BE%D0%BC%D0%B5%D1%80;_%D0%96%D1%83%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9))) · рус., гекзаметр · романтический возвышенный стиль · первый классический стихотворный перевод на русский -->
 
 ### Odyss. IX.19–24
 

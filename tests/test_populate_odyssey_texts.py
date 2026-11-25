@@ -56,6 +56,19 @@ def test_populate_all_matches_committed_content(tmp_path, monkeypatch):
         assert generated_body == committed_body, filename
 
 
+# --- Translator notes: the links a lesson page draws ---
+
+
+@pytest.mark.parametrize("filename", _GENERATED_FILES)
+def test_translator_notes_write_addresses_with_brackets_as_links(filename):
+    """A lesson draws a translator note (`<!-- **...** -->`) as Markdown. The link maker never keeps a `)` at the end of a bare
+    address, so e.g. an archive copy of `Odyssey_(Pope)` opened a 404 page: such an address must be a Markdown link."""
+    for line in (script._TEXTS_DIR / filename).read_text(encoding="utf-8").splitlines():
+        if line.startswith("<!-- **"):
+            rest = re.sub(r"\[[^\]]*\]\((?:[^()\s]|\([^()\s]*\))*\)", "", line)  # without the Markdown links
+            assert not re.search(r"https?://[^\s\]]*\(", rest), rest
+
+
 # --- _strip_header() ---
 
 
